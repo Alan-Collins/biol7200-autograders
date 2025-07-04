@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-# make_assignment.sh will replace the lines here, DO NOT REMOVE
-REPLACE_NAME
-REPLACE_REPO_NAME
-
-BASE_DIR=/autograder/$REPO_NAME
+BASE_DIR=/autograder/biol7200-autograders
 
 # update git repo
 cd $BASE_DIR
@@ -12,10 +8,8 @@ git pull
 # I think the next line is only necessary if you change the requirements after the first version of the assignment
 pip3 install -r $BASE_DIR/requirements.txt
 
-# change to assignment directory
-cd $BASE_DIR/$NAME
+# change to tests directory
+cd $BASE_DIR/tests
 
-# copy student submission to folder
-cp -r /autograder/submission/* ./
 
 python3 $BASE_DIR/gradescope_base/run_tests.py
