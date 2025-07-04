@@ -30,6 +30,8 @@ class TestFiles(unittest.TestCase):
         if cls._path.exists():
             cls._path.rmdir()
             for dir in cls._path.parents:
+                if str(dir) == "/":
+                    break
                 dir.rmdir()
 
     @weight(0)
