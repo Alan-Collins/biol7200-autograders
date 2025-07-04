@@ -47,13 +47,16 @@ class TestFiles(unittest.TestCase):
         )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
-    @weight(2)
-    def test_no_err(self):
+    @weight(1)
+    def test_zero_exit(self):
         self.assertEqual(
             self._exit,
             0,
             f"{SOLUTION_SCRIPT} returned a non-zero exit code. Something went wrong."
         )
+
+    @weight(1)
+    def test_no_err(self):
         self.assertEqual(
             len(self._stderr.strip()),
             0,
