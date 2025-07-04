@@ -1,5 +1,5 @@
 # Gradescope Autograder Template
-a good template for setting up gradescope autograding with python
+a good template for setting up gradescope autograding with python. Cloned from https://github.com/mnoukhov/gradescope-autograder-template
 
 - uses github `deploy key` to make your gradescope tests always up to date with your assignment repo
 - makes it easy to test your solution locally with standard `unittest`

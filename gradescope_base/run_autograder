@@ -2,7 +2,6 @@
 
 # make_assignment.sh will replace the lines here, DO NOT REMOVE
 REPLACE_NAME
-REPLACE_SOLUTION
 REPLACE_REPO_NAME
 
 BASE_DIR=/autograder/$REPO_NAME
@@ -16,10 +15,7 @@ pip3 install -r $BASE_DIR/requirements.txt
 # change to assignment directory
 cd $BASE_DIR/$NAME
 
-# delete any solution files or folders in the git repo
-rm -rf $SOLUTION
-
 # copy student submission to folder
-cp -r /autograder/submission/$SOLUTION ./
+cp -r /autograder/submission/* ./
 
 python3 $BASE_DIR/gradescope_base/run_tests.py
