@@ -28,6 +28,7 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls._path.exists():
+            cls._path.rmdir()
             for dir in cls._path.parents:
                 dir.rmdir()
 
