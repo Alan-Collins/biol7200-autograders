@@ -50,6 +50,7 @@ class TestFiles(unittest.TestCase):
     @weight(1)
     @number("4.2")
     def test_zero_exit(self):
+        """Check script runs successfully"""
         if self._exit !=  0:
             self.fail(
                 f"{SOLUTION_SCRIPT} returned a non-zero exit code. Something went wrong."
@@ -59,6 +60,7 @@ class TestFiles(unittest.TestCase):
     @weight(1)
     @number("4.3")
     def test_no_err(self):
+        """Check script produces no stderr"""
         if len(self._stderr.strip()) != 0:
             self.fail(
                 f"{SOLUTION_SCRIPT} produced messages in the stderr indicating an issue."
@@ -69,6 +71,7 @@ class TestFiles(unittest.TestCase):
     @weight(2)
     @number("4.4")
     def test_taking_cli(self):
+        """Check script uses command line inputs"""
         found = False # look for use of commandline inputs
         pattern = re.compile(r"^[^#]*([ =]\$\d+|\bgetopts)([ #]|$)")
         with open(SCRIPT_PATH) as fin:
@@ -85,6 +88,7 @@ class TestFiles(unittest.TestCase):
     @weight(2)
     @number("4.5")
     def test_mkdir(self):
+        """Check script makes directory"""
         if not self._path.exists():
             self.fail(
                 "Your script did not create the directory specified as commandline input."
@@ -94,6 +98,7 @@ class TestFiles(unittest.TestCase):
     @weight(2)
     @number("4.6")
     def test_cd(self):
+        """Check script changes directory"""
         found = False # look for use of commandline inputs
         pattern = re.compile(r"^[^#]*cd ")
         with open(SCRIPT_PATH) as fin:
@@ -110,6 +115,7 @@ class TestFiles(unittest.TestCase):
     @weight(1)
     @number("4.7")
     def test_stdout_has_path(self):
+        """Check script writes path to stdout"""
         found = False # look for use of commandline inputs
         pattern = re.compile(r"^[^#]*pwd")
         with open(SCRIPT_PATH) as fin:
@@ -130,6 +136,7 @@ class TestFiles(unittest.TestCase):
     @weight(1)
     @number("4.8")
     def test_stdout_is_only_path(self):
+        """Check script doesn't print extraneous information to stdout"""
         if not TEST_PATH in self._stdout:
             self.fail("Your script's stdout does not include the new working directory")
         
@@ -144,6 +151,7 @@ class TestFiles(unittest.TestCase):
     @number("4.9")
     @visibility("on_fail")
     def test_validating_cli(self):
+        """Check script validates inputs"""
         found = False # look for conditional checking cli
         pattern = re.compile(r"if.*\[.*\$\#.*\]")
         with open(SCRIPT_PATH) as fin:
@@ -165,6 +173,7 @@ class TestFiles(unittest.TestCase):
     @number("4.10")
     @visibility("on_fail")
     def test_named_variables(self):
+        """Check script uses named variables"""
         found = False # look for assignment of cli to var
         pattern = re.compile(r"[^=]\$1")
         with open(SCRIPT_PATH) as fin:
