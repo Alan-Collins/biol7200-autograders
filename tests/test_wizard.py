@@ -15,7 +15,10 @@ class TestFiles(unittest.TestCase):
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
         for path in missing_files:
             print(f'Missing {path}')
-        self.assertEqual(len(missing_files), 0, f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully')
+        if len(missing_files) > 0:
+            self.fail(
+                f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
+            )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
 
 class TestVariables(unittest.TestCase):
@@ -25,7 +28,8 @@ class TestVariables(unittest.TestCase):
         """Check wizard variable is set"""
         command = f'source {SCRIPT_PATH}; if [[ -z "$wizard" ]]; then exit 1; else exit 0; fi'
         result = subprocess.call(command, shell=True, executable="/bin/bash", text=True)
-        self.assertEqual(result, 0, 'The wizard variable is not set properly in your script')
+        if result != 0:
+            self.fail('The wizard variable is not set properly in your script')
         print('The wizard variable is set')
 
     @weight(2)
@@ -34,7 +38,8 @@ class TestVariables(unittest.TestCase):
         """Check wizard variable has the right value"""
         command = f'source {SCRIPT_PATH}; echo "$wizard"; if [[ "$wizard" == "Gandalf the Grey" ]]; then exit 0; else exit 1; fi'
         result = subprocess.run(command, shell=True, executable="/bin/bash", text=True, capture_output=True)
-        self.assertEqual(result.returncode, 0, f'The value assigned to the wizard variable is not correct. We expected "Gandalf the Grey", but found "{result.stdout.strip()}"')
+        if result.returncode != 0:
+            self.fail(f'The value assigned to the wizard variable is not correct. We expected "Gandalf the Grey", but found "{result.stdout.strip()}"')
         print('The wizard variable has the correct value')
 
 
@@ -45,7 +50,8 @@ class TestAliases(unittest.TestCase):
         """Check view_wizard alias is set"""
         command = f'source {SCRIPT_PATH}; if alias view_wizard >/dev/null 2>&1; then exit 0; else exit 1; fi'
         result = subprocess.call(command, shell=True, executable="/bin/bash", text=True)
-        self.assertEqual(result, 0, 'The view_wizard alias is not set properly in your script')
+        if result != 0:
+            self.fail('The view_wizard alias is not set properly in your script')
         print('The view_wizard alias is set')
 
     @weight(2)
