@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 import shutil
 
-from gradescope_utils.autograder_utils.decorators import weight
+from gradescope_utils.autograder_utils.decorators import weight, number
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
 SUBMISSION_PATH = "/autograder/submission/"
@@ -38,6 +38,7 @@ class TestFiles(unittest.TestCase):
             shutil.rmtree(cls._dir)
 
     @weight(0)
+    @number("5.1")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -51,6 +52,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(1)
+    @number("5.2")
     def test_zero_exit(self):
         self.assertEqual(
             self._exit,
@@ -59,6 +61,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(1)
+    @number("5.3")
     def test_no_err(self):
         self.assertEqual(
             len(self._stderr.strip()),
@@ -68,6 +71,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(5)
+    @number("5.4")
     def test_infile_unchanged(self):
         with open(self._infile) as f:
             contents = f.read()
@@ -79,6 +83,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(5)
+    @number("5.5")
     def test_outfile_exists(self):
         self.assertTrue(
             self._outfile.exists,
@@ -86,6 +91,7 @@ class TestFiles(unittest.TestCase):
         )
     
     @weight(3)
+    @number("5.6")
     def test_whitespace_in_headers(self):
         with open(self._outfile) as f:
             head = f.readline()
@@ -97,6 +103,7 @@ class TestFiles(unittest.TestCase):
             )
     
     @weight(5)
+    @number("5.7")
     def test_header_format_correct(self):
         with open(self._outfile) as f:
             head = f.readline()
@@ -109,7 +116,8 @@ class TestFiles(unittest.TestCase):
             )
 
     @weight(5)
-    def test_ext_in_header(self):
+    @number("5.8")
+    def test_ext_not_in_header(self):
         with open(self._outfile) as f:
             head = f.readline()
         pattern = re.compile(r"^.*\.fna.*$")
@@ -117,6 +125,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Your script has added the file extension to the header lines.")
 
     @weight(5)
+    @number("5.9")
     def test_sequence_lines_unchanged(self):
         with open(self._outfile) as f:
             seq = f.readlines()[1]

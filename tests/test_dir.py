@@ -35,6 +35,7 @@ class TestFiles(unittest.TestCase):
                 dir.rmdir()
 
     @weight(0)
+    @number("4.1")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -48,6 +49,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(1)
+    @number("4.2")
     def test_zero_exit(self):
         self.assertEqual(
             self._exit,
@@ -56,6 +58,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(1)
+    @number("4.3")
     def test_no_err(self):
         self.assertEqual(
             len(self._stderr.strip()),
@@ -65,6 +68,7 @@ class TestFiles(unittest.TestCase):
         )
     
     @weight(2)
+    @number("4.4")
     def test_taking_cli(self):
         found = False # look for use of commandline inputs
         pattern = re.compile(r"^[^#]*([ =]\$\d+|\bgetopts)([ #]|$)")
@@ -79,6 +83,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(0)
+    @number("4.5")
     def test_validating_cli(self):
         found = False # look for conditional checking cli
         pattern = re.compile(r"if.*\[.*\$\#.*\]")
@@ -99,6 +104,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(0)
+    @number("4.6")
     def test_named_variables(self):
         found = False # look for assignment of cli to var
         pattern = re.compile(r"[^=]\$1")
@@ -115,6 +121,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(2)
+    @number("4.7")
     def test_mkdir(self):
         self.assertTrue(
             self._path.exists(),
@@ -122,6 +129,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(2)
+    @number("4.8")
     def test_cd(self):
         found = False # look for use of commandline inputs
         pattern = re.compile(r"^[^#]*cd ")
@@ -136,6 +144,7 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(1)
+    @number("4.9")
     def test_stdout_has_path(self):
         self.assertTrue(
             TEST_PATH in self._stdout,
@@ -143,6 +152,7 @@ class TestFiles(unittest.TestCase):
         )
     
     @weight(1)
+    @number("4.10")
     def test_stdout_is_only_path(self):
         if not TEST_PATH in self._stdout:
             self.fail("Your script's stdout does not include the new working directory")
