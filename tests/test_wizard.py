@@ -1,7 +1,7 @@
 import unittest
 import subprocess
 from gradescope_utils.autograder_utils.decorators import weight, number
-from gradescope_utils.autograder_utils.files import Check_submitted_files
+from gradescope_utils.autograder_utils.files import check_submitted_files
 
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "wizard.sh"
@@ -12,7 +12,7 @@ class TestFiles(unittest.TestCase):
     @number("3.1")
     def test_submitted_files(self):
         """Check submitted files"""
-        missing_files = Check_submitted_files([f'{SOLUTION_SCRIPT}'])
+        missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
         for path in missing_files:
             print(f'Missing {path}')
         self.assertEqual(len(missing_files), 0, f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully')
