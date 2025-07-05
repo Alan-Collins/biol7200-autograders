@@ -78,6 +78,22 @@ class TestFiles(unittest.TestCase):
             f'Your script does not appear to use command line arguments.'
         )
 
+    @weight(0)
+    def test_named_variables(self):
+        found = False # look for use of commandline inputs
+        pattern = re.compile(r"[^=]\$1")
+        with open(SCRIPT_PATH) as fin:
+            for line in fin:
+                if re.match(pattern, line):
+                    found = True
+        
+        self.assertFalse(
+            found,
+            'It looks like you are using command line arguments directly. '
+            'Consider assigning command line inputs to named variables instead. '
+            'Named variables make it much easier for a reader to understand what code is doing.'
+        )
+
     @weight(2)
     def test_mkdir(self):
         self.assertTrue(
