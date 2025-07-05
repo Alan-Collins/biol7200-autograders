@@ -65,7 +65,10 @@ class TestAliases(unittest.TestCase):
         alias = subprocess.run(command, capture_output=True, shell=True, executable="/bin/bash", text=True).stdout.strip('"\'\n ')
         if len(alias) == 0:
             self.fail("We were not able to process your alias. Please notify Professor Collins so he can diagnose the issue")
+        # get wizard value
+        command = f'source {SCRIPT_PATH}; echo "$wizard"'
         wizard = subprocess.run(command, shell=True, executable="/bin/bash", text=True, capture_output=True).stdout.strip()
+        # get alias output
         result = subprocess.run(f"source {SCRIPT_PATH}; {alias}", capture_output=True, shell=True, executable="/bin/bash", text=True).stdout.strip()
         self.assertEqual(
             result,
