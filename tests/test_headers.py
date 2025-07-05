@@ -95,7 +95,7 @@ class TestFiles(unittest.TestCase):
     def test_whitespace_in_headers(self):
         with open(self._outfile) as f:
             head = f.readline()
-        pattern = re.compile(r"^[^ \t]*contig")
+        pattern = re.compile(r"^\S*\s+\S*contig")
         if re.match(pattern, head):
             self.fail(
                 "You have introduced whitespace into the header lines. "
@@ -128,7 +128,7 @@ class TestFiles(unittest.TestCase):
     @number("5.9")
     def test_sequence_lines_unchanged(self):
         with open(self._outfile) as f:
-            seq = f.readlines()[1]
+            seq = f.readlines()[1].strip()
         expected = INPUT_SEQUENCE.split()[1]
         if seq != expected:
             self.fail(
