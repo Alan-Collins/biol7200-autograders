@@ -5,7 +5,7 @@ REPLACE_GITHUB_BRANCH
 
 cd /autograder/source
 
-apt-get install -y python3 python3-pip python3-dev
+apt-get update && apt-get install -y python3 python3-pip python3-dev git wget zlib1g-dev make build-essential libncurses5-dev libbz2-dev liblzma-dev libcurl4-gnutls-dev
 
 mkdir -p /root/.ssh
 cp ssh_config /root/.ssh/config
