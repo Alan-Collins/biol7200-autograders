@@ -19,3 +19,35 @@ ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 git clone -b $GITHUB_BRANCH git@github.com:Alan-Collins/biol7200-autograders.git /autograder/biol7200-autograders
 # Install python dependencies
 pip3 install -r /autograder/biol7200-autograders/requirements.txt
+
+# Depdendencies
+mkdir /building
+cd /building
+wget \
+    https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.16.0+-x64-linux.tar.gz \
+    https://github.com/samtools/samtools/releases/download/1.22/samtools-1.22.tar.bz2
+
+tar -zxf ncbi-blast-2.16.0+-x64-linux.tar.gz
+tar -jxf samtools-1.22.tar.bz2
+
+cd samtools-1.22/
+./configure --prefix=/building/samtools && make && make install
+
+cd ..
+git clone https://github.com/lh3/seqtk.git
+cd seqtk
+make
+
+cd ..
+git clone https://github.com/lh3/minimap2.git
+cd minimap2
+make
+
+cp \
+    /building/ncbi-blast-2.16.0+/bin/* \
+    /building/samtools/bin/samtools \
+    /building/seqtk/seqtk \
+    /building/minimap2/minimap2 \
+    /usr/bin/
+
+cd && rm -rf /building
