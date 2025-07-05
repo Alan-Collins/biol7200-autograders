@@ -3,7 +3,7 @@ import subprocess
 import re
 from pathlib import Path
 
-from gradescope_utils.autograder_utils.decorators import weight
+from gradescope_utils.autograder_utils.decorators import weight, number
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
 SUBMISSION_PATH = "/autograder/submission/"
