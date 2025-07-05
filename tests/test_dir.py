@@ -79,8 +79,28 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(0)
+    def test_validating_cli(self):
+        found = False # look for conditional checking cli
+        pattern = re.compile(r"if.*\[.*\$\#.*\]")
+        with open(SCRIPT_PATH) as fin:
+            for line in fin:
+                if re.match(pattern, line):
+                    found = True
+        
+        self.assertFalse(
+            found,
+            'It looks like you are validating the number of command line arguments given to your script. '
+            "That's not necessary for any of the Bash assignments in this course (but you can do it if you like). "
+            'LLMs like to include input validation in their Bash scripts. '
+            'If you included it here because you have seen it when talking to an LLM, '
+            'then two things:\n'
+            '1. Make sure you understand and can write from memory all of the code you submit for assignments.\n'
+            "2. We'll cover conditionals like that in an upcoming class. If you don't understand how it works then (see point 1, but also) you should understand it after that class.\n"
+        )
+
+    @weight(0)
     def test_named_variables(self):
-        found = False # look for use of commandline inputs
+        found = False # look for assignment of cli to var
         pattern = re.compile(r"[^=]\$1")
         with open(SCRIPT_PATH) as fin:
             for line in fin:
