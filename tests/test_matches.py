@@ -77,7 +77,7 @@ class TestFiles(unittest.TestCase):
         print("Your script ran successfully.")
 
     @weight(1)
-    @number("5.3")
+    @number("6.3")
     def test_no_err(self):
         """Check script produces no stderr"""
         if len(self._match_stderr.strip()) != 0 or len(self._no_match_stderr.strip()) != 0:
@@ -88,7 +88,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced no errors.")
 
     @weight(1)
-    @number("5.4")
+    @number("6.4")
     def test_infile_unchanged(self):
         """Check input file unchanged"""
         match_eq = subprocess.call(["cmp", "-s", self._match, MATCH_ASSEMBLY_PATH])
@@ -102,7 +102,7 @@ class TestFiles(unittest.TestCase):
         print("The input files were not modified")
 
     @weight(1)
-    @number("5.5")
+    @number("6.5")
     def test_outfile_exists(self):
         """Check output file created"""
         if not all([
