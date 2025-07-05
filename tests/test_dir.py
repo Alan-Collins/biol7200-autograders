@@ -3,7 +3,7 @@ import subprocess
 import re
 from pathlib import Path
 
-from gradescope_utils.autograder_utils.decorators import weight, number
+from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
 SUBMISSION_PATH = "/autograder/submission/"
@@ -82,8 +82,52 @@ class TestFiles(unittest.TestCase):
             f'Your script does not appear to use command line arguments.'
         )
 
-    @weight(0)
+    @weight(2)
     @number("4.5")
+    def test_mkdir(self):
+        self.assertTrue(
+            self._path.exists(),
+            "Your script did not create the directory specified as commandline input."
+        )
+
+    @weight(2)
+    @number("4.6")
+    def test_cd(self):
+        found = False # look for use of commandline inputs
+        pattern = re.compile(r"^[^#]*cd ")
+        with open(SCRIPT_PATH) as fin:
+            for line in fin:
+                if re.match(pattern, line):
+                    found = True
+        
+        self.assertTrue(
+            found,
+            'Your script does not appear to change its working directory.'
+        )
+
+    @weight(1)
+    @number("4.7")
+    def test_stdout_has_path(self):
+        self.assertTrue(
+            TEST_PATH in self._stdout,
+            "Your script does not print the absolute path of the new working directory to stdout"
+        )
+    
+    @weight(1)
+    @number("4.8")
+    def test_stdout_is_only_path(self):
+        if not TEST_PATH in self._stdout:
+            self.fail("Your script's stdout does not include the new working directory")
+        
+        self.assertTrue(
+            TEST_PATH == self._stdout.strip(),
+            "Your script should only print the absolute path of the new working directory to stdout."
+                "There should be nothing else written to the stdout."
+        )
+    
+    @weight(0)
+    @number("4.9")
+    @visibility("on_fail")
     def test_validating_cli(self):
         found = False # look for conditional checking cli
         pattern = re.compile(r"if.*\[.*\$\#.*\]")
@@ -104,7 +148,8 @@ class TestFiles(unittest.TestCase):
         )
 
     @weight(0)
-    @number("4.6")
+    @number("4.10")
+    @visibility("on_fail")
     def test_named_variables(self):
         found = False # look for assignment of cli to var
         pattern = re.compile(r"[^=]\$1")
@@ -118,47 +163,4 @@ class TestFiles(unittest.TestCase):
             'It looks like you are using command line arguments directly. '
             'Consider assigning command line inputs to named variables instead. '
             'Named variables make it much easier for a reader to understand what code is doing.'
-        )
-
-    @weight(2)
-    @number("4.7")
-    def test_mkdir(self):
-        self.assertTrue(
-            self._path.exists(),
-            "Your script did not create the directory specified as commandline input."
-        )
-
-    @weight(2)
-    @number("4.8")
-    def test_cd(self):
-        found = False # look for use of commandline inputs
-        pattern = re.compile(r"^[^#]*cd ")
-        with open(SCRIPT_PATH) as fin:
-            for line in fin:
-                if re.match(pattern, line):
-                    found = True
-        
-        self.assertTrue(
-            found,
-            'Your script does not appear to change its working directory.'
-        )
-
-    @weight(1)
-    @number("4.9")
-    def test_stdout_has_path(self):
-        self.assertTrue(
-            TEST_PATH in self._stdout,
-            "Your script does not print the absolute path of the new working directory to stdout"
-        )
-    
-    @weight(1)
-    @number("4.10")
-    def test_stdout_is_only_path(self):
-        if not TEST_PATH in self._stdout:
-            self.fail("Your script's stdout does not include the new working directory")
-        
-        self.assertTrue(
-            TEST_PATH == self._stdout.strip(),
-            "Your script should only print the absolute path of the new working directory to stdout."
-                "There should be nothing else written to the stdout."
         )
