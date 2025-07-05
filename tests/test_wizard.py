@@ -36,10 +36,13 @@ class TestVariables(unittest.TestCase):
     @number("3.3")
     def test_wizard_value_correct(self):
         """Check wizard variable has the right value"""
-        command = f'source {SCRIPT_PATH}; echo "$wizard"; if [[ "$wizard" == "Gandalf the Grey" ]]; then exit 0; else exit 1; fi'
-        result = subprocess.run(command, shell=True, executable="/bin/bash", text=True, capture_output=True)
-        if result.returncode != 0:
-            self.fail(f'The value assigned to the wizard variable is not correct. We expected "Gandalf the Grey", but found "{result.stdout.strip()}"')
+        command = f'source {SCRIPT_PATH}; echo "$wizard"'
+        result = subprocess.run(command, shell=True, executable="/bin/bash", text=True, capture_output=True).stdout.strip()
+        expected = "Gandalf the Grey"
+        self.assertEqual(
+            result,
+            expected,
+            f'The value assigned to the wizard variable is not correct. We expected {expected}, but found "{result}"')
         print('The wizard variable has the correct value')
 
 
@@ -62,6 +65,10 @@ class TestAliases(unittest.TestCase):
         alias = subprocess.run(command, capture_output=True, shell=True, executable="/bin/bash", text=True).stdout.strip('"\'\n ')
         if len(alias) == 0:
             self.fail("We were not able to process your alias. Please notify Professor Collins so he can diagnose the issue")
+        wizard = subprocess.run(command, shell=True, executable="/bin/bash", text=True, capture_output=True).stdout.strip()
         result = subprocess.run(f"source {SCRIPT_PATH}; {alias}", capture_output=True, shell=True, executable="/bin/bash", text=True).stdout.strip()
-        self.assertEqual(result, 'Gandalf the Grey', f'The view_wizard alias is not set properly in your script. We expected running the alias to produce "Gandalf the Grey", but it produced "{result} for your alias "{alias}"')
+        self.assertEqual(
+            result,
+            wizard,
+            f'The view_wizard alias is not set properly in your script. We expected running the alias to produce your wizard variable contents: {wizard}, but it produced "{result} for your alias "{alias}"')
         print('The wizard alias works as expected')
