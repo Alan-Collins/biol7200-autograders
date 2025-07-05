@@ -42,9 +42,8 @@ class TestFiles(unittest.TestCase):
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
         for path in missing_files:
             print(f'Missing {path}')
-        self.assertEqual(
-            len(missing_files),
-            0,
-            f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
-        )
+        if len(missing_files) > 0:
+            self.fail(
+                f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
+            )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
