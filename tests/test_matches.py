@@ -8,11 +8,11 @@ from pathlib import Path
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
-# SUBMISSION_PATH = "/autograder/submission/"
-# SOLUTION_SCRIPT = "find_perfect_matches.sh"
-# SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
+SUBMISSION_PATH = "/autograder/submission/"
+SOLUTION_SCRIPT = "find_perfect_matches.sh"
+SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 
-# class TestFiles(unittest.TestCase):
+class TestFiles(unittest.TestCase):
 #     @classmethod
 #     def setUpClass(cls):
 #         cls._dir = Path(tempfile.mkdtemp())
@@ -35,16 +35,16 @@ from gradescope_utils.autograder_utils.files import check_submitted_files
 #         if cls._dir.exists():
 #             shutil.rmtree(cls._dir)
 
-#     @weight(0)
-#     @number("6.1")
-#     def test_submitted_files(self):
-#         """Check submitted files"""
-#         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
-#         for path in missing_files:
-#             print(f'Missing {path}')
-#         self.assertEqual(
-#             len(missing_files),
-#             0,
-#             f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
-#         )
-#         print(f'{SOLUTION_SCRIPT} script submitted successfully')
+    @weight(0)
+    @number("6.1")
+    def test_submitted_files(self):
+        """Check submitted files"""
+        missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
+        for path in missing_files:
+            print(f'Missing {path}')
+        self.assertEqual(
+            len(missing_files),
+            0,
+            f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
+        )
+        print(f'{SOLUTION_SCRIPT} script submitted successfully')
