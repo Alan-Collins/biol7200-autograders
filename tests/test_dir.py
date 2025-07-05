@@ -41,31 +41,30 @@ class TestFiles(unittest.TestCase):
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
         for path in missing_files:
             print(f'Missing {path}')
-        self.assertEqual(
-            len(missing_files),
-            0,
-            f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
-        )
+        if len(missing_files) > 0:
+            self.fail(
+                f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
+            )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(1)
     @number("4.2")
     def test_zero_exit(self):
-        self.assertEqual(
-            self._exit,
-            0,
-            f"{SOLUTION_SCRIPT} returned a non-zero exit code. Something went wrong."
-        )
+        if self._exit !=  0:
+            self.fail(
+                f"{SOLUTION_SCRIPT} returned a non-zero exit code. Something went wrong."
+            )
+        print("Your script ran successfully.")
 
     @weight(1)
     @number("4.3")
     def test_no_err(self):
-        self.assertEqual(
-            len(self._stderr.strip()),
-            0,
-            f"{SOLUTION_SCRIPT} produced messages in the stderr indicating an issue."
-                "If you wrote to the stderr, remove those messages and resubmit."
-        )
+        if len(self._stderr.strip()) != 0:
+            self.fail(
+                f"{SOLUTION_SCRIPT} produced messages in the stderr indicating an issue."
+                    "If you wrote to the stderr, remove those messages and resubmit."
+            )
+        print("Your script produced no errors.")
     
     @weight(2)
     @number("4.4")
@@ -77,18 +76,20 @@ class TestFiles(unittest.TestCase):
                 if re.match(pattern, line):
                     found = True
         
-        self.assertTrue(
-            found,
-            f'Your script does not appear to use command line arguments.'
-        )
+        if not found:
+            self.fail(
+                f'Your script does not appear to use command line arguments.'
+            )
+        print("your script uses the provided command line arguments.")
 
     @weight(2)
     @number("4.5")
     def test_mkdir(self):
-        self.assertTrue(
-            self._path.exists(),
-            "Your script did not create the directory specified as commandline input."
-        )
+        if not self._path.exists():
+            self.fail(
+                "Your script did not create the directory specified as commandline input."
+            )
+        print("Your script created the expected directory")
 
     @weight(2)
     @number("4.6")
@@ -100,18 +101,31 @@ class TestFiles(unittest.TestCase):
                 if re.match(pattern, line):
                     found = True
         
-        self.assertTrue(
-            found,
-            'Your script does not appear to change its working directory.'
-        )
+        if not found:
+            self.fail(
+                'Your script does not appear to change its working directory.'
+            )
+        print("Your script changes its working directory.")
 
     @weight(1)
     @number("4.7")
     def test_stdout_has_path(self):
-        self.assertTrue(
-            TEST_PATH in self._stdout,
-            "Your script does not print the absolute path of the new working directory to stdout"
-        )
+        found = False # look for use of commandline inputs
+        pattern = re.compile(r"^[^#]*pwd")
+        with open(SCRIPT_PATH) as fin:
+            for line in fin:
+                if re.match(pattern, line):
+                    found = True
+        if not found:
+            self.fail(
+                "Your script does not print the location of its current working directory."
+            )
+        
+        if TEST_PATH not in self._stdout:
+            self.fail(
+                "Your script does not print the absolute path of the new working directory to stdout"
+            )
+        print("Your script prints the path of its current working directory")
     
     @weight(1)
     @number("4.8")
@@ -119,11 +133,12 @@ class TestFiles(unittest.TestCase):
         if not TEST_PATH in self._stdout:
             self.fail("Your script's stdout does not include the new working directory")
         
-        self.assertTrue(
-            TEST_PATH == self._stdout.strip(),
-            "Your script should only print the absolute path of the new working directory to stdout."
-                "There should be nothing else written to the stdout."
-        )
+        if TEST_PATH != self._stdout.strip():
+            self.fail(
+                "Your script should only print the absolute path of the new working directory to stdout."
+                    "There should be nothing else written to the stdout."
+            )
+        print("The stdout of your script only contains the instructed contents: the path of your scripts working directory.")
     
     @weight(0)
     @number("4.9")
@@ -135,17 +150,16 @@ class TestFiles(unittest.TestCase):
             for line in fin:
                 if re.match(pattern, line):
                     found = True
-        
-        self.assertFalse(
-            found,
-            'It looks like you are validating the number of command line arguments given to your script. '
-            "That's not necessary for any of the Bash assignments in this course (but you can do it if you like). "
-            'LLMs like to include input validation in their Bash scripts. '
-            'If you included it here because you have seen it when talking to an LLM, '
-            'then two things:\n'
-            '1. Make sure you understand and can write from memory all of the code you submit for assignments.\n'
-            "2. We'll cover conditionals like that in an upcoming class. If you don't understand how it works then (see point 1, but also) you should understand it after that class.\n"
-        )
+        if found:
+            self.fail(
+                'It looks like you are validating the number of command line arguments given to your script. '
+                "That's not necessary for any of the Bash assignments in this course (but you can do it if you like). "
+                'LLMs like to include input validation in their Bash scripts. '
+                'If you included it here because you have seen it when talking to an LLM, '
+                'then two things:\n'
+                '1. Make sure you understand and can write from memory all of the code you submit for assignments.\n'
+                "2. We'll cover conditionals like that in an upcoming class. If you don't understand how it works then (see point 1, but also) you should understand it after that class.\n"
+            )
 
     @weight(0)
     @number("4.10")
@@ -158,9 +172,9 @@ class TestFiles(unittest.TestCase):
                 if re.match(pattern, line):
                     found = True
         
-        self.assertFalse(
-            found,
-            'It looks like you are using command line arguments directly. '
-            'Consider assigning command line inputs to named variables instead. '
-            'Named variables make it much easier for a reader to understand what code is doing.'
-        )
+        if found:
+            self.fail(
+                'It looks like you are using command line arguments directly. '
+                'Consider assigning command line inputs to named variables instead. '
+                'Named variables make it much easier for a reader to understand what code is doing.'
+            )
