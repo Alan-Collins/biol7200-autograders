@@ -7,9 +7,12 @@ SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "wizard.sh"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 
+Q_NUM = 3
+POINT_NUM = (i for i in range(1000))
+
 class TestFiles(unittest.TestCase):
     @weight(0)
-    @number("3.1")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -23,7 +26,7 @@ class TestFiles(unittest.TestCase):
 
 class TestVariables(unittest.TestCase):
     @weight(2)
-    @number("3.2")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_wizard_set(self):
         """Check wizard variable is set"""
         command = f'source {SCRIPT_PATH}; if [[ -z "$wizard" ]]; then exit 1; else exit 0; fi'
@@ -33,7 +36,7 @@ class TestVariables(unittest.TestCase):
         print('The wizard variable is set')
 
     @weight(2)
-    @number("3.3")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_wizard_value_correct(self):
         """Check wizard variable has the right value"""
         command = f'source {SCRIPT_PATH}; echo "$wizard"'
@@ -48,7 +51,7 @@ class TestVariables(unittest.TestCase):
 
 class TestAliases(unittest.TestCase):
     @weight(2)
-    @number("3.4")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_view_wizard_set(self):
         """Check view_wizard alias is set"""
         command = f'source {SCRIPT_PATH}; if alias view_wizard >/dev/null 2>&1; then exit 0; else exit 1; fi'
@@ -58,7 +61,7 @@ class TestAliases(unittest.TestCase):
         print('The view_wizard alias is set')
 
     @weight(2)
-    @number("3.5")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_view_wizard_alias_correct(self):
         """Check view_wizard alias works as expected"""
         command = f'source {SCRIPT_PATH}; if alias view_wizard >/dev/null 2>&1; then grep -Po "(?<=view_wizard=).+" {SCRIPT_PATH}; exit 0; else exit 1; fi'

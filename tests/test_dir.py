@@ -12,6 +12,9 @@ SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 
 TEST_PATH = "/test/childdir"
 
+Q_NUM = 4
+POINT_NUM = (i for i in range(1000))
+
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -35,7 +38,7 @@ class TestFiles(unittest.TestCase):
                 dir.rmdir()
 
     @weight(0)
-    @number("4.1")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -48,7 +51,32 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(1)
-    @number("4.2")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_shebang_present(self):
+        """Check script uses shebang"""
+        with open(SCRIPT_PATH) as f:
+            first_two = f.read()[:2]
+        if first_two != "#!":
+            self.fail(
+                f"Your scripts should always start with a shebang to ensure the correct program executes them."
+            )
+        print("Your script begins with a shebang.")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_shebang_correct(self):
+        """Check shebang correct"""
+        pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin/env))?bin/(?:(?<=usr/bin/)env )?bash")
+        with open(SCRIPT_PATH) as f:
+            first_line = f.readline()
+        if not re.match(pattern, first_line):
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        print("Your script begins with a correct shebang.")
+    
+    @weight(1)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_zero_exit(self):
         """Check script runs successfully"""
         if self._exit !=  0:
@@ -58,7 +86,7 @@ class TestFiles(unittest.TestCase):
         print("Your script ran successfully.")
 
     @weight(1)
-    @number("4.3")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_no_err(self):
         """Check script produces no stderr"""
         if len(self._stderr.strip()) != 0:
@@ -69,7 +97,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced no errors.")
     
     @weight(2)
-    @number("4.4")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_taking_cli(self):
         """Check script uses command line inputs"""
         found = False # look for use of commandline inputs
@@ -85,8 +113,8 @@ class TestFiles(unittest.TestCase):
             )
         print("your script uses the provided command line arguments.")
 
-    @weight(2)
-    @number("4.5")
+    @weight(1)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_mkdir(self):
         """Check script makes directory"""
         if not self._path.exists():
@@ -95,8 +123,8 @@ class TestFiles(unittest.TestCase):
             )
         print("Your script created the expected directory")
 
-    @weight(2)
-    @number("4.6")
+    @weight(1)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_cd(self):
         """Check script changes directory"""
         found = False # look for use of commandline inputs
@@ -113,7 +141,7 @@ class TestFiles(unittest.TestCase):
         print("Your script changes its working directory.")
 
     @weight(1)
-    @number("4.7")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_stdout_has_path(self):
         """Check script writes path to stdout"""
         found = False # look for use of commandline inputs
@@ -134,7 +162,7 @@ class TestFiles(unittest.TestCase):
         print("Your script prints the path of its current working directory")
     
     @weight(1)
-    @number("4.8")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_stdout_is_only_path(self):
         """Check script doesn't print extraneous information to stdout"""
         if not TEST_PATH in self._stdout:
@@ -148,7 +176,7 @@ class TestFiles(unittest.TestCase):
         print("The stdout of your script only contains the instructed contents: the path of your scripts working directory.")
     
     @weight(0)
-    @number("4.9")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     @visibility("on_fail")
     def test_validating_cli(self):
         """Check script validates inputs"""
@@ -170,7 +198,7 @@ class TestFiles(unittest.TestCase):
             )
 
     @weight(0)
-    @number("4.10")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     @visibility("on_fail")
     def test_named_variables(self):
         """Check script uses named variables"""

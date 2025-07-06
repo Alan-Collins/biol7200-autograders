@@ -14,6 +14,9 @@ SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 
 INPUT_SEQUENCE = """>contig.1\nATCG\nGCTA\n>contig.2\nAAAA\nTTTT\n>contig.3\nCCCC\nGGGG\n"""
 
+Q_NUM = 5
+POINT_NUM = (i for i in range(1000))
+
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -38,7 +41,7 @@ class TestFiles(unittest.TestCase):
             shutil.rmtree(cls._dir)
 
     @weight(0)
-    @number("5.1")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -49,9 +52,34 @@ class TestFiles(unittest.TestCase):
                 f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
             )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
+
+    @weight(1)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_shebang_present(self):
+        """Check script uses shebang"""
+        with open(SCRIPT_PATH) as f:
+            first_two = f.read()[:2]
+        if first_two != "#!":
+            self.fail(
+                f"Your scripts should always start with a shebang to ensure the correct program executes them."
+            )
+        print("Your script begins with a shebang.")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_shebang_correct(self):
+        """Check shebang correct"""
+        pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin/env))?bin/(?:(?<=usr/bin/)env )?bash")
+        with open(SCRIPT_PATH) as f:
+            first_line = f.readline()
+        if not re.match(pattern, first_line):
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        print("Your script begins with a correct shebang.")
     
     @weight(1)
-    @number("5.2")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_zero_exit(self):
         """Check script runs successfully"""
         if self._exit !=  0:
@@ -61,7 +89,7 @@ class TestFiles(unittest.TestCase):
         print("Your script ran successfully.")
 
     @weight(1)
-    @number("5.3")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_no_err(self):
         """Check script produces no stderr"""
         if len(self._stderr.strip()) != 0:
@@ -71,8 +99,8 @@ class TestFiles(unittest.TestCase):
             )
         print("Your script produced no errors.")
 
-    @weight(5)
-    @number("5.4")
+    @weight(4)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_infile_unchanged(self):
         """Check input file unchanged"""
         with open(self._infile) as f:
@@ -84,8 +112,8 @@ class TestFiles(unittest.TestCase):
             )
         print("The input file was not modified")
 
-    @weight(5)
-    @number("5.5")
+    @weight(4)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_outfile_exists(self):
         """Check output file created"""
         if not self._outfile.exists:
@@ -95,7 +123,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced the expected output file.")
     
     @weight(3)
-    @number("5.6")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_whitespace_in_headers(self):
         """Check whitespace in headers"""
         with open(self._outfile) as f:
@@ -110,7 +138,7 @@ class TestFiles(unittest.TestCase):
               "so adding whitespace while simply renaming headers would be a mistake.")
     
     @weight(5)
-    @number("5.7")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_header_format_correct(self):
         """Check header formatting"""
         with open(self._outfile) as f:
@@ -125,7 +153,7 @@ class TestFiles(unittest.TestCase):
         print("The headers in your output file look like they are correctly formatted")
 
     @weight(5)
-    @number("5.8")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_ext_not_in_header(self):
         """Check file extension not in header"""
         with open(self._outfile) as f:
@@ -136,7 +164,7 @@ class TestFiles(unittest.TestCase):
         print("You removed file extensions from the header.")
 
     @weight(5)
-    @number("5.9")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_sequence_lines_unchanged(self):
         """Check sequence lines unchanged"""
         with open(self._outfile) as f:

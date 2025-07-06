@@ -20,6 +20,9 @@ QUERY_PATH = TEST_DATA_PATH / QUERY_FILE
 MATCH_ASSEMBLY_PATH = TEST_DATA_PATH / MATCH_ASSEMBLY_FILE
 NO_MATCH_ASSEMBLY_PATH = TEST_DATA_PATH / NO_MATCH_ASSEMBLY_FILE
 
+Q_NUM = 6
+POINT_NUM = (i for i in range(1000))
+
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -54,7 +57,7 @@ class TestFiles(unittest.TestCase):
             shutil.rmtree(cls._dir)
 
     @weight(0)
-    @number("6.1")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -67,7 +70,32 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(1)
-    @number("6.2")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_shebang_present(self):
+        """Check script uses shebang"""
+        with open(SCRIPT_PATH) as f:
+            first_two = f.read()[:2]
+        if first_two != "#!":
+            self.fail(
+                f"Your scripts should always start with a shebang to ensure the correct program executes them."
+            )
+        print("Your script begins with a shebang.")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_shebang_correct(self):
+        """Check shebang correct"""
+        pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin/env))?bin/(?:(?<=usr/bin/)env )?bash")
+        with open(SCRIPT_PATH) as f:
+            first_line = f.readline()
+        if not re.match(pattern, first_line):
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        print("Your script begins with a correct shebang.")
+    
+    @weight(1)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_zero_exit(self):
         """Check script runs successfully"""
         if self._match_exit !=  0:
@@ -77,7 +105,7 @@ class TestFiles(unittest.TestCase):
         print("Your script ran successfully.")
 
     @weight(1)
-    @number("6.3")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_no_err(self):
         """Check script produces no stderr"""
         if len(self._match_stderr.strip()) != 0 or len(self._no_match_stderr.strip()) != 0:
@@ -88,7 +116,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced no errors.")
 
     @weight(1)
-    @number("6.4")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_infile_unchanged(self):
         """Check input file unchanged"""
         match_eq = subprocess.call(["cmp", "-s", self._match, MATCH_ASSEMBLY_PATH])
@@ -102,7 +130,7 @@ class TestFiles(unittest.TestCase):
         print("The input files were not modified")
 
     @weight(1)
-    @number("6.5")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_outfile_exists(self):
         """Check output file created"""
         if not all([
