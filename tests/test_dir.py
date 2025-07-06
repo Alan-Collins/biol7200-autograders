@@ -143,7 +143,8 @@ class TestFiles(unittest.TestCase):
         if TEST_PATH != self._stdout.strip():
             self.fail(
                 "Your script should only print the absolute path of the new working directory to stdout."
-                    "There should be nothing else written to the stdout."
+                "There should be nothing else written to the stdout. "
+                f"Your script printed{self._stdout.strip()}"
             )
         print("The stdout of your script only contains the instructed contents: the path of your scripts working directory.")
     
