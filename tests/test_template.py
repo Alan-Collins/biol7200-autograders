@@ -7,6 +7,9 @@ SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "<script name>"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 
+Q_NUM = 4
+POINT_NUM = (i for i in range(1000))
+
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -17,6 +20,8 @@ class TestFiles(unittest.TestCase):
         pass
 
     @weight(0)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @visibility("on_fail")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
