@@ -28,6 +28,19 @@ POINT_NUM = (i for i in range(1000))
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        outfmt_pattern = re.compile(r"-outfmt[ ]*?(?:([\'\" ]?)[ ]*6[ ]*\1|([\'\"])[ ]*6[ ]*(.*?)\2)")
+        with open(SCRIPT_PATH) as f:
+            lines = []
+            for line in f:
+                # skip commented lines
+                if line.strip().startswith("#"):
+                    continue
+                line.append(line.rstrip().strip("\\"))
+        contents = "".join(line)
+        cls._all_outfmts = re.findall(outfmt_pattern, contents)
+        cls._outfmt_count = len(cls._all_outfmts)
+        cls._outfmt = re.search(outfmt_pattern, contents).group(2)
+        cls._qcov_hsp_perc = re.search(r"-qcov_hsp_perc[ ]+100", contents) is not None
         cls._dir = Path(tempfile.mkdtemp())
         cls._q = shutil.copy(QUERY_PATH, cls._dir / QUERY_FILE)
         cls._no_match = shutil.copy(NO_MATCH_ASSEMBLY_PATH, cls._dir / NO_MATCH_ASSEMBLY_FILE)
@@ -143,3 +156,24 @@ class TestFiles(unittest.TestCase):
                 "Your script did not create the specified output file."
             )
         print("Your script produced the expected output file.")
+
+    @weight(5)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_can_determine_perf(self):
+        """Check you include data for identifying perfect hits"""
+        if not self._outfmt_count > 0:
+            self.fail(
+                "Your script does not include any specification of the outfmt. Consult the BLAST section of the assignment document if unsure."
+            )
+        if self._outfmt_count > 1 and len(set(self._all_outfmts)) > 1:
+            self.fail(
+                "Your script is running blast multiple times with (what look like) different outfmt specifications. For the sake of my sanity in writing these autograder checks please just run BLAST once in your script."
+            )
+        br = BlastResult.from_outfmt_str(self._outfmt)
+        if not br.can_verify_perfect_match(self._qcov_hsp_perc):
+            self.fail(
+                "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
+            )
+
+            
+        print("Your script uses BLAST settings that allow you to identify perfect hits.")
