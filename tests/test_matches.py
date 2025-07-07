@@ -35,8 +35,8 @@ class TestFiles(unittest.TestCase):
                 # skip commented lines
                 if line.strip().startswith("#"):
                     continue
-                line.append(line.rstrip().strip("\\"))
-        contents = "".join(line)
+                lines.append(line.rstrip().strip("\\"))
+        contents = "".join(lines)
         cls._all_outfmts = re.findall(outfmt_pattern, contents)
         cls._outfmt_count = len(cls._all_outfmts)
         cls._outfmt = re.search(outfmt_pattern, contents).group(2)
