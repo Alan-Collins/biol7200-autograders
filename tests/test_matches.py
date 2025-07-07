@@ -39,7 +39,7 @@ class TestFiles(unittest.TestCase):
         contents = "".join(lines)
         cls._all_outfmts = re.findall(outfmt_pattern, contents)
         cls._outfmt_count = len(cls._all_outfmts)
-        cls._outfmt = re.search(outfmt_pattern, contents).group(2)
+        cls._outfmt = re.search(outfmt_pattern, contents).group(3)
         cls._qcov_hsp_perc = re.search(r"-qcov_hsp_perc[ ]+100", contents) is not None
         cls._dir = Path(tempfile.mkdtemp())
         cls._q = shutil.copy(QUERY_PATH, cls._dir / QUERY_FILE)
