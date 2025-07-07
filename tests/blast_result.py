@@ -68,7 +68,6 @@ class BlastResult(BaseModel):
     @classmethod
     def from_outfmt_str(cls, fmt_string: str, result_line: str=None):
         field_data = cls._get_field_data(fmt_string, result_line)
-        field_data["fields_used"] = set(field_data.keys())
         return cls(**field_data)
     
     @staticmethod
@@ -76,6 +75,8 @@ class BlastResult(BaseModel):
         idx_flds = BlastResult._get_field_idxs(fmt_string)
 
         fld_data = {}
+        fld_data["fields_used"] = set([v for v in idx_flds.values()])
+
         if result_line is not None:
             for n, datum in enumerate(result_line.split()):
                 fld_data[idx_flds[n]] = datum
