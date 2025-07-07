@@ -170,8 +170,6 @@ class TestFiles(unittest.TestCase):
                 "Your script is running blast multiple times with (what look like) different outfmt specifications. For the sake of my sanity in writing these autograder checks please just run BLAST once in your script."
             )
         br = BlastResult.from_outfmt_str(self._outfmt)
-        print(br.fields_used)
-        print(self._outfmt)
         if not br.can_verify_perfect_match(self._qcov_hsp_perc):
             self.fail(
                 "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
