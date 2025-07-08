@@ -115,11 +115,15 @@ class TestFiles(unittest.TestCase):
     @weight(4)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_outfile_exists(self):
-        """Check output file created"""
+        """Check output file created correctly"""
         if not self._outfile.exists:
             self.fail(
                 "Your script did not create the specified output file."
             )
+        with open(self._outfile) as f:
+            num_lines = len(f.readlines())
+        if num_lines == 0:
+            self.fail("Your script produced an empty output file.")
         print("Your script produced the expected output file.")
     
     @weight(3)
