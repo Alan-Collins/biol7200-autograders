@@ -238,7 +238,6 @@ class TestFiles(unittest.TestCase):
 
         with open(self._match_out) as f:
             num_lines = len(f.readlines())
-            print(num_lines)
         if num_lines == 0:
             self.fail("Your script produced an empty output file.")
         
@@ -247,15 +246,8 @@ class TestFiles(unittest.TestCase):
 
         with open(self._no_match_out) as f:
             num_lines = len(f.readlines())
-            print(num_lines)
-        if num_lines == 0:
+        if num_lines != 0:
             self.fail("Your script's output file contains the wrong number of matches.")
-        
-        match_numbers = re.findall("\d+", self._match_stdout)
-        no_match_numbers = re.findall("\d+", self._no_match_stdout)
-
-        if len(match_numbers) > 1 or len(no_match_numbers) > 1:
-            self.fail()
 
         print("Your script produced an output file containing the expected number of matches.")
 
@@ -263,10 +255,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_stdout_match_number(self):
         """Check correct number of matches in stdout"""
-        match_numbers = re.findall("\d+", self._match_stdout)
-        no_match_numbers = re.findall("\d+", self._no_match_stdout)
-        print(match_numbers, no_match_numbers)
-        print(len(match_numbers), len(no_match_numbers))
+        match_numbers = re.findall(r"\d+", self._match_stdout)
+        no_match_numbers = re.findall(r"\d+", self._no_match_stdout)
 
         if len(match_numbers) > 1 or len(no_match_numbers) > 1:
             self.fail(
