@@ -257,6 +257,7 @@ class TestFiles(unittest.TestCase):
         """Check correct number of matches in stdout"""
         match_numbers = re.findall(r"\d+", self._match_stdout)
         no_match_numbers = re.findall(r"\d+", self._no_match_stdout)
+        print(match_numbers, no_match_numbers)
 
         if len(match_numbers) > 1 or len(no_match_numbers) > 1:
             self.fail(
