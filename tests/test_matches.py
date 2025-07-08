@@ -163,6 +163,22 @@ class TestFiles(unittest.TestCase):
 
         print("Your script produced the expected output file.")
 
+    @weight(4)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_task_blastn_short(self):
+        """Check task used"""
+        with open(SCRIPT_PATH) as f:
+            found = False
+            for line in f:
+                if line.strip().startswith("#"):
+                    continue
+                if re.match(".*blastn-short.*", line):
+                    found = True
+        if not found:
+            self.fail("The instructions specified you must use a -task option. Check the assignment document.")
+
+        print("Your script uses -task as instructed.")
+
     @weight(5)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_can_determine_perf(self):
@@ -193,6 +209,10 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
             )
+        if not self._match_out.exists:
+            self.fail(
+                "Your script did not create the specified output file."
+            )
         with open(self._match_out) as f:
             n = 0 # confirm there are hits to avoid giving points for empty files
             for hit in f:
@@ -204,5 +224,52 @@ class TestFiles(unittest.TestCase):
                     )
         if n == 0:
             self.fail("Your script produced an empty output file.")
-            
+
         print("Your script's output file contains pefect hits")
+
+    @weight(5)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_file_match_number(self):
+        """Check correct number of matches in output file"""
+        if not self._match_out.exists:
+            self.fail(
+                "Your script did not create the specified output file."
+            )
+
+        with open(self._match_out) as f:
+            num_lines = len(f.readlines())
+        if num_lines == 0:
+            self.fail("Your script produced an empty output file.")
+        
+        if num_lines != 10:
+            self.fail("Your script's output file contains the wrong number of matches.")
+
+        with open(self._no_match_out) as f:
+            num_lines = len(f.readlines())
+        if num_lines == 0:
+            self.fail("Your script's output file contains the wrong number of matches.")
+        
+        match_numbers = re.findall("\d+", self._match_stdout)
+        no_match_numbers = re.findall("\d+", self._no_match_stdout)
+
+        if len(match_numbers) > 1 or len(no_match_numbers) > 1:
+            self.fail()
+
+        print("Your script produced an output file containing the expected number of matches.")
+
+    @weight(5)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_stdout_match_number(self):
+        """Check correct number of matches in stdout"""
+        match_numbers = re.findall("\d+", self._match_stdout)
+        no_match_numbers = re.findall("\d+", self._no_match_stdout)
+
+        if len(match_numbers) > 1 or len(no_match_numbers) > 1:
+            self.fail(
+                "Your script produces stdout with too many numbers for this simple autograder to interpret.\n"
+                "It should only print the number of perfect hits identified to stdout."
+            )
+
+        if int(match_numbers[0]) != 10 or int(no_match_numbers) != 0:
+            self.fail("Your script prints the wrong number of matches to the stdout.")
+        print("Your script printed the expected number of hits to stdout.")
