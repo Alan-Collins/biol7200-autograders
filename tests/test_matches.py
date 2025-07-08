@@ -255,11 +255,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_stdout_match_number(self):
         """Check correct number of matches in stdout"""
-        match_numbers = re.findall(r"\d+", self._match_stdout)
-        no_match_numbers = re.findall(r"\d+", self._no_match_stdout)
-        print(self._match_stdout)
-        print(self._no_match_stdout)
-        print(match_numbers, no_match_numbers)
+        match_numbers = re.findall(r"\b\d+\b", self._match_stdout)
+        no_match_numbers = re.findall(r"\b\d+\b", self._no_match_stdout)
 
         if len(match_numbers) > 1 or len(no_match_numbers) > 1:
             self.fail(
