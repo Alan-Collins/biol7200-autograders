@@ -264,6 +264,6 @@ class TestFiles(unittest.TestCase):
                 "It should only print the number of perfect hits identified to stdout."
             )
 
-        if int(match_numbers[0]) != 10 or int(no_match_numbers) != 0:
+        if int(match_numbers[0]) != 10 or int(no_match_numbers[0]) != 0:
             self.fail("Your script prints the wrong number of matches to the stdout.")
         print("Your script printed the expected number of hits to stdout.")
