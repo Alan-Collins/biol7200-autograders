@@ -155,6 +155,12 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "Your script did not create the specified output file."
             )
+
+        with open(self._match_out) as f:
+            num_lines = len(f.readlines())
+        if num_lines == 0:
+            self.fail("Your script produced an empty output file.")
+
         print("Your script produced the expected output file.")
 
     @weight(5)
@@ -175,5 +181,28 @@ class TestFiles(unittest.TestCase):
                 "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
             )
 
-            
         print("Your script uses BLAST settings that allow you to identify perfect hits.")
+
+    @weight(5)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_perf_hits(self):
+        """Check your script outputs perfect hits"""
+
+        br = BlastResult.from_outfmt_str(self._outfmt)
+        if not br.can_verify_perfect_match(self._qcov_hsp_perc):
+            self.fail(
+                "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
+            )
+        with open(self._match_out) as f:
+            n = 0 # confirm there are hits to avoid giving points for empty files
+            for hit in f:
+                n += 1
+                br = BlastResult.from_outfmt_str(self._outfmt, hit)
+                if not br.is_perfect_match(self._qcov_hsp_perc):
+                    self.fail(
+                        "Your script output file includes BLAST results which are not perfect hits."
+                    )
+        if n == 0:
+            self.fail("Your script produced an empty output file.")
+            
+        print("Your script's output file contains pefect hits")
