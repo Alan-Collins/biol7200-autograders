@@ -238,7 +238,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.3.{POINT_NUM.reset(1)}")
     def test_used_regex_3(self):
         """Check used a regex"""
-        command = self.answers.get(2)
+        command = self.answers.get(3)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
@@ -273,7 +273,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.3.{next(POINT_NUM)}")
     def test_correct_output_2(self):
         "Check output is correct"
-        command = self.answers.get(2)
+        command = self.answers.get(3)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
