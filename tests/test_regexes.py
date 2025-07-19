@@ -41,23 +41,19 @@ POINT_NUM = PointCounter(0)
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        x = cls()
-        x.answers = {}
+        cls.answers = {}
         submission = Path(SCRIPT_PATH)
         if not submission.exists():
-            return x
+            return cls
         with open(submission) as f:
             for line in f:
                 q_num = line.strip()[0]
                 command = line.strip()[1:].strip()
                 if not re.match(r"\d", q_num):
                     continue
-                x.answers[int(q_num)] = command
-        return x
-    
-    @classmethod
-    def tearDownClass(cls):
-        pass
+                cls.answers[int(q_num)] = command
+        return cls
+
     
     @weight(0)
     @number(f"{Q_NUM}.0.{next(POINT_NUM)}")
