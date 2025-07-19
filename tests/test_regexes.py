@@ -49,7 +49,9 @@ class TestFiles(unittest.TestCase):
                 x.answers[int(q_num)] = command
         return x
     
-    
+    @classmethod
+    def tearDownClass(cls):
+        pass
     
     @weight(0)
     @number(f"{Q_NUM}.0.{next(POINT_NUM)}")
