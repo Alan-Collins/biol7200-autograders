@@ -26,7 +26,7 @@ class PointCounter():
         self._setup(start)
         return self._counter
 
-    def next(self):
+    def next(self) -> int:
         self._counter += 1
         return self._counter
 
@@ -82,6 +82,8 @@ class TestFiles(unittest.TestCase):
     def test_used_regex_1(self):
         """Check used a regex"""
         command = self.answers.get(SUBQ_COUNTER)
+        print(SUBQ_COUNTER)
+        print(command)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
