@@ -433,4 +433,128 @@ class TestFiles(unittest.TestCase):
         if brlen != 45.54:
             self.fail("Your command returned the wrong value.")
         print("Your command returned the correct value.")
+
+    @weight(4)
+    @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
+    def test_count_genes(self):
+        """Check number of gene files determined is correct"""
+        command = self.answers.get(6)
+        if not command:
+            self.fail("Could not find command. Make sure you follow the submission instructions")
+        # check command uses find with a regex
+        if not command.strip().startswith("find "):
+            self.fail("Your command should use find to identify the gene files.")
+        if not "-regex" in command:
+            self.fail("Your command should use a regex to identify gene files.")
+        # set up temp dir and test command
+        dir = mkdtemp()
+        shutil.copy(f"{DATA_DIR}find_data", dir)
+        result = subprocess.run(
+            command,
+            shell=True,
+            cwd=dir,
+            text=True,
+            capture_output=True
+        )
+        if result.returncode != 0:
+            self.fail("Your command returned a non-zero exit code.")
+        # Check output
+        outfile = Path(f"{dir}/out_6.txt")
+        if not outfile.exists():
+            self.fail("Your command did not produce the expected output file.")
+        with open(outfile) as f:
+            gene_count = f.read().strip()
+        try:
+            gene_count = float(gene_count)
+        except:
+            self.fail("The output of your command is not a number.")
+        if gene_count != 4334:
+            self.fail("Your command returned the wrong value.")
+        print("Your command returned the correct value.")
+    
+    @weight(4)
+    @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
+    def test_count_proteins(self):
+        """Check number of protein files determined is correct"""
+        command = self.answers.get(7)
+        if not command:
+            self.fail("Could not find command. Make sure you follow the submission instructions")
+        # check command uses find with a regex
+        if not command.strip().startswith("find "):
+            self.fail("Your command should use find to identify the gene files.")
+        if not "-regex" in command:
+            self.fail("Your command should use a regex to identify gene files.")
+        # set up temp dir and test command
+        dir = mkdtemp()
+        shutil.copy(f"{DATA_DIR}find_data", dir)
+        result = subprocess.run(
+            command,
+            shell=True,
+            cwd=dir,
+            text=True,
+            capture_output=True
+        )
+        if result.returncode != 0:
+            self.fail("Your command returned a non-zero exit code.")
+        # Check output
+        outfile = Path(f"{dir}/out_7.txt")
+        if not outfile.exists():
+            self.fail("Your command did not produce the expected output file.")
+        with open(outfile) as f:
+            gene_count = f.read().strip()
+        try:
+            gene_count = float(gene_count)
+        except:
+            self.fail("The output of your command is not a number.")
+        if gene_count != 3992:
+            self.fail("Your command returned the wrong value.")
+        print("Your command returned the correct value.")
+    
+    @weight(2)
+    @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
+    def test_count_file_cps(self):
+        """Check gene and protein files were copied correctly"""
+        command = self.answers.get(8)
+        if not command:
+            self.fail("Could not find command. Make sure you follow the submission instructions")
+        # check command uses find with a regex
+        if not command.strip().startswith("find "):
+            self.fail("Your solution should use find to identify the gene files.")
+        if not "-regex" in command:
+            self.fail("Your solution should use a regex to identify gene files.")
+        if not re.match(r".*[^\\]\s*;", command):
+            self.fail("Your sultion should be composed of two bash commands.")
+        # set up temp dir and test command
+        dir = mkdtemp()
+        shutil.copy(f"{DATA_DIR}find_data", dir)
+        gene_dir = Path(f"{dir}/genes")
+        protein_dir = Path(f"{dir}/proteins")
+        Path.mkdir(gene_dir)
+        Path.mkdir(protein_dir)
+        result = subprocess.run(
+            command,
+            shell=True,
+            cwd=dir,
+            text=True,
+            capture_output=True
+        )
+        if result.returncode != 0:
+            self.fail("Your command returned a non-zero exit code.")
+        # Check output
+        gene_files = [file.name for file in gene_dir.iterdir()]
+        protein_files = [file.name for file in protein_dir.iterdir()]
+        if len(gene_files) != 4334:
+            self.fail("Your command copied the wrong number of files to the genes directory")
+        if len(protein_files) != 3992:
+            self.fail("Your command copied the wrong number of files to the proteins directory")
+        gene_regex = re.compile(r"[a-z]{3}[A-Z]")
+        protein_regex = re.compile(r"[A-Z][a-z]{2}[A-Z]")
+        for f in gene_files:
+            if not re.match(gene_regex, str(f)):
+                self.fail("files that do not match the expected name format were found in the output genes directory")
+        for f in protein_files:
+            if not re.match(protein_regex, str(f)):
+                self.fail("files that do not match the expected name format were found in the output proteins directory")
+
+        print("Your command copied the files as expected.")
     
