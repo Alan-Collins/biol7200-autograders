@@ -448,7 +448,7 @@ class TestFiles(unittest.TestCase):
             self.fail("Your command should use a regex to identify gene files.")
         # set up temp dir and test command
         dir = mkdtemp()
-        shutil.copy(f"{DATA_DIR}find_data", dir)
+        shutil.copytree(f"{DATA_DIR}find_data", dir)
         result = subprocess.run(
             command,
             shell=True,
@@ -486,7 +486,7 @@ class TestFiles(unittest.TestCase):
             self.fail("Your command should use a regex to identify gene files.")
         # set up temp dir and test command
         dir = mkdtemp()
-        shutil.copy(f"{DATA_DIR}find_data", dir)
+        shutil.copytree(f"{DATA_DIR}find_data", dir)
         result = subprocess.run(
             command,
             shell=True,
@@ -526,7 +526,7 @@ class TestFiles(unittest.TestCase):
             self.fail("Your sultion should be composed of two bash commands.")
         # set up temp dir and test command
         dir = mkdtemp()
-        shutil.copy(f"{DATA_DIR}find_data", dir)
+        shutil.copytree(f"{DATA_DIR}find_data", dir)
         gene_dir = Path(f"{dir}/genes")
         protein_dir = Path(f"{dir}/proteins")
         Path.mkdir(gene_dir)
