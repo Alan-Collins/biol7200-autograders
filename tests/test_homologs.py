@@ -7,8 +7,6 @@ import subprocess
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 
-from blast_result import BlastResult
-
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "git_repo.txt"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
