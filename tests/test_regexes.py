@@ -26,11 +26,11 @@ class TestFiles(unittest.TestCase):
             return x
         with open(submission) as f:
             for line in f:
-                number = line.strip()[0]
+                q_num = line.strip()[0]
                 command = line.strip()[1:].strip()
-                if not re.match(r"\d", number):
+                if not re.match(r"\d", q_num):
                     continue
-                x.answers[int(number)] = command
+                x.answers[int(q_num)] = command
         return x
     
     POINT_NUM = (i for i in range(1, 1000))
@@ -239,7 +239,7 @@ class TestFiles(unittest.TestCase):
             regex = search_string.group(2)
             try:
                 re.compile(regex)
-                if r"\u" in regex or "\U" in regex:
+                if r"\u" in regex or r"\U" in regex:
                     case_convert_found = True
                 regex_found = True
             except re.error:
