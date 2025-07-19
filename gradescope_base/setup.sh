@@ -5,7 +5,26 @@ REPLACE_GITHUB_BRANCH
 
 cd /autograder/source
 
-apt-get install -y python3 python3-pip python3-dev
+# dependencies for samtools build taken from staphb dockerfile plus python
+apt-get update && apt-get install --no-install-recommends -y \
+    libncurses5-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libcurl4-gnutls-dev \
+    zlib1g-dev \
+    libssl-dev \
+    gcc \
+    wget \
+    make \
+    perl \
+    bzip2 \
+    gnuplot \
+    ca-certificates \
+    gawk \
+    python3 \
+    python3-pip \
+    python3-dev && \
+    apt-get autoclean && rm -rf /var/lib/apt/lists/*
 
 mkdir -p /root/.ssh
 cp ssh_config /root/.ssh/config
@@ -23,7 +42,7 @@ pip3 install -r /autograder/biol7200-autograders/requirements.txt
 # Depdendencies
 mkdir /building
 cd /building
-wget \
+wget -q \
     https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.16.0+-x64-linux.tar.gz \
     https://github.com/samtools/samtools/releases/download/1.22/samtools-1.22.tar.bz2
 
