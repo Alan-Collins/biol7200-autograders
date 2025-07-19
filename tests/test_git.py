@@ -1,6 +1,5 @@
 import unittest
 from pathlib import Path
-import re
 from tempfile import mkdtemp
 import shutil
 import subprocess
