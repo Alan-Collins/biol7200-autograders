@@ -167,12 +167,15 @@ class TestFiles(unittest.TestCase):
             try:
                 output_numbers = re.findall(r"\d+", result.stdout)
                 if len(output_numbers) > 1:
-                    raise
+                    self.fail(
+                        "Your script's stdout appears to contain more than one number. "
+                        "The stdout should only contain the number of matches"
+                    )
                 count = int(output_numbers[0])
             except:
                 self.fail(
                     "Unable to interpret the stdout as a number. "
-                    "The stdout should only contain the number of matches"
+                    "The stdout should contain the number of matches"
                 )
             with open(f"{dir}/out.txt") as f:
                 lines = [i for i in f]
@@ -226,12 +229,15 @@ class TestFiles(unittest.TestCase):
             try:
                 output_numbers = re.findall(r"\d+", result.stdout)
                 if len(output_numbers) > 1:
-                    raise
+                    self.fail(
+                        "Your script's stdout appears to contain more than one number. "
+                        "The stdout should only contain the number of matches"
+                    )
                 count = int(output_numbers[0])
             except:
                 self.fail(
                     "Unable to interpret the stdout as a number. "
-                    "The stdout should only contain the number of matches"
+                    "The stdout should contain the number of matches"
                 )
             with open(f"{dir}/{assembly[:-4]}_out.txt") as f:
                 lines = [i for i in f]
