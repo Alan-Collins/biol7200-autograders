@@ -1,0 +1,276 @@
+import unittest
+from pathlib import Path
+import re
+from tempfile import mkdtemp
+import shutil
+import subprocess
+
+from gradescope_utils.autograder_utils.decorators import weight, number, visibility
+
+from blast_result import BlastResult
+
+SUBMISSION_PATH = "/autograder/submission/"
+SOLUTION_SCRIPT = "git_repo.txt"
+SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
+DATA_DIR = "/autograder/biol7200-autograders/data/"
+
+Q_NUM = 3
+
+class PointCounter():
+    def __init__(self, start=0):
+        self._setup(start)
+    
+    def _setup(self, start=0):
+        self._counter = start
+    
+    def reset(self, start=0) -> int:
+        self._setup(start)
+        return self._counter
+
+    def next(self) -> int:
+        self._counter += 1
+        return self._counter
+
+    def __hash__(self):
+        return hash(self._counter)
+    
+    def __eq__(self, value):
+        return self._counter == value
+
+    def __str__(self):
+        return str(self._counter)
+
+
+
+POINT_NUM = PointCounter(0)
+
+class TestFiles(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.dir = mkdtemp()
+        try:
+            with open(SCRIPT_PATH) as f:
+                repo = f.read().strip()
+            repo_name = repo.split("/")[-1]
+            if repo_name.endswith(".git"):
+                repo_name = repo_name[:-4]
+            result = subprocess.run(
+                ["git", "clone", repo],
+                cwd=cls.dir,
+                capture_output=True
+            )
+            if result.returncode != 0:
+                raise
+            cls.homolog_file = Path(f"{cls.dir}/{repo_name}/find_homologs.sh")
+            cls.repo_cloned = True
+        except:
+            cls.repo_cloned = False
+        
+        cls.input_files = [
+            "HK_domains.faa",
+            "Escherichia_coli_K12.fna",
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
+            "Vibrio_cholerae_N16961.fna",
+            "Wolbachia.fna"
+        ]
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.dir)
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_submitted_files(self):
+        """Check submitted files"""
+        if not self.homolog_file.exists():
+            self.fail(
+                "Unable to get the identify_homologs.sh script from a git repo. "
+                "follow the instructions carefully."
+            )
+        print(f"identify_homologs.sh script submitted successfully")
+    
+
+    @weight(5)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    def test_runs(self):
+        """Check script runs without error"""
+        if not self.homolog_file.exists():
+            self.fail(
+                "Unable to get the identify_homologs.sh script from a git repo. "
+                "follow the instructions carefully."
+            )
+        dir = mkdtemp()
+        for file in self.input_files:
+            shutil.copy(f"{DATA_DIR}{file}", f"{dir}/")
+        command = [
+            self.homolog_file,
+            f"{dir}/HK_domains.faa",
+            f"{dir}/Wolbachia.fna",
+            f"{dir}/out.txt"
+        ]
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            cwd=dir,
+            text=True
+        )
+        if result.returncode != 0:
+            self.fail("Your script exited with a non-zero exit code.")
+
+        task_regex = re.compile(r"^[^\#]*tblastn-fast")
+        with open(self.homolog_file) as f:
+            for line in f:
+                if re.match(task_regex, line):
+                    print(
+                        "You appear to be using -task tblastn-fast. "
+                        "Note that you will get fewer matches that meet our criteria with "
+                        "that setting. It also won't speed things up much."
+                    )
+
+        print(f"Your script executed successfully")
+
+    
+    @weight(15)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    def test_produces_expected_outputs(self):
+        """Check script produces expected outputs"""
+        if not self.homolog_file.exists():
+            self.fail(
+                "Unable to get the identify_homologs.sh script from a git repo. "
+                "follow the instructions carefully."
+            )
+        dir = mkdtemp()
+        for file in self.input_files:
+            shutil.copy(f"{DATA_DIR}{file}", f"{dir}/")
+        for assembly in [
+            "Escherichia_coli_K12.fna",
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
+            "Vibrio_cholerae_N16961.fna",
+            "Wolbachia.fna"
+        ]:
+            command = [
+                self.homolog_file,
+                f"{dir}/HK_domains.faa",
+                f"{dir}/{assembly}",
+                f"{dir}/out.txt"
+            ]
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                cwd=dir,
+                text=True
+            )
+            if result.returncode != 0:
+                self.fail("Your script exited with a non-zero exit code.")
+            try:
+                count = int(result.stdout.strip())
+            except:
+                self.fail(
+                    "Unable to interpret the stdout as a number. "
+                    "The stdout should only contain the number of matches"
+                )
+            with open(f"{dir}/out.txt") as f:
+                lines = [i for i in f]
+                if len(lines) < 2:
+                    self.fail("Your script produces an output file lacking hits")
+                for l in lines:
+                    if not r"\t" in l:
+                        self.fail("Your script produces an output file of the wrong format.")
+            
+            if count != len(lines):
+                self.fail("Your script's stdout and output file disagree about how many hits there are.")
+
+        print(f"Your script produces outputs of the correct format.")
+
+    
+    @weight(20)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    # @visibility("after_due_date")
+    def test_produces_expected_outputs(self):
+        """Check script produces expected outputs"""
+        if not self.homolog_file.exists():
+            self.fail(
+                "Unable to get the identify_homologs.sh script from a git repo. "
+                "follow the instructions carefully."
+            )
+        dir = mkdtemp()
+        for file in self.input_files:
+            shutil.copy(f"{DATA_DIR}{file}", f"{dir}/")
+        all_results = {}
+        for assembly in [
+            "Escherichia_coli_K12.fna",
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
+            "Vibrio_cholerae_N16961.fna",
+            "Wolbachia.fna"
+        ]:
+            command = [
+                self.homolog_file,
+                f"{dir}/HK_domains.faa",
+                f"{dir}/{assembly}",
+                f"{dir}/{assembly[:-4]}_out.txt"
+            ]
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                cwd=dir,
+                text=True
+            )
+            all_results[assembly] = result
+            if result.returncode != 0:
+                self.fail("Your script exited with a non-zero exit code.")
+            try:
+                count = int(result.stdout.strip())
+            except:
+                self.fail(
+                    "Unable to interpret the stdout as a number. "
+                    "The stdout should only contain the number of matches"
+                )
+            with open(f"{dir}/{assembly[:-4]}_out.txt") as f:
+                lines = [i for i in f]
+                if len(lines) < 2:
+                    self.fail("Your script produces an output file lacking hits")
+                for l in lines:
+                    if not r"\t" in l:
+                        self.fail("Your script produces an output file of the wrong format.")
+            
+            if count != len(lines):
+                self.fail("Your script's stdout and output file disagree about how many hits there are.")
+        
+        tblastn_expected = {
+            "Escherichia_coli_K12.fna": 116,
+            "Vibrio_cholerae_N16961.fna": 125,
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 250,
+            "Wolbachia.fna": 5
+        }
+
+        tblastn_fast_expected = {
+            "Escherichia_coli_K12.fna": 102,
+            "Vibrio_cholerae_N16961.fna": 107,
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 196,
+            "Wolbachia.fna": 4
+        }
+
+        task_regex = re.compile(r"^[^\#]*tblastn-fast")
+        task = "slow"
+        with open(self.homolog_file) as f:
+            for line in f:
+                if re.match(task_regex, line):
+                    task = "fast"
+        
+        fail = False
+        print(f"Performance using -task {'tblastn' if task == 'slow' else 'tblastn-fast'}")
+        for ass, result in all_results.items():
+            if task == "fast":
+                expected = tblastn_fast_expected[ass]
+            else:
+                expected = tblastn_expected[ass]
+            
+            if int(result.stdout.strip()) != expected:
+                fail = True
+            print(f"Yours: {result.stdout.strip()} expected: {expected}")
+
+        if fail:
+            self.fail("Your script identifies the wrong number of matches.")        
+
+        print("Your script identifies the correct number of matches.")
