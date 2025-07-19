@@ -67,7 +67,7 @@ class TestFiles(unittest.TestCase):
             cls.repo_cloned = False
         
         cls.input_files = [
-            "HK_domains.faa",
+            "HK_domain.faa",
             "Escherichia_coli_K12.fna",
             "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
             "Vibrio_cholerae_N16961.fna",
@@ -105,7 +105,7 @@ class TestFiles(unittest.TestCase):
             shutil.copy(f"{DATA_DIR}{file}", f"{dir}/")
         command = [
             self.homolog_file,
-            f"{dir}/HK_domains.faa",
+            f"{dir}/HK_domain.faa",
             f"{dir}/Wolbachia.fna",
             f"{dir}/out.txt"
         ]
@@ -151,7 +151,7 @@ class TestFiles(unittest.TestCase):
         ]:
             command = [
                 self.homolog_file,
-                f"{dir}/HK_domains.faa",
+                f"{dir}/HK_domain.faa",
                 f"{dir}/{assembly}",
                 f"{dir}/out.txt"
             ]
@@ -187,8 +187,8 @@ class TestFiles(unittest.TestCase):
     @weight(20)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     # @visibility("after_due_date")
-    def test_produces_expected_outputs(self):
-        """Check script produces expected outputs"""
+    def test_gets_right_number(self):
+        """Check script identifies correct number of matches"""
         if not self.homolog_file.exists():
             self.fail(
                 "Unable to get the identify_homologs.sh script from a git repo. "
@@ -206,7 +206,7 @@ class TestFiles(unittest.TestCase):
         ]:
             command = [
                 self.homolog_file,
-                f"{dir}/HK_domains.faa",
+                f"{dir}/HK_domain.faa",
                 f"{dir}/{assembly}",
                 f"{dir}/{assembly[:-4]}_out.txt"
             ]
