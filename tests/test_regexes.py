@@ -24,11 +24,11 @@ class PointCounter():
     
     def reset(self, start=0) -> int:
         self._setup(start)
-        return self._counter.next()
+        return self._counter
 
     def next(self):
         self._counter += 1
-        return next(self._counter)
+        return self._counter
 
     def __hash__(self):
         return hash(self._counter)
