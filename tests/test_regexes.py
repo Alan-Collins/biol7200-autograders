@@ -81,9 +81,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
     def test_used_regex_1(self):
         """Check used a regex"""
-        command = self.answers.get(SUBQ_COUNTER)
-        print(SUBQ_COUNTER)
-        print(command)
+        command = self.answers.get(1)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
@@ -110,7 +108,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{SUBQ_COUNTER}.{POINT_NUM.next()}")
     def test_correct_output_1(self):
         "Check output is correct"
-        command = self.answers.get(SUBQ_COUNTER)
+        command = self.answers.get(1)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
@@ -130,7 +128,7 @@ class TestFiles(unittest.TestCase):
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
-        outfile = Path(f"{dir}/out_{SUBQ_COUNTER}.fna")
+        outfile = Path(f"{dir}/out_1.fna")
         if not outfile.exists():
             self.fail("Your command did not produce the expected output file.")
         with open(outfile) as f:
@@ -165,7 +163,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
     def test_used_regex_2(self):
         """Check used a regex"""
-        command = self.answers.get(SUBQ_COUNTER)
+        command = self.answers.get(2)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
@@ -192,7 +190,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{SUBQ_COUNTER}.{POINT_NUM.next()}")
     def test_correct_output_2(self):
         "Check output is correct"
-        command = self.answers.get(SUBQ_COUNTER)
+        command = self.answers.get(2)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
@@ -212,7 +210,7 @@ class TestFiles(unittest.TestCase):
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
-        outfile = Path(f"{dir}/out_{SUBQ_COUNTER}.fna")
+        outfile = Path(f"{dir}/out_2.fna")
         if not outfile.exists():
             self.fail("Your command did not produce the expected output file.")
         with open(outfile) as f:
@@ -248,7 +246,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
     def test_used_regex_3(self):
         """Check used a regex"""
-        command = self.answers.get(SUBQ_COUNTER)
+        command = self.answers.get(3)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
@@ -282,7 +280,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{SUBQ_COUNTER}.{POINT_NUM.next()}")
     def test_correct_output_3(self):
         "Check output is correct"
-        command = self.answers.get(SUBQ_COUNTER)
+        command = self.answers.get(3)
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
@@ -302,7 +300,7 @@ class TestFiles(unittest.TestCase):
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
-        outfile = Path(f"{dir}/out_{SUBQ_COUNTER}.fna")
+        outfile = Path(f"{dir}/out_3.fna")
         if not outfile.exists():
             self.fail("Your command did not produce the expected output file.")
         with open(outfile) as f:
