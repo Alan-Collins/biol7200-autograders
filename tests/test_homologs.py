@@ -188,7 +188,7 @@ class TestFiles(unittest.TestCase):
     
     @weight(20)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    # @visibility("after_due_date")
+    @visibility("after_due_date")
     def test_gets_right_number(self):
         """Check script identifies correct number of matches"""
         if not self.homolog_file.exists():
