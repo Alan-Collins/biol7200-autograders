@@ -112,6 +112,7 @@ class TestFiles(unittest.TestCase):
         shutil.copy(f"{DATA_DIR}HK_domain.faa", dir)
         result = subprocess.run(
             command,
+            shell=True,
             cwd=dir,
             text=True,
             capture_output=True
@@ -193,6 +194,7 @@ class TestFiles(unittest.TestCase):
         shutil.copy(f"{DATA_DIR}HK_domain.faa", dir)
         result = subprocess.run(
             command,
+            shell=True,
             cwd=dir,
             text=True,
             capture_output=True
@@ -271,7 +273,7 @@ class TestFiles(unittest.TestCase):
 
     @weight(4)
     @number(f"{Q_NUM}.3.{next(POINT_NUM)}")
-    def test_correct_output_2(self):
+    def test_correct_output_3(self):
         "Check output is correct"
         command = self.answers.get(3)
         if not command:
@@ -283,6 +285,7 @@ class TestFiles(unittest.TestCase):
         shutil.copy(f"{DATA_DIR}HK_domain.faa", dir)
         result = subprocess.run(
             command,
+            shell=True,
             cwd=dir,
             text=True,
             capture_output=True
