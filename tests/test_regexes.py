@@ -296,6 +296,9 @@ class TestFiles(unittest.TestCase):
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
         outfile = Path(f"{dir}out_1.fna")
+        import os
+        print(os.listdir(dir))
+        print(outfile)
         if not outfile.exists():
             self.fail("Your command did not produce the expected output file.")
         with open(outfile) as f:
