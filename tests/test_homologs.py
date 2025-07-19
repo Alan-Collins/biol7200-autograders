@@ -165,7 +165,10 @@ class TestFiles(unittest.TestCase):
             if result.returncode != 0:
                 self.fail("Your script exited with a non-zero exit code.")
             try:
-                count = int(result.stdout.strip())
+                output_numbers = re.findall(r"\d+", result.stdout)
+                if len(output_numbers) > 1:
+                    raise
+                count = int(output_numbers[0])
             except:
                 self.fail(
                     "Unable to interpret the stdout as a number. "
@@ -221,7 +224,10 @@ class TestFiles(unittest.TestCase):
             if result.returncode != 0:
                 self.fail("Your script exited with a non-zero exit code.")
             try:
-                count = int(result.stdout.strip())
+                output_numbers = re.findall(r"\d+", result.stdout)
+                if len(output_numbers) > 1:
+                    raise
+                count = int(output_numbers[0])
             except:
                 self.fail(
                     "Unable to interpret the stdout as a number. "
@@ -266,10 +272,10 @@ class TestFiles(unittest.TestCase):
                 expected = tblastn_fast_expected[ass]
             else:
                 expected = tblastn_expected[ass]
-            
-            if int(result.stdout.strip()) != expected:
+            count = int(re.findall(r"\d+", result.stdout)[0])
+            if count != expected:
                 fail = True
-            print(f"Yours: {result.stdout.strip()} expected: {expected}")
+            print(f"Yours: {count} expected: {expected}")
 
         if fail:
             self.fail("Your script identifies the wrong number of matches.")        
