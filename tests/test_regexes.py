@@ -363,7 +363,7 @@ class TestFiles(unittest.TestCase):
         print("Your command returned the correct number of leaf names.")
     
     @weight(3)
-    @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.next()}")
+    @number(f"{Q_NUM}.{SUBQ_COUNTER}.{POINT_NUM.next()}")
     def test_correct_leaf_names(self):
         """Check the correct leaf names"""
         command = self.answers.get(4)
