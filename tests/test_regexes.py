@@ -400,4 +400,37 @@ class TestFiles(unittest.TestCase):
                 f"{len(sims)} leaf names are correct"
             )
         print("Your leaf names match the expected values.")
-        
+    
+    @weight(5)
+    @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
+    def test_correct_brlen_sum(self):
+        """Check the sum of branch lengths is correct"""
+        command = self.answers.get(5)
+        if not command:
+            self.fail("Could not find command. Make sure you follow the submission instructions")
+        # set up temp dir and test command
+        dir = mkdtemp()
+        shutil.copy(f"{DATA_DIR}Tree_of_life.nwk", dir)
+        result = subprocess.run(
+            command.replace("ggrep", "grep"),
+            shell=True,
+            cwd=dir,
+            text=True,
+            capture_output=True
+        )
+        if result.returncode != 0:
+            self.fail("Your command returned a non-zero exit code.")
+        # Check output
+        outfile = Path(f"{dir}/out_5.txt")
+        if not outfile.exists():
+            self.fail("Your command did not produce the expected output file.")
+        with open(outfile) as f:
+            brlen_str = f.read().strip()
+        try:
+            brlen = float(brlen_str)
+        except:
+            self.fail("The output of your command is not a number.")
+        if brlen != 45.54:
+            self.fail("Your command returned the wrong value.")
+        print("Your command returned the correct value.")
+    
