@@ -122,7 +122,7 @@ class TestFiles(unittest.TestCase):
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
-        outfile = Path(f"{dir}out_1.fna")
+        outfile = Path(f"{dir}/out_1.fna")
         if not outfile.exists():
             self.fail("Your command did not produce the expected output file.")
         with open(outfile) as f:
@@ -204,7 +204,7 @@ class TestFiles(unittest.TestCase):
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
-        outfile = Path(f"{dir}out_1.fna")
+        outfile = Path(f"{dir}/out_2.fna")
         if not outfile.exists():
             self.fail("Your command did not produce the expected output file.")
         with open(outfile) as f:
@@ -252,7 +252,6 @@ class TestFiles(unittest.TestCase):
         case_convert_found = False
         for _, script in re.findall(r"([\"\'])(.+?)\1", command):
             regex_parts = re.match(r"s(.)(.*)\1(.*)\1", script)
-            print(regex_parts.group(2), regex_parts.group(3))
             if not regex_parts:
                 continue
             search_string = regex_parts.group(2)
@@ -295,10 +294,7 @@ class TestFiles(unittest.TestCase):
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
-        outfile = Path(f"{dir}out_1.fna")
-        import os
-        print(os.listdir(dir))
-        print(outfile)
+        outfile = Path(f"{dir}/out_3.fna")
         if not outfile.exists():
             self.fail("Your command did not produce the expected output file.")
         with open(outfile) as f:
