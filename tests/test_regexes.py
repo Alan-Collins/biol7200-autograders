@@ -14,7 +14,23 @@ SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 DATA_DIR = "/autograder/biol7200-autograders/data/"
 
 Q_NUM = 1
-POINT_NUM = (i for i in range(1000))
+
+class PointCounter():
+    def __init__(self, start=0):
+        self._setup(start)
+    
+    def _setup(self, start=0):
+        self._counter = (i for i in range(start, 1000))
+    
+    def __iter__(self):
+        yield from self._counter
+    
+    def reset(self, start=0) -> int:
+        self._setup(start)
+        return next(self._counter)
+
+
+POINT_NUM = PointCounter(0)
 
 class TestFiles(unittest.TestCase):
     @classmethod
@@ -33,7 +49,7 @@ class TestFiles(unittest.TestCase):
                 x.answers[int(q_num)] = command
         return x
     
-    POINT_NUM = (i for i in range(1, 1000))
+    
     
     @weight(0)
     @number(f"{Q_NUM}.0.{next(POINT_NUM)}")
@@ -50,10 +66,9 @@ class TestFiles(unittest.TestCase):
         )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
-    POINT_NUM = (i for i in range(1, 1000))
 
     @weight(1)
-    @number(f"{Q_NUM}.1.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.1.{POINT_NUM.reset(1)}")
     def test_used_regex_1(self):
         """Check used a regex"""
         command = self.answers.get(1)
@@ -133,10 +148,8 @@ class TestFiles(unittest.TestCase):
                 self.fail("The headers in your output do not match the expected format.")
         print("Your output looks good.")
 
-    POINT_NUM = (i for i in range(1, 1000))
-
     @weight(1)
-    @number(f"{Q_NUM}.2.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.2.{POINT_NUM.reset(1)}")
     def test_used_regex_2(self):
         """Check used a regex"""
         command = self.answers.get(2)
@@ -216,10 +229,9 @@ class TestFiles(unittest.TestCase):
                 self.fail("The headers in your output do not match the expected format.")
         print("Your output looks good.")
 
-    POINT_NUM = (i for i in range(1, 1000))
 
     @weight(1)
-    @number(f"{Q_NUM}.3.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.3.{POINT_NUM.reset(1)}")
     def test_used_regex_3(self):
         """Check used a regex"""
         command = self.answers.get(2)
