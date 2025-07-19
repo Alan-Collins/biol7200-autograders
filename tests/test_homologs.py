@@ -62,6 +62,7 @@ class TestFiles(unittest.TestCase):
             if result.returncode != 0:
                 raise
             cls.homolog_file = Path(f"{cls.dir}/{repo_name}/find_homologs.sh")
+            cls.homolog_file.chmod(0o777)
             cls.repo_cloned = True
         except:
             cls.repo_cloned = False
