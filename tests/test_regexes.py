@@ -109,7 +109,7 @@ class TestFiles(unittest.TestCase):
             self.fail("You must use sed for this question.")
         # set up temp dir and test command
         dir = mkdtemp()
-        shutil.copyfile(f"{DATA_DIR}HK_domain.faa", dir)
+        shutil.copy(f"{DATA_DIR}HK_domain.faa", dir)
         result = subprocess.run(
             command,
             cwd=dir,
@@ -190,7 +190,7 @@ class TestFiles(unittest.TestCase):
             self.fail("You must use sed for this question.")
         # set up temp dir and test command
         dir = mkdtemp()
-        shutil.copyfile(f"{DATA_DIR}HK_domain.faa", dir)
+        shutil.copy(f"{DATA_DIR}HK_domain.faa", dir)
         result = subprocess.run(
             command,
             cwd=dir,
@@ -280,7 +280,7 @@ class TestFiles(unittest.TestCase):
             self.fail("You must use sed for this question.")
         # set up temp dir and test command
         dir = mkdtemp()
-        shutil.copyfile(f"{DATA_DIR}HK_domain.faa", dir)
+        shutil.copy(f"{DATA_DIR}HK_domain.faa", dir)
         result = subprocess.run(
             command,
             cwd=dir,
