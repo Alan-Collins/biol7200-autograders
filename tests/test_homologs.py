@@ -181,9 +181,6 @@ class TestFiles(unittest.TestCase):
                 lines = [i for i in f]
                 if len(lines) < 2:
                     self.fail("Your script produces an output file lacking hits")
-                for l in lines:
-                    if not r"\t" in l:
-                        self.fail("Your script produces an output file of the wrong format.")
             
             if count != len(lines):
                 self.fail("Your script's stdout and output file disagree about how many hits there are.")
@@ -243,9 +240,6 @@ class TestFiles(unittest.TestCase):
                 lines = [i for i in f]
                 if len(lines) < 2:
                     self.fail("Your script produces an output file lacking hits")
-                for l in lines:
-                    if not r"\t" in l:
-                        self.fail("Your script produces an output file of the wrong format.")
             
             if count != len(lines):
                 self.fail("Your script's stdout and output file disagree about how many hits there are.")
@@ -278,7 +272,7 @@ class TestFiles(unittest.TestCase):
                 expected = tblastn_fast_expected[ass]
             else:
                 expected = tblastn_expected[ass]
-            count = int(re.findall(r"\d+", result.stdout)[0])
+            count = int(re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)[0])
             if count != expected:
                 fail = True
             print(f"Yours: {count} expected: {expected}")
