@@ -81,14 +81,16 @@ class TestFiles(unittest.TestCase):
         if not "sed" in command:
             self.fail("You must use sed for this question.")
         if not any([flag in command for flag in ["-E", "-r", "--regexp-extended"]]):
-            self.fail("You must use a regex to complete this question.")
+            self.fail("You must use the sed regex mode to complete this question.")
         # Try to grab the regex from the sed command
         regex_found = False
         for script in re.findall("([\"\']).+?\1", command):
+            print(f"found sed script: {script}")
             search_string = re.match("s(.)(.*)\1", script)
             if not search_string:
                 continue
             regex = search_string.group(2)
+            print(f"found regex: {regex}")
             try:
                 re.compile(regex)
                 regex_found = True
