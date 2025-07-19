@@ -250,6 +250,7 @@ class TestFiles(unittest.TestCase):
         case_convert_found = False
         for _, script in re.findall(r"([\"\'])(.+?)\1", command):
             regex_parts = re.match(r"s(.)(.*)\1(.*)\1", script)
+            print(regex_parts.group(2), regex_parts.group(3))
             if not regex_parts:
                 continue
             search_string = regex_parts.group(2)
@@ -257,7 +258,7 @@ class TestFiles(unittest.TestCase):
                 re.compile(search_string)
                 regex_found = True
             except re.error:
-                continue
+                pass
             replace_string = regex_parts.group(3)
             if r"\u" in replace_string or r"\U" in replace_string:
                 case_convert_found = True
