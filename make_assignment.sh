@@ -11,8 +11,9 @@ cp gradescope_base/* zip_$GITHUB_BRANCH/
 
 sed -i "s,REPLACE_GITHUB_BRANCH,GITHUB_BRANCH=$GITHUB_BRANCH," zip_$GITHUB_BRANCH/setup.sh
 
+# copy in the assignment data
+cp data/* zip_$GITHUB_BRANCH/
+
 # zip the assignement and delete folder
 zip -r -m -j $GITHUB_BRANCH.zip zip_$GITHUB_BRANCH/*
 rmdir zip_$GITHUB_BRANCH
-
-
