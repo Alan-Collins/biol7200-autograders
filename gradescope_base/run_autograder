@@ -8,7 +8,7 @@ git pull
 # I think the next line is only necessary if you change the requirements after the first version of the assignment
 pip3 install -r $BASE_DIR/requirements.txt
 
-tar -xzf $BASE_DIR/ex3_data.tar.gz
+tar -xzf /autograder/source/ex3_data.tar.gz
 
 # change to tests directory
 cd $BASE_DIR/tests
