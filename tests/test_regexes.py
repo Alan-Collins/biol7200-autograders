@@ -85,8 +85,8 @@ class TestFiles(unittest.TestCase):
         # Try to grab the regex from the sed command
         regex_found = False
         print(command)
-        print(re.findall(r"([\"\']).+?\1", command))
-        for script in re.findall(r"([\"\']).+?\1", command):
+        print(re.findall(r"([\"\'])(.+?)\1", command))
+        for _, script in re.findall(r"([\"\'])(.+?)\1", command):
             print(f"found sed script: {script}")
             search_string = re.match(r"s(.)(.*)\1", script)
             if not search_string:
@@ -169,8 +169,8 @@ class TestFiles(unittest.TestCase):
             self.fail("You must use a regex to complete this question.")
         # Try to grab the regex from the sed command
         regex_found = False
-        for script in re.findall(r"([\"\']).+?\1", command):
-            search_string = re.match(r"s(.)(.*)\1", command)
+        for _, script in re.findall(r"([\"\'])(.+?)\1", command):
+            search_string = re.match(r"s(.)(.*)\1", script)
             if not search_string:
                 continue
             regex = search_string.group(2)
@@ -252,8 +252,8 @@ class TestFiles(unittest.TestCase):
         # Try to grab the regex from the sed command
         regex_found = False
         case_convert_found = False
-        for script in re.findall(r"([\"\']).+?\1", command):
-            search_string = re.match(r"s(.)(.*)\1", command)
+        for _, script in re.findall(r"([\"\'])(.+?)\1", command):
+            search_string = re.match(r"s(.)(.*)\1", script)
             if not search_string:
                 continue
             regex = search_string.group(2)
