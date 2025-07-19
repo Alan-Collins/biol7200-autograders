@@ -172,7 +172,9 @@ class TestFiles(unittest.TestCase):
                         "The stdout should only contain the number of matches"
                     )
                 count = int(output_numbers[0])
-            except:
+            except Exception as e:
+                print(e)
+                print(re.findall(r"\d+", result.stdout))
                 self.fail(
                     "Unable to interpret the stdout as a number. "
                     "The stdout should contain the number of matches"
