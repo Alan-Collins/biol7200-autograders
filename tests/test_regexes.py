@@ -23,7 +23,13 @@ class PointCounter():
         self._counter = (i for i in range(start, 1000))
     
     def __iter__(self):
-        yield from self._counter
+        return self._counter
+    
+    def __next__(self):
+        try:
+            return next(self._counter)
+        except:
+            raise StopIteration
     
     def reset(self, start=0) -> int:
         self._setup(start)
