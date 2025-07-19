@@ -330,3 +330,74 @@ class TestFiles(unittest.TestCase):
             if not re.match(header_regex, line):
                 self.fail("The headers in your output do not match the expected format.")
         print("Your output looks good.")
+
+    @weight(2)
+    @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
+    def test_correct_leaf_number(self):
+        """Check the correct number of leaves was found"""
+        command = self.answers.get(4)
+        if not command:
+            self.fail("Could not find command. Make sure you follow the submission instructions")
+        # set up temp dir and test command
+        dir = mkdtemp()
+        shutil.copy(f"{DATA_DIR}Tree_of_life.nwk", dir)
+        result = subprocess.run(
+            command.replace("ggrep", "grep"),
+            shell=True,
+            cwd=dir,
+            text=True,
+            capture_output=True
+        )
+        if result.returncode != 0:
+            self.fail("Your command returned a non-zero exit code.")
+        # Check output
+        outfile = Path(f"{dir}/out_4.txt")
+        if not outfile.exists():
+            self.fail("Your command did not produce the expected output file.")
+        with open(outfile) as f:
+            line_count = len([i for i in f])
+        if line_count > 191:
+            self.fail("Your command returned too many leaf names.")
+        elif line_count < 191:
+            self.fail("your command returned too few leaf names.")
+        print("Your command returned the correct number of leaf names.")
+    
+    @weight(3)
+    @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.next()}")
+    def test_correct_leaf_names(self):
+        """Check the correct leaf names"""
+        command = self.answers.get(4)
+        if not command:
+            self.fail("Could not find command. Make sure you follow the submission instructions")
+        # set up temp dir and test command
+        dir = mkdtemp()
+        shutil.copy(f"{DATA_DIR}Tree_of_life.nwk", dir)
+        result = subprocess.run(
+            command.replace("ggrep", "grep"),
+            shell=True,
+            cwd=dir,
+            text=True,
+            capture_output=True
+        )
+        if result.returncode != 0:
+            self.fail("Your command returned a non-zero exit code.")
+        # Check output
+        outfile = Path(f"{dir}/out_4.txt")
+        if not outfile.exists():
+            self.fail("Your command did not produce the expected output file.")
+        with open(outfile) as f:
+            leaves = [l.strip() for l in f]
+        
+        with open(f"{DATA_DIR}Tree_of_life.nwk") as f:
+            tree = f.read()
+        leaf_regex = re.compile(r"(?<=\(|,)[^(),:]+(?=[:,)])")
+        true_leaves = [i for i in re.findall(leaf_regex, tree)]
+        diffs = set(leaves).difference(true_leaves)
+        sims = set(leaves).intersection(true_leaves)
+        if diffs != set():
+            self.fail(
+                f"{len(diffs)} of the leaf names found by your command differ from the expected names. "
+                f"{len(sims)} leaf names are correct"
+            )
+        print("Your leaf names match the expected values.")
+        
