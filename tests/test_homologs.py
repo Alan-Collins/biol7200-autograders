@@ -165,7 +165,7 @@ class TestFiles(unittest.TestCase):
             if result.returncode != 0:
                 self.fail("Your script exited with a non-zero exit code.")
             try:
-                output_numbers = re.findall(r"\d+", result.stdout)
+                output_numbers = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
                 if len(output_numbers) > 1:
                     self.fail(
                         "Your script's stdout appears to contain more than one number. "
@@ -173,8 +173,6 @@ class TestFiles(unittest.TestCase):
                     )
                 count = int(output_numbers[0])
             except Exception as e:
-                print(e)
-                print(re.findall(r"\d+", result.stdout))
                 self.fail(
                     "Unable to interpret the stdout as a number. "
                     "The stdout should contain the number of matches"
@@ -229,7 +227,7 @@ class TestFiles(unittest.TestCase):
             if result.returncode != 0:
                 self.fail("Your script exited with a non-zero exit code.")
             try:
-                output_numbers = re.findall(r"\d+", result.stdout)
+                output_numbers = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
                 if len(output_numbers) > 1:
                     self.fail(
                         "Your script's stdout appears to contain more than one number. "
