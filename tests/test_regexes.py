@@ -84,6 +84,8 @@ class TestFiles(unittest.TestCase):
             self.fail("You must use the sed regex mode to complete this question.")
         # Try to grab the regex from the sed command
         regex_found = False
+        print(command)
+        print(re.findall("([\"\']).+?\1", command))
         for script in re.findall("([\"\']).+?\1", command):
             print(f"found sed script: {script}")
             search_string = re.match("s(.)(.*)\1", script)
