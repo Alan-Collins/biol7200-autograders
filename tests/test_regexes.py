@@ -84,15 +84,11 @@ class TestFiles(unittest.TestCase):
             self.fail("You must use the sed regex mode to complete this question.")
         # Try to grab the regex from the sed command
         regex_found = False
-        print(command)
-        print(re.findall(r"([\"\'])(.+?)\1", command))
         for _, script in re.findall(r"([\"\'])(.+?)\1", command):
-            print(f"found sed script: {script}")
             search_string = re.match(r"s(.)(.*)\1", script)
             if not search_string:
                 continue
             regex = search_string.group(2)
-            print(f"found regex: {regex}")
             try:
                 re.compile(regex)
                 regex_found = True
@@ -253,17 +249,18 @@ class TestFiles(unittest.TestCase):
         regex_found = False
         case_convert_found = False
         for _, script in re.findall(r"([\"\'])(.+?)\1", command):
-            search_string = re.match(r"s(.)(.*)\1", script)
-            if not search_string:
+            regex_parts = re.match(r"s(.)(.*)\1(.*)\1", script)
+            if not regex_parts:
                 continue
-            regex = search_string.group(2)
+            search_string = regex_parts.group(2)
             try:
-                re.compile(regex)
-                if r"\u" in regex or r"\U" in regex:
-                    case_convert_found = True
+                re.compile(search_string)
                 regex_found = True
             except re.error:
                 continue
+            replace_string = regex_parts.group(3)
+            if r"\u" in replace_string or r"\U" in replace_string:
+                case_convert_found = True
         if not regex_found:
             self.fail("You must use a regex to complete this question.")
         
@@ -272,7 +269,7 @@ class TestFiles(unittest.TestCase):
         print(f'Looks like you used a regex and processed the matched text')
 
     @weight(4)
-    @number(f"{Q_NUM}.2.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.3.{next(POINT_NUM)}")
     def test_correct_output_2(self):
         "Check output is correct"
         command = self.answers.get(2)
