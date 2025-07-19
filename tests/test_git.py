@@ -9,7 +9,7 @@ from gradescope_utils.autograder_utils.decorators import weight, number, visibil
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
 SUBMISSION_PATH = "/autograder/submission/"
-SOLUTION_SCRIPT = "git_repo.txt.txt"
+SOLUTION_SCRIPT = "git_repo.txt"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 
 Q_NUM = 2
