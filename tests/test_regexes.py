@@ -8,37 +8,14 @@ import subprocess
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
+from utils import PointCounter
+
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "regexes.txt"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 DATA_DIR = "/autograder/biol7200-autograders/data/"
 
 Q_NUM = 1
-
-class PointCounter():
-    def __init__(self, start=0):
-        self._setup(start)
-    
-    def _setup(self, start=0):
-        self._counter = start
-    
-    def reset(self, start=0) -> int:
-        self._setup(start)
-        return self._counter
-
-    def next(self) -> int:
-        self._counter += 1
-        return self._counter
-
-    def __hash__(self):
-        return hash(self._counter)
-    
-    def __eq__(self, value):
-        return self._counter == value
-
-    def __str__(self):
-        return str(self._counter)
-
 
 SUBQ_COUNTER = PointCounter(0)
 
