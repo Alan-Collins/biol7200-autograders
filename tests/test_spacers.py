@@ -224,22 +224,12 @@ class TestFiles(unittest.TestCase):
             this_array_count = 0
             this_array_spacers_seen = set()
             this_array_hits = []
-            for line in result.stdout.split("\n"):
+            for line in result.stdout.split("\n")[:-1]:
                 cols = line.split()
-                try:
-                    if array not in cols[0]:
-                        continue
-                except:
-                    print("couldn't index line")
-                    print(line)
-                    break
+                if array not in cols[0]:
+                    continue
                 this_array_count += 1
-                try:
-                    spacer_num = int(cols[0].split(":")[1][0])
-                except:
-                    print("couldn't index line")
-                    print(line)
-                    break
+                spacer_num = int(cols[0].split(":")[1][0])
                 this_array_spacers_seen.add(spacer_num)
                 this_array_hits.append(BlastResult.from_outfmt_str("std qlen slen", line))
             if (
