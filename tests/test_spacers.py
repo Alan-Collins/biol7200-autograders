@@ -188,9 +188,6 @@ class TestFiles(unittest.TestCase):
         expected_file = Path(f"{self.dir}/expected.fna")
         with open(expected_file, 'w') as f:
             f.write(EXPECTED_SPACERS)
-        
-        with open(self.outfile) as f:
-            print(f.read())
         # BLAST expected against student results
         # Sort by subject hits
         # keep best hit for each subject based on length and pident
@@ -206,6 +203,7 @@ class TestFiles(unittest.TestCase):
             cwd=self.dir,
             capture_output=True
         )
+        print(result)
 
         if result.returncode != 0:
             self.fail(
