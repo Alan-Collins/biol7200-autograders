@@ -20,10 +20,7 @@ apt-get update && apt-get install --no-install-recommends -y \
     bzip2 \
     gnuplot \
     ca-certificates \
-    gawk \
-    python3 \
-    python3-pip \
-    python3-dev && \
+    gawk &&\
     apt-get autoclean && rm -rf /var/lib/apt/lists/*
 
 mkdir -p /root/.ssh
@@ -34,6 +31,17 @@ chmod 400 /root/.ssh/deploy_key
 # To prevent host key verification errors at runtime
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
+# Install mamba for python version controlling
+wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3.sh -b -p "${HOME}/conda"
+source "${HOME}/conda/etc/profile.d/conda.sh"
+# For mamba support also run the following command
+source "${HOME}/conda/etc/profile.d/mamba.sh"
+mamba shell init
+source "${HOME}/.bashrc"
+mamba create -y -n biol7200 python pip
+mamba activate biol7200
+
 # Clone autograder files
 git clone -b $GITHUB_BRANCH git@github.com:Alan-Collins/biol7200-autograders.git /autograder/biol7200-autograders
 # Install python dependencies
@@ -43,7 +51,7 @@ pip3 install -r /autograder/biol7200-autograders/requirements.txt
 mkdir /building
 cd /building
 wget -q \
-    https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.16.0+-x64-linux.tar.gz \
+    https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.16.0/ncbi-blast-2.16.0+-x64-linux.tar.gz \
     https://github.com/samtools/samtools/releases/download/1.22/samtools-1.22.tar.bz2
 
 tar -zxf ncbi-blast-2.16.0+-x64-linux.tar.gz

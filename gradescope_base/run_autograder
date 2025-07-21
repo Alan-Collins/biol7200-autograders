@@ -5,6 +5,7 @@ BASE_DIR=/autograder/biol7200-autograders
 # update git repo
 cd $BASE_DIR
 git pull
+mamba activate biol7200
 # I think the next line is only necessary if you change the requirements after the first version of the assignment
 pip3 install -r $BASE_DIR/requirements.txt
 
