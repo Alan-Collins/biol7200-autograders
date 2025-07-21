@@ -143,6 +143,7 @@ class TestFiles(unittest.TestCase):
             self.fail("Your script returned a non-zero exitcode.")
         if not self.outfile.exists():
             print([i for i in Path(self.dir).iterdir()])
+            print(self.result)
             self.fail("Your script did not produce an output file.")
         print("Your script produced a file.")
 
