@@ -189,7 +189,7 @@ class TestFiles(unittest.TestCase):
         with open(expected_file, 'w') as f:
             f.write(EXPECTED_SPACERS)
         
-        with open(expected_file) as f:
+        with open(self.outfile) as f:
             print(f.read())
         # BLAST expected against student results
         # Sort by subject hits
