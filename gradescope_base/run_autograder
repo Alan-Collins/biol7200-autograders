@@ -6,10 +6,12 @@ BASE_DIR=/autograder/biol7200-autograders
 cd $BASE_DIR
 git pull
 # I think the next line is only necessary if you change the requirements after the first version of the assignment
-pip3 install -r $BASE_DIR/requirements.txt
+/root/conda/condabin/mamba run -n biol7200 pip3 install -r $BASE_DIR/requirements.txt
+
+tar -xzf /autograder/source/ex3_data.tar.gz
 
 # change to tests directory
 cd $BASE_DIR/tests
 
 
-python3 $BASE_DIR/gradescope_base/run_tests.py
+/root/conda/condabin/mamba run -n biol7200 python3 $BASE_DIR/gradescope_base/run_tests.py
