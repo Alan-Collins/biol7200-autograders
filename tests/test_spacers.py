@@ -8,7 +8,7 @@ import subprocess
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
-from utils import PointCounter
+from utils import PointCounter, BlastResult
 
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "find_perfect_matches.sh"
@@ -215,28 +215,46 @@ class TestFiles(unittest.TestCase):
             "orig_array": 9,
             "same_contig": 8
         }
-        # Assess ability to extract the 100% match array
-        orig_array_count = 0
-        orig_spacers_seen = set()
-        for line in result.stdout.split("\n"):
-            try:
+        n = 0
+        for array, count in expected_count.items():
+            n += 1
+            # Assess ability to extract the 100% match array
+            this_array_count = 0
+            this_array_spacers_seen = set()
+            this_array_hits = []
+            for line in result.stdout.split("\n"):
                 cols = line.split()
-                if "orig_array" not in cols[0]:
+                if array not in cols[0]:
                     continue
-                orig_array_count += 1
-                try:
-                    spacer_num = int(cols[0].split(":")[1][0])
-                except:
-                    print(cols[0].split(":"))
-                orig_spacers_seen.add(spacer_num)
-            except: print(line)
+                this_array_count += 1
+
+                spacer_num = int(cols[0].split(":")[1][0])
+                this_array_spacers_seen.add(spacer_num)
+                this_array_hits.append(BlastResult.from_outfmt_str("std qlen slen", line))
+            if (
+                this_array_count == count
+                and all(
+                    [i in this_array_spacers_seen for i in range(1, count+1)]
+                )
+            ):
+                print(f"Array {n} found")
+            else:
+                print(f"Array {n} has issues")
+            
+            # Assess original array hits
+            orig_issues = set()
+            for hit in this_array_hits:
+                if hit.is_perfect_match():
+                    continue
+                if hit.qlen != hit.slen:
+                    if hit.qlen == hit.slen+1 or hit.qlen == hit.slen-1:
+                        orig_issues.add("off by one error.")
+                    else:
+                        orig_issues.add("spacers of the wrong length found.")
+            if len(orig_issues) == 0:
+                print(f"Array {n} spacers are correct")
+            else:
+                print(f"Array {n} issues:\n{'\n'.join([i for i in orig_issues])}")
+
+        print(f"Expected vs result BLAST output (outfmt '6 std qlen slen'):\n{result.stdout}")
         
-        if (
-            orig_array_count == 9 
-            and all(
-                [i in orig_spacers_seen for i in range(1, 10)]
-            )
-        ):
-            print("Array 1 found")
-        else:
-            print("Array 1 has issues")
