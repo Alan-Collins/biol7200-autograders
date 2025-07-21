@@ -88,7 +88,7 @@ class TestFiles(unittest.TestCase):
             return cls
         cls.submitted = True
         shutil.copy(SCRIPT_PATH, cls.dir)
-        cls.outfile = Path(f"{dir}/spacers.fna")
+        cls.outfile = Path(f"{cls.dir}/spacers.fna")
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
         command = [
             f"./{SOLUTION_SCRIPT}",
