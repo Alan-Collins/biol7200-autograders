@@ -196,7 +196,8 @@ class TestFiles(unittest.TestCase):
         command = (
             f"blastn -query {expected_file} -subject {self.outfile} "
             "-task blastn-short -outfmt '6 std qlen slen' "
-            "| sort -k2,2 -k4,4nr -k3,3nr | awk '!a[$2]++'"
+            "| sort -k2,2 -k4,4nr -k3,3nr | awk '!a[$2]++' "
+            "| column -t"
         )
         result = subprocess.run(
             command,
