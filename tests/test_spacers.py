@@ -218,52 +218,52 @@ class TestFiles(unittest.TestCase):
             "same_contig": 8
         }
         n = 0
-        print(result)
-        try:
-            for array, count in expected_count.items():
-                n += 1
-                # Assess ability to extract the 100% match array
-                this_array_count = 0
-                this_array_spacers_seen = set()
-                this_array_hits = []
-                for line in result.stdout.split("\n"):
-                    cols = line.split()
-                    if array not in cols[0]:
-                        continue
-                    this_array_count += 1
-
+        for array, count in expected_count.items():
+            n += 1
+            # Assess ability to extract the 100% match array
+            this_array_count = 0
+            this_array_spacers_seen = set()
+            this_array_hits = []
+            for line in result.stdout.split("\n"):
+                cols = line.split()
+                if array not in cols[0]:
+                    continue
+                this_array_count += 1
+                try:
                     spacer_num = int(cols[0].split(":")[1][0])
-                    this_array_spacers_seen.add(spacer_num)
-                    this_array_hits.append(BlastResult.from_outfmt_str("std qlen slen", line))
-                if (
-                    this_array_count == count
-                    and all(
-                        [i in this_array_spacers_seen for i in range(1, count+1)]
-                    )
-                ):
-                    print(f"Array {n} found")
-                elif this_array_count == 0:
-                    print(f"Array {n} not found")
-                else:
-                    print(f"Array {n} has issues")
-                
-                # Assess original array hits
-                orig_issues = set()
-                for hit in this_array_hits:
-                    if hit.is_perfect_match():
-                        continue
-                    if hit.qlen != hit.slen:
-                        if hit.qlen == hit.slen+1 or hit.qlen == hit.slen-1:
-                            orig_issues.add("off by one error.")
-                        else:
-                            orig_issues.add("spacers of the wrong length found.")
-                if len(orig_issues) == 0:
-                    print(f"Array {n} spacers are correct")
-                else:
-                    issue_str = "\n".join([f"Array {n} issues:"] + [i for i in orig_issues])
-                    print(issue_str)
+                except:
+                    print("couldn't index line")
+                    print(line)
+                    break
+                this_array_spacers_seen.add(spacer_num)
+                this_array_hits.append(BlastResult.from_outfmt_str("std qlen slen", line))
+            if (
+                this_array_count == count
+                and all(
+                    [i in this_array_spacers_seen for i in range(1, count+1)]
+                )
+            ):
+                print(f"Array {n} found")
+            elif this_array_count == 0:
+                print(f"Array {n} not found")
+            else:
+                print(f"Array {n} has issues")
+            
+            # Assess original array hits
+            orig_issues = set()
+            for hit in this_array_hits:
+                if hit.is_perfect_match():
+                    continue
+                if hit.qlen != hit.slen:
+                    if hit.qlen == hit.slen+1 or hit.qlen == hit.slen-1:
+                        orig_issues.add("off by one error.")
+                    else:
+                        orig_issues.add("spacers of the wrong length found.")
+            if len(orig_issues) == 0:
+                print(f"Array {n} spacers are correct")
+            else:
+                issue_str = "\n".join([f"Array {n} issues:"] + [i for i in orig_issues])
+                print(issue_str)
 
-            print(f"Expected vs result BLAST output (outfmt '6 std qlen slen'):\n{result.stdout}")
-        except Exception as e:
-            print(e)
+        print(f"Expected vs result BLAST output (outfmt '6 std qlen slen'):\n{result.stdout}")
         
