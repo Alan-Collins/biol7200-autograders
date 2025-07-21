@@ -222,7 +222,10 @@ class TestFiles(unittest.TestCase):
             if "orig_array" not in cols[0]:
                 continue
             orig_array_count += 1
-            spacer_num = int(cols[0].split(":")[1][0])
+            try:
+                spacer_num = int(cols[0].split(":")[1][0])
+            except:
+                print(cols[0].split(":"))
             orig_spacers_seen.add(spacer_num)
         
         if (
