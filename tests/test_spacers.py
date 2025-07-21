@@ -102,7 +102,6 @@ class TestFiles(unittest.TestCase):
             capture_output=True,
             cwd=cls.dir
         )
-        print([i for i in Path(cls.dir).iterdir()])
 
     @classmethod
     def tearDownClass(cls):
@@ -125,18 +124,17 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
 
     @weight(0)
-    @number(f"{Q_NUM}.{POINT_NUM}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_no_error(self):
         """Check script ran successfully"""
         if not self.submitted:
             self.fail("No script was submitted.")
-        
         if self.result.returncode != 0:
             self.fail("Your script returned a non-zero exitcode.")
         print("Your script ran successfully.")
     
     @weight(0)
-    @number(f"{Q_NUM}.{POINT_NUM}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_outfile_exists(self):
         """Check script produced an output file"""
         if not self.submitted:
@@ -144,11 +142,12 @@ class TestFiles(unittest.TestCase):
         if self.result.returncode != 0:
             self.fail("Your script returned a non-zero exitcode.")
         if not self.outfile.exists():
+            print([i for i in Path(self.dir).iterdir()])
             self.fail("Your script did not produce an output file.")
         print("Your script produced a file.")
 
     @weight(0)
-    @number(f"{Q_NUM}.{POINT_NUM}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_fasta_output(self):
         """Check output file is fasta"""
         if not self.submitted:
@@ -175,7 +174,7 @@ class TestFiles(unittest.TestCase):
     
     @weight(0)
     @visibility("hidden")
-    @number(f"{Q_NUM}.{POINT_NUM}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_compare_to_expected(self):
         """Compare output to actual spacer sequences"""
         if not self.submitted:
