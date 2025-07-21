@@ -249,7 +249,7 @@ class TestFiles(unittest.TestCase):
             count = int(re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)[0])
             if count != expected:
                 fail = True
-            print(f"Yours: {count} expected: {expected}")
+            print(f"Yours: {count} expected: {expected} for {ass}")
 
         if fail:
             self.fail("Your script identifies the wrong number of matches.")        
