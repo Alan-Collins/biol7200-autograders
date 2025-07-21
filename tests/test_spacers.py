@@ -254,7 +254,8 @@ class TestFiles(unittest.TestCase):
             if len(orig_issues) == 0:
                 print(f"Array {n} spacers are correct")
             else:
-                print(f"Array {n} issues:\n{'\n'.join([i for i in orig_issues])}")
+                issue_str = "\n".join([f"Array {n} issues:"] + [i for i in orig_issues])
+                print(issue_str)
 
         print(f"Expected vs result BLAST output (outfmt '6 std qlen slen'):\n{result.stdout}")
         
