@@ -192,7 +192,7 @@ class TestFiles(unittest.TestCase):
         # Sort by subject hits
         # keep best hit for each subject based on length and pident
         command = (
-            f"blastn -query {expected_file} -subject {self.outfile}"
+            f"blastn -query {expected_file} -subject {self.outfile} "
             "-task blastn-short -outfmt '6 std qlen slen' "
             "| sort -k2,2 -k4,4nr -k3,3nr | awk '!a[$2]++'"
         )
@@ -203,8 +203,6 @@ class TestFiles(unittest.TestCase):
             cwd=self.dir,
             capture_output=True
         )
-        print(result)
-
         if result.returncode != 0:
             self.fail(
                 "Couldn't compare output to expected results.\n"
@@ -220,7 +218,6 @@ class TestFiles(unittest.TestCase):
         # Assess ability to extract the 100% match array
         orig_array_count = 0
         orig_spacers_seen = set()
-        print(result.stdout)
         for line in result.stdout.split("\n"):
             try:
                 cols = line.split()
