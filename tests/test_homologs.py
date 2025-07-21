@@ -22,6 +22,7 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.dir = mkdtemp()
+        cls.homolog_file = Path(f"{cls.dir}/{repo_name}/find_homologs.sh")
         try:
             with open(SCRIPT_PATH) as f:
                 repo = f.read().strip()
@@ -35,7 +36,6 @@ class TestFiles(unittest.TestCase):
             )
             if result.returncode != 0:
                 raise
-            cls.homolog_file = Path(f"{cls.dir}/{repo_name}/find_homologs.sh")
             cls.homolog_file.chmod(0o777)
             cls.repo_cloned = True
         except:
