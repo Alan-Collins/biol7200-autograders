@@ -217,16 +217,19 @@ class TestFiles(unittest.TestCase):
         # Assess ability to extract the 100% match array
         orig_array_count = 0
         orig_spacers_seen = set()
+        print(result.stdout)
         for line in result.stdout.split("\n"):
-            cols = line.split()
-            if "orig_array" not in cols[0]:
-                continue
-            orig_array_count += 1
             try:
-                spacer_num = int(cols[0].split(":")[1][0])
-            except:
-                print(cols[0].split(":"))
-            orig_spacers_seen.add(spacer_num)
+                cols = line.split()
+                if "orig_array" not in cols[0]:
+                    continue
+                orig_array_count += 1
+                try:
+                    spacer_num = int(cols[0].split(":")[1][0])
+                except:
+                    print(cols[0].split(":"))
+                orig_spacers_seen.add(spacer_num)
+            except: print(line)
         
         if (
             orig_array_count == 9 
