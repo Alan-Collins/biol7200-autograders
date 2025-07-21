@@ -102,6 +102,7 @@ class TestFiles(unittest.TestCase):
             capture_output=True,
             cwd=cls.dir
         )
+        print([i for i in Path(cls.dir).iterdir()])
 
     @classmethod
     def tearDownClass(cls):
