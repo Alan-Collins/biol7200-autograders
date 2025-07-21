@@ -127,6 +127,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_no_error(self):
         """Check script ran successfully"""
+        import platform
+        print(platform.python_version())
         if not self.submitted:
             self.fail("No script was submitted.")
         if self.result.returncode != 0:
