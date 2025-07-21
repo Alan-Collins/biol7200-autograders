@@ -216,6 +216,7 @@ class TestFiles(unittest.TestCase):
             "same_contig": 8
         }
         n = 0
+        print(result)
         for array, count in expected_count.items():
             n += 1
             # Assess ability to extract the 100% match array
@@ -238,6 +239,8 @@ class TestFiles(unittest.TestCase):
                 )
             ):
                 print(f"Array {n} found")
+            elif this_array_count == 0:
+                print(f"Array {n} not found")
             else:
                 print(f"Array {n} has issues")
             
