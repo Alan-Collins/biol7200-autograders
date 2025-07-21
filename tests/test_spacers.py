@@ -226,8 +226,13 @@ class TestFiles(unittest.TestCase):
             this_array_hits = []
             for line in result.stdout.split("\n"):
                 cols = line.split()
-                if array not in cols[0]:
-                    continue
+                try:
+                    if array not in cols[0]:
+                        continue
+                except:
+                    print("couldn't index line")
+                    print(line)
+                    break
                 this_array_count += 1
                 try:
                     spacer_num = int(cols[0].split(":")[1][0])
