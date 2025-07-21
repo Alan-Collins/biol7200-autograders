@@ -188,6 +188,9 @@ class TestFiles(unittest.TestCase):
         expected_file = Path(f"{self.dir}/expected.fna")
         with open(expected_file, 'w') as f:
             f.write(EXPECTED_SPACERS)
+        
+        with open(expected_file) as f:
+            print(f.read())
         # BLAST expected against student results
         # Sort by subject hits
         # keep best hit for each subject based on length and pident
@@ -209,6 +212,8 @@ class TestFiles(unittest.TestCase):
                 "Couldn't compare output to expected results.\n"
                 f"Error:\n{result.stderr}"
             )
+        if len(result.stdout.strip()) == 0:
+            self.fail("No matches found between expected spacers and output.")
         expected_count = {
             "other_contig": 8,
             "orig_array": 9,
