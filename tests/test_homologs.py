@@ -215,6 +215,7 @@ class TestFiles(unittest.TestCase):
         else:
             penalty = sum([PENALTIES[i] for i in result])
             set_score = 40 - penalty
+            print(set_score, penalty)
             print(
                 f"Your script has at least {len(result)} issues "
                 "that prevent it from identifying the correct number of homologs"
