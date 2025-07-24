@@ -97,7 +97,7 @@ class TestFiles(unittest.TestCase):
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
         start = time.perf_counter()
         for assembly in [
-            "Escherichia_coli_K12.fna"
+            "Escherichia_coli_K12.fna",
             "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
             "Vibrio_cholerae_N16961.fna",
             "Wolbachia.fna"
