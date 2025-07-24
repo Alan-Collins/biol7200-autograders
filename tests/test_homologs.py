@@ -67,6 +67,15 @@ ISSUES = {
     6: "Don't sort before uniq"
 }
 
+SPECIES_LIST = [
+    "Escherichia_coli_K12",
+    "Pseudomonas_aeruginosa_UCBPP-PA14",
+    "Vibrio_cholerae_N16961",
+    "Wolbachia"
+]
+
+LEADERBOARD_NULL = 999_999_999
+
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -92,7 +101,7 @@ class TestFiles(unittest.TestCase):
         cls.outfiles = {}
         cls.results = {}
         cls.counts = {}
-        cls.run_time = 999_999_999
+        cls.run_time = LEADERBOARD_NULL
         cls.zero_exit = True
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
@@ -159,19 +168,26 @@ class TestFiles(unittest.TestCase):
     @leaderboard(column_name="run time", sort_order="asc")
     def test_run_time_leaderboard(self, set_leaderboard_value=None):
         """Set script run time for leaderboard"""
-        set_leaderboard_value = self.run_time
-        
+        counts = tuple(self.counts[species] for species in SPECIES_LIST)
+        if EXPECTED_OUTPUTS.get(counts, None) != "correct":
+            set_leaderboard_value = LEADERBOARD_NULL
+        else:
+            set_leaderboard_value = self.run_time
 
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    def test_run_time(self, set_leaderboard_value=None):
+    def test_run_time(self):
         """Check script run time for leaderboard"""
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         print(f"Your script took {self.run_time}s to run on all four species.")
+        counts = tuple(self.counts[species] for species in SPECIES_LIST)
+        if EXPECTED_OUTPUTS.get(counts, None) != "correct":
+            self.fail("Only submissions that identify the correct number of homologs are added to the leaderboard.")
 
 
+    @weight(40)
     @partial_credit(40)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_result_correct(self, set_score=None):
@@ -191,6 +207,7 @@ class TestFiles(unittest.TestCase):
             print(
                 "Your script has issues that could not be diagnosed automatically by the autograder."
             )
+            set_score = 0
             self.fail()
         result = EXPECTED_OUTPUTS[counts]
         if result == "correct":
@@ -203,7 +220,7 @@ class TestFiles(unittest.TestCase):
             )
             penalty = sum([PENALTIES[i] for i in result])
             set_score = 40 - penalty
-            self.fail()
+            self.fail("")
 
     @visibility("hidden")
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -211,20 +228,9 @@ class TestFiles(unittest.TestCase):
         """Indicate identified issues to TAs"""
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
-
-        species_list = [
-            "Escherichia_coli_K12",
-            "Pseudomonas_aeruginosa_UCBPP-PA14",
-            "Vibrio_cholerae_N16961",
-            "Wolbachia"
-        ]
-        
-        counts = tuple(self.counts[species] for species in species_list)
+        counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if counts not in EXPECTED_OUTPUTS:
-            print(
-                "The script has issues that could not be diagnosed automatically by the autograder."
-            )
-            self.fail()
+            self.fail("The script has issues that could not be diagnosed automatically by the autograder.")
         result = EXPECTED_OUTPUTS[counts]
 
         print("The number of identified homologs was:")
@@ -237,4 +243,4 @@ class TestFiles(unittest.TestCase):
             print("The issues with the script likely include:")
             for iss in result:
                 print(ISSUES[iss])
-            self.fail()
+            self.fail("")
