@@ -211,25 +211,30 @@ class TestFiles(unittest.TestCase):
         """Indicate identified issues to TAs"""
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
+
+        species_list = [
+            "Escherichia_coli_K12",
+            "Pseudomonas_aeruginosa_UCBPP-PA14",
+            "Vibrio_cholerae_N16961",
+            "Wolbachia"
+        ]
         
-        counts = tuple(
-            self.counts[species] for species in [
-                "Escherichia_coli_K12",
-                "Pseudomonas_aeruginosa_UCBPP-PA14",
-                "Vibrio_cholerae_N16961",
-                "Wolbachia"
-            ]
-        )
+        counts = tuple(self.counts[species] for species in species_list)
         if counts not in EXPECTED_OUTPUTS:
             print(
                 "The script has issues that could not be diagnosed automatically by the autograder."
             )
             self.fail()
         result = EXPECTED_OUTPUTS[counts]
+
+        print("The number of identified homologs was:")
+        for species, count in self.counts.items():
+            print(f"{species:<35}:{count}")
+        
         if result == "correct":
             print("The script identified the correct number of homologs for each organism.")
-
         else:
+            print("The issues with the script likely include:")
             for iss in result:
                 print(ISSUES[iss])
             self.fail()
