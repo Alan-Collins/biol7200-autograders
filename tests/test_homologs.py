@@ -229,7 +229,7 @@ class TestFiles(unittest.TestCase):
 
         print("The number of identified homologs was:")
         for species, count in self.counts.items():
-            print(f"{species:<35}:{count}")
+            print(f"{species+':':<35} {count}")
         
         if result == "correct":
             print("The script identified the correct number of homologs for each organism.")
