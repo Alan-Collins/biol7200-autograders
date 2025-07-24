@@ -156,16 +156,20 @@ class TestFiles(unittest.TestCase):
             self.fail("Your script exited with a non-zero exit code.")
         print("Your script ran successfully.")
 
-    @weight(0)
     @leaderboard(column_name="run time", sort_order="asc")
+    def test_run_time_leaderboard(self, set_leaderboard_value=None):
+        """Set script run time for leaderboard"""
+        set_leaderboard_value = self.run_time
+        
+
+
+    @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_run_time(self, set_leaderboard_value=None):
         """Check script run time for leaderboard"""
-        set_leaderboard_value = self.run_time
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         print(f"Your script took {self.run_time}s to run on all four species.")
-
 
 
     @partial_credit(40)
@@ -177,7 +181,7 @@ class TestFiles(unittest.TestCase):
         
         counts = tuple(
             self.counts[species] for species in [
-                "Escherichia_coli_K12"
+                "Escherichia_coli_K12",
                 "Pseudomonas_aeruginosa_UCBPP-PA14",
                 "Vibrio_cholerae_N16961",
                 "Wolbachia"
