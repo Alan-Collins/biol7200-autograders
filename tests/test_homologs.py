@@ -103,9 +103,10 @@ class TestFiles(unittest.TestCase):
             "Vibrio_cholerae_N16961.fna",
             "Wolbachia.fna"
         ]:
-            bed = assembly.replace(".fna", ".bed")
-            outfile = assembly.replace("fna", "txt")
-            cls.outfiles[assembly.replace(".fna", "")] = Path(outfile)
+            basename = assembly.replace(".fna", "")
+            bed = basename + ".bed"
+            outfile = basename + ".txt")
+            cls.outfiles[basename] = Path(f"{cls.dir}/{outfile}")
             command = [
                 f"./{SOLUTION_SCRIPT}",
                 "HK_domain.faa",
@@ -119,12 +120,12 @@ class TestFiles(unittest.TestCase):
                 capture_output=True,
                 cwd=cls.dir
             )
-            cls.results[assembly.replace(".fna", "")] = result
+            cls.results[basename] = result
             if result.returncode != 0:
                 cls.zero_exit = False
-            with open(outfile) as f:
+            with open(cls.outfiles[basename]) as f:
                 lines = len([i for i in f])
-            cls.counts[assembly.replace(".fna", "")] = lines
+            cls.counts[basename] = lines
         end = time.perf_counter()
         cls.run_time = int(end-start)
 
