@@ -170,7 +170,7 @@ class TestFiles(unittest.TestCase):
         """Set script run time for leaderboard"""
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if EXPECTED_OUTPUTS.get(counts, None) != "correct":
-            set_leaderboard_value(LEADERBOARD_NULL)
+            self.fail()
         else:
             set_leaderboard_value(self.run_time)
 
