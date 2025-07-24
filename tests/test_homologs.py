@@ -105,7 +105,7 @@ class TestFiles(unittest.TestCase):
         ]:
             basename = assembly.replace(".fna", "")
             bed = basename + ".bed"
-            outfile = basename + ".txt")
+            outfile = basename + ".txt"
             cls.outfiles[basename] = Path(f"{cls.dir}/{outfile}")
             command = [
                 f"./{SOLUTION_SCRIPT}",
