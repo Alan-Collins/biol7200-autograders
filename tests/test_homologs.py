@@ -47,6 +47,7 @@ EXPECTED_OUTPUTS = {
     (113, 179, 167, 2): [1, 2, 3, 5, 6],
     (113, 179, 113, 2): [1, 3, 5, 6],
     (113, 179, 97, 2): [1, 5, 6],
+    (0, 0, 0, 0): [7]
 }
 
 PENALTIES = {
@@ -56,15 +57,17 @@ PENALTIES = {
     4: 10, # Don't keep only unique lines
     5: 5, # Don't check all combinations of start and stop
     6: 5, # Don't sort before uniq
+    7: 40 # Catastrophic failure
 }
 
 ISSUES = {
-    1: "Don't check sequence ID matches",
-    2: "Don't use `break` to stop checking hits",
-    3: "Don't check feature orientation matches hit orientation",
-    4: "Don't keep only unique lines",
-    5: "Don't check all combinations of start and stop",
-    6: "Don't sort before uniq"
+    1: "Didn't check sequence ID matches",
+    2: "Didn't use `break` to stop checking hits",
+    3: "Didn't check feature orientation matches hit orientation",
+    4: "Didn't keep only unique lines",
+    5: "Didn't check all combinations of start and stop",
+    6: "Didn't sort before uniq",
+    7: "Didn't identify any homologs for any species"
 }
 
 SPECIES_LIST = [
