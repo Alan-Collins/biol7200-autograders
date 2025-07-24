@@ -92,6 +92,7 @@ class TestFiles(unittest.TestCase):
         cls.outfiles = {}
         cls.results = {}
         cls.counts = {}
+        cls.run_time = 999_999_999
         cls.zero_exit = True
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
