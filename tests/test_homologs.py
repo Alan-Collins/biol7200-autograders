@@ -227,14 +227,13 @@ class TestFiles(unittest.TestCase):
         """Indicate identified issues to TAs"""
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
+        print("The number of identified homologs was:")
+        for species, count in self.counts.items():
+            print(f"{species+':':<35} {count}")
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if counts not in EXPECTED_OUTPUTS:
             self.fail("The script has issues that could not be diagnosed automatically by the autograder.")
         result = EXPECTED_OUTPUTS[counts]
-
-        print("The number of identified homologs was:")
-        for species, count in self.counts.items():
-            print(f"{species+':':<35} {count}")
         
         if result == "correct":
             print("\nThe script identified the correct number of homologs for each organism.")
