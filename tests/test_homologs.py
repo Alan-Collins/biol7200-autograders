@@ -160,9 +160,9 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_run_time(self, set_leaderboard_value=None):
         """Check script run time for leaderboard"""
+        set_leaderboard_value = self.run_time
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
-        set_leaderboard_value = self.run_time
         print(f"Your script took {self.run_time}s to run on all four species.")
 
 
