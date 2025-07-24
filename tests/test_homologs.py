@@ -187,8 +187,9 @@ class TestFiles(unittest.TestCase):
             self.fail("Only submissions that identify the correct number of homologs are added to the leaderboard.")
 
 
-    @weight(40)
-    @partial_credit(40)
+    # @weight(40)
+    # @partial_credit(40)
+    # @visibility("visible")
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_result_correct(self, set_score=None):
         """Check script identifies correct number of homologs"""
@@ -221,6 +222,7 @@ class TestFiles(unittest.TestCase):
             penalty = sum([PENALTIES[i] for i in result])
             set_score = 40 - penalty
             self.fail("")
+
 
     @visibility("hidden")
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
