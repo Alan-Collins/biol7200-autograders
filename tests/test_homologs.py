@@ -170,9 +170,9 @@ class TestFiles(unittest.TestCase):
         """Set script run time for leaderboard"""
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if EXPECTED_OUTPUTS.get(counts, None) != "correct":
-            set_leaderboard_value = LEADERBOARD_NULL
+            set_leaderboard_value(LEADERBOARD_NULL)
         else:
-            set_leaderboard_value = self.run_time
+            set_leaderboard_value(self.run_time)
 
 
     @weight(0)
@@ -206,17 +206,16 @@ class TestFiles(unittest.TestCase):
             print(
                 "Your script has issues that could not be diagnosed automatically by the autograder."
             )
-            set_score = 0
+            set_score(0)
             self.fail()
         result = EXPECTED_OUTPUTS[counts]
         if result == "correct":
             print("Your script identified the correct number of homologs for each organism.")
-            set_score = 40
+            set_score(40)
         else:
             penalty = sum([PENALTIES[i] for i in result])
-            set_score = 40 - penalty
-            print(set_score, penalty)
-            print(
+            set_score(40 - penalty)
+            self.fail(
                 f"Your script has at least {len(result)} issues "
                 "that prevent it from identifying the correct number of homologs"
             )
