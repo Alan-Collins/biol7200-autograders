@@ -214,7 +214,7 @@ class TestFiles(unittest.TestCase):
         
         counts = tuple(
             self.counts[species] for species in [
-                "Escherichia_coli_K12"
+                "Escherichia_coli_K12",
                 "Pseudomonas_aeruginosa_UCBPP-PA14",
                 "Vibrio_cholerae_N16961",
                 "Wolbachia"
