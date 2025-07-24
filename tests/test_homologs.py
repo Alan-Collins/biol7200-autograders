@@ -213,13 +213,12 @@ class TestFiles(unittest.TestCase):
             print("Your script identified the correct number of homologs for each organism.")
             set_score = 40
         else:
-            print(
-                f"Your script has at least {len(result)} issues "
-                "that prevent it from identifying the correct number of homology"
-            )
             penalty = sum([PENALTIES[i] for i in result])
             set_score = 40 - penalty
-            self.fail("")
+            print(
+                f"Your script has at least {len(result)} issues "
+                "that prevent it from identifying the correct number of homologs"
+            )
 
 
     @visibility("hidden")
@@ -238,9 +237,9 @@ class TestFiles(unittest.TestCase):
             print(f"{species+':':<35} {count}")
         
         if result == "correct":
-            print("The script identified the correct number of homologs for each organism.")
+            print("\nThe script identified the correct number of homologs for each organism.")
         else:
-            print("The issues with the script likely include:")
+            print("\nThe issues with the script likely include:")
             for iss in result:
                 print(ISSUES[iss])
             self.fail("")
