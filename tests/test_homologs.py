@@ -187,9 +187,7 @@ class TestFiles(unittest.TestCase):
             self.fail("Only submissions that identify the correct number of homologs are added to the leaderboard.")
 
 
-    # @weight(40)
-    # @partial_credit(40)
-    # @visibility("visible")
+    @partial_credit(40)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_result_correct(self, set_score=None):
         """Check script identifies correct number of homologs"""
@@ -226,7 +224,7 @@ class TestFiles(unittest.TestCase):
 
     @visibility("hidden")
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    def test_result_correct(self):
+    def test_result_correct_tas(self):
         """Indicate identified issues to TAs"""
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
