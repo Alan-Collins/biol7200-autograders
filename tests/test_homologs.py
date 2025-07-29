@@ -3,6 +3,7 @@ from pathlib import Path
 from tempfile import mkdtemp
 import shutil
 import subprocess
+import re
 
 from gradescope_utils.autograder_utils.decorators import (
     weight,
@@ -114,6 +115,33 @@ class TestFiles(unittest.TestCase):
             f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
         )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
+    
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_shebang_present(self):
+        """Check script uses shebang"""
+        with open(SCRIPT_PATH) as f:
+            first_two = f.read()[:2]
+        if first_two != "#!":
+            self.fail(
+                f"Your scripts should always start with a shebang to ensure the correct program executes them."
+            )
+        print("Your script begins with a shebang.")
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_shebang_correct(self):
+        """Check shebang correct"""
+        pattern = re.compile(r"\#\![ ]?/usr/bin/env python3")
+        with open(SCRIPT_PATH) as f:
+            first_line = f.readline()
+        if not re.match(pattern, first_line):
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        print("Your script begins with a correct shebang.")
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -132,6 +160,8 @@ class TestFiles(unittest.TestCase):
         
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if counts == (27, 38, 34, 2):
+            for species, count in self.counts.items():
+                print(f"{species+':':<35} {count}")
             print("Your script identified the correct number of homologs for each organism.")
         else:
             for species, count in self.counts.items():
