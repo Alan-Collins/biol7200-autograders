@@ -48,15 +48,21 @@ class TestFiles(unittest.TestCase):
         ]
         for file in cls.input_files:
             shutil.copy(f"{DATA_DIR}{file}", f"{cls.dir}/")
-        
-        if not Path(SCRIPT_PATH).exists():
-            cls.submitted = False
-            return cls
         cls.submitted = True
         cls.outfiles = {}
         cls.results = {}
         cls.counts = {}
-        cls.zero_exit = True
+        cls.shebang = False
+        if not Path(SCRIPT_PATH).exists():
+            cls.submitted = False
+            return cls
+        else:
+            pattern = re.compile(r"\#\![ ]?/usr/bin/env python3")
+            with open(SCRIPT_PATH) as f:
+                first_line = f.readline()
+            if re.match(pattern, first_line):
+                cls.shebang = True
+        cls.zero_exit = False
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
         for assembly in [
@@ -91,8 +97,8 @@ class TestFiles(unittest.TestCase):
                 cwd=cls.dir
             )
             cls.results[basename] = result
-            if result.returncode != 0:
-                cls.zero_exit = False
+            if result.returncode == 0:
+                cls.zero_exit = True
             with open(cls.outfiles[basename]) as f:
                 lines = len([i for i in f])
             cls.counts[basename] = lines
@@ -134,10 +140,7 @@ class TestFiles(unittest.TestCase):
     @visibility("on_fail")
     def test_shebang_correct(self):
         """Check shebang correct"""
-        pattern = re.compile(r"\#\![ ]?/usr/bin/env python3")
-        with open(SCRIPT_PATH) as f:
-            first_line = f.readline()
-        if not re.match(pattern, first_line):
+        if not self.shebang:
             self.fail(
                 f"Your script does not begin with a correct shebang."
             )
@@ -157,6 +160,10 @@ class TestFiles(unittest.TestCase):
         """Check script identifies correct number of homologs"""
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
         
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if counts == (27, 38, 34, 2):
