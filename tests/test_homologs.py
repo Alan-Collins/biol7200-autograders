@@ -18,7 +18,7 @@ SOLUTION_SCRIPT = "homolog_identify.py"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 DATA_DIR = "/autograder/biol7200-autograders/data/"
 
-Q_NUM = 1
+Q_NUM = 2
 
 POINT_NUM = PointCounter(0)
 
