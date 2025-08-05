@@ -77,7 +77,7 @@ class TestFiles(unittest.TestCase):
         with open(wrapped_hidden.resolve(), 'w') as f:
             f.write(HIDDEN_SEQS_WRAPPED)
         with open(unwrapped_hidden.resolve(), 'w') as f:
-            f.write(HIDDEN_SEQS_WRAPPED)
+            f.write(HIDDEN_SEQS_UNWRAPPED)
         
         cls.submitted = True
         cls.results = {}
