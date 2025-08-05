@@ -70,13 +70,13 @@ class TestFiles(unittest.TestCase):
         unwrapped = Path(cls.dir) / Path("unwrapped.fna")
         wrapped_hidden = Path(cls.dir) / Path("wrapped_hidden.fna")
         unwrapped_hidden = Path(cls.dir) / Path("unwrapped_hidden.fna")
-        with open(wrapped.resolve()) as f:
+        with open(wrapped.resolve(), 'w') as f:
             f.write(SEQS_WRAPPED)
-        with open(unwrapped.resolve()) as f:
+        with open(unwrapped.resolve(), 'w') as f:
             f.write(SEQS_UNWRAPPED)
-        with open(wrapped_hidden.resolve()) as f:
+        with open(wrapped_hidden.resolve(), 'w') as f:
             f.write(HIDDEN_SEQS_WRAPPED)
-        with open(unwrapped_hidden.resolve()) as f:
+        with open(unwrapped_hidden.resolve(), 'w') as f:
             f.write(HIDDEN_SEQS_WRAPPED)
         
         cls.submitted = True
