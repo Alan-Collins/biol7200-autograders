@@ -127,6 +127,8 @@ class TestFiles(unittest.TestCase):
     @visibility("on_fail")
     def test_shebang_present(self):
         """Check script uses shebang"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(SCRIPT_PATH) as f:
             first_two = f.read()[:2]
         if first_two != "#!":
@@ -140,6 +142,8 @@ class TestFiles(unittest.TestCase):
     @visibility("on_fail")
     def test_shebang_correct(self):
         """Check shebang correct"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.shebang:
             self.fail(
                 f"Your script does not begin with a correct shebang."
@@ -150,6 +154,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_exit_codes(self):
         """Check script ran without error"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         print("Your script ran successfully.")
@@ -158,6 +164,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_result_correct(self):
         """Check script identifies correct number of homologs"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         if not self.shebang:
