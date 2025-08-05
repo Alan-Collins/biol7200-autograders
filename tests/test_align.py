@@ -117,7 +117,7 @@ class TestFiles(unittest.TestCase):
             cls.zero_exit = False
 
         hidden_wrapped_result = subprocess.run(
-            ["./pretty_align.py", f"{wrapped.resolve()}"],
+            ["./pretty_align.py", f"{wrapped_hidden.resolve()}"],
             text=True,
             capture_output=True,
             cwd=cls.dir
@@ -127,7 +127,7 @@ class TestFiles(unittest.TestCase):
             cls.zero_exit = False
         
         hidden_unwrapped_result = subprocess.run(
-            ["./pretty_align.py", f"{unwrapped.resolve()}"],
+            ["./pretty_align.py", f"{unwrapped_hidden.resolve()}"],
             text=True,
             capture_output=True,
             cwd=cls.dir
