@@ -182,7 +182,7 @@ class TestFiles(unittest.TestCase):
 
     @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    @visibility("on_fail")
+    @visibility("visible")
     def test_shebang_present(self):
         """Check script uses shebang"""
         with open(SCRIPT_PATH) as f:
@@ -195,7 +195,7 @@ class TestFiles(unittest.TestCase):
 
     @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    @visibility("on_fail")
+    @visibility("visible")
     def test_shebang_correct(self):
         """Check shebang correct"""
         if not self.shebang:
