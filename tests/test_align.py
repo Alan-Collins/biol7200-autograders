@@ -14,7 +14,7 @@ SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "pretty_align.py"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 
-Q_NUM = 4
+Q_NUM = 1
 
 POINT_NUM = PointCounter(0)
 
