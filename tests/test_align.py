@@ -252,7 +252,7 @@ class TestFiles(unittest.TestCase):
     def test_matches_expected_hidden(self):
         """Check output matches expected hidden testcase"""
         one_line_res = self.results["hidden_unwrapped"]
-        for a, b in zip(one_line_res.stdout.split("\n"), EXPECTED.split("\n")):
+        for a, b in zip(one_line_res.stdout.split("\n"), HIDDEN_EXPECTED.split("\n")):
             if a == b:
                 continue
             self.fail(
@@ -260,7 +260,7 @@ class TestFiles(unittest.TestCase):
             )
         
         multi_line_res = self.results["hidden_wrapped"]
-        for a, b in zip(multi_line_res.stdout.split("\n"), EXPECTED.split("\n")):
+        for a, b in zip(multi_line_res.stdout.split("\n"), HIDDEN_EXPECTED.split("\n")):
             if a == b:
                 continue
             self.fail(
