@@ -62,6 +62,8 @@ class TestFiles(unittest.TestCase):
                 first_line = f.readline()
             if re.match(pattern, first_line):
                 cls.shebang = True
+            else:
+                cls.shebang = False
         cls.zero_exit = False
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
