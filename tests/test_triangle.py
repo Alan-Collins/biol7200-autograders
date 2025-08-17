@@ -50,7 +50,7 @@ class TestFiles(unittest.TestCase):
                         # If the function starts with a de-indented comment can't get indent amount
                         if len(line.split("#")[0].strip()) == 0:
                             continue
-                        indent = re.match(r"^\s*", line)
+                        indent = re.match(r"^\s*", line)[0]
                     # Add appropriately indented lines and blank lines
                     # If the line is neither it indicates the end of the function body
                     if line.startswith(indent) or len(line.split("#")[0].strip()) == 0:
@@ -131,7 +131,7 @@ class TestFiles(unittest.TestCase):
         else:
             print("found multiple lines of code on the baseline:\n")
             for line in self.baseline_code:
-                print("line")
+                print(line)
             self.fail()
             
 
