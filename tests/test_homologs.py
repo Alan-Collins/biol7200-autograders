@@ -23,36 +23,20 @@ Q_NUM = 3
 
 POINT_NUM = PointCounter(0)
 
-SPECIES_LIST = [
-    "Escherichia_coli_K12",
-    "Pseudomonas_aeruginosa_UCBPP-PA14",
-    "Vibrio_cholerae_N16961",
-    "Wolbachia"
-]
-
 
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.dir = mkdtemp()
         cls.input_files = [
-            "HK_domain.faa",
-            "Escherichia_coli_K12.fna",
-            "Escherichia_coli_K12.bed",
-            "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
-            "Pseudomonas_aeruginosa_UCBPP-PA14.bed",
             "Vibrio_cholerae_N16961.fna",
             "Vibrio_cholerae_N16961.bed",
-            "Wolbachia.fna",
-            "Wolbachia.bed"
+            "Vc_blastout.txt"
         ]
         for file in cls.input_files:
             shutil.copy(f"{DATA_DIR}{file}", f"{cls.dir}/")
         cls.submitted = True
-        cls.outfiles = {}
-        cls.results = {}
-        cls.counts = {}
-        cls.shebang = False
+        cls.outfile = Path(f"{cls.dir}/Vc_student_out.fna")
         if not Path(SCRIPT_PATH).exists():
             cls.submitted = False
             return cls
@@ -67,43 +51,25 @@ class TestFiles(unittest.TestCase):
         cls.zero_exit = False
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
-        for assembly in [
-            "Escherichia_coli_K12.fna",
-            "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
-            "Vibrio_cholerae_N16961.fna",
-            "Wolbachia.fna"
-        ]:
-            basename = assembly.replace(".fna", "")
-            bed = basename + ".bed"
-            blast = basename + "blast.txt"
-            outfile = basename + ".txt"
-            cls.outfiles[basename] = Path(f"{cls.dir}/{outfile}")
-            blast_command = f"tblastn -query HK_domain.faa -subject {assembly} -outfmt '6 std qlen' > {blast}"
-            subprocess.run(
-                blast_command,
-                text=True,
-                capture_output=True,
-                shell=True,
-                cwd=cls.dir
-            )
-            command = [
-                f"./{SOLUTION_SCRIPT}",
-                blast,
-                bed,
-                outfile
-            ]
-            result = subprocess.run(
-                command,
-                text=True,
-                capture_output=True,
-                cwd=cls.dir
-            )
-            cls.results[basename] = result
-            if result.returncode == 0:
-                cls.zero_exit = True
-            with open(cls.outfiles[basename]) as f:
-                lines = len([i for i in f])
-            cls.counts[basename] = lines
+        assembly =  Path(f"{cls.dir}/Vibrio_cholerae_N16961.fna")
+        bed = Path(f"{cls.dir}/Vibrio_cholerae_N16961.bed")
+        blast = Path(f"{cls.dir}/Vc_blastout.txt")
+        command = [
+            f"./{SOLUTION_SCRIPT}",
+            blast,
+            bed,
+            assembly,
+            cls.outfile
+        ]
+        cls.result = subprocess.run(
+            command,
+            text=True,
+            capture_output=True,
+            cwd=cls.dir
+        )
+        if cls.result.returncode == 0:
+            cls.zero_exit = True
+
 
     @classmethod
     def tearDownClass(cls):
@@ -161,26 +127,3 @@ class TestFiles(unittest.TestCase):
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         print("Your script ran successfully.")
-
-    @weight(20)
-    @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    def test_result_correct(self):
-        """Check script identifies correct number of homologs"""
-        if not self.submitted:
-            self.fail("No script was submitted")
-        if not self.zero_exit:
-            self.fail("Your script exited with a non-zero exit code.")
-        if not self.shebang:
-            self.fail(
-                f"Your script does not begin with a correct shebang."
-            )
-        
-        counts = tuple(self.counts[species] for species in SPECIES_LIST)
-        if counts == (27, 38, 34, 2):
-            for species, count in self.counts.items():
-                print(f"{species+':':<35} {count}")
-            print("Your script identified the correct number of homologs for each organism.")
-        else:
-            for species, count in self.counts.items():
-                print(f"{species+':':<35} {count}")
-            self.fail("Your script identified the wrong number of homologs")
