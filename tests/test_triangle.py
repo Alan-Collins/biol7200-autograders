@@ -27,7 +27,7 @@ class TestFiles(unittest.TestCase):
             cls.submitted = False
             return cls
         with open(soln) as fin:
-            code = fin.read()
+            cls.code = fin.read()
         # check shebang
         pattern = re.compile(r"\#\![ ]?/usr/bin/env python3")
         with open(SCRIPT_PATH) as f:
@@ -36,31 +36,14 @@ class TestFiles(unittest.TestCase):
             cls.shebang = True
         else:
             cls.shebang = False
-
-        # check base line code just functions and single call
-
-
-        # run script and check triangles
-
         try:
             import triangle
-
-            # interrogate docstrings
-
-            # check type hints
+            cls.imported = True
         except:
             cls.imported = False
             cls.docstrings = False
             cls.typehints = False
             return cls
-
-        
-        
-        
-
-
-        
-
 
     @classmethod
     def tearDownClass(cls):
@@ -80,3 +63,28 @@ class TestFiles(unittest.TestCase):
             f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
         )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
+
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_import(self):
+        """Check importable"""
+        if not self.imported:
+            try:
+                import triangle
+            except Exception as e:
+                self.fail(
+                    "Couldn't import your script due to the following error:\n"
+                    f"{e}"
+                )
+
+
+    # check base line code just functions and single call
+
+
+    # run script and check triangles
+
+    # interrogate docstrings
+
+    # check type hints
