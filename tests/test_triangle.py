@@ -37,9 +37,41 @@ class TestFiles(unittest.TestCase):
         else:
             cls.shebang = False
         try:
-            import triangle
+            func_found = False
+            func_body = []
+            indent = None
+            func_lines = []
+            cls.def_lines = []
+            cls.func_names = []
+            cls.baseline_code = []
+            for line in cls.code.splitlines():
+                if func_found:
+                    if not indent:
+                        # If the function starts with a de-indented comment can't get indent amount
+                        if len(line.split("#")[0].strip()) == 0:
+                            continue
+                        indent = re.match(r"^\s*", line)
+                    # Add appropriately indented lines and blank lines
+                    # If the line is neither it indicates the end of the function body
+                    if line.startswith(indent) or len(line.split("#")[0].strip()) == 0:
+                        func_lines.append(line)
+                    else:
+                        func_body.append("\n".join(func_lines))
+                        func_lines = []
+                        func_found = False
+                if line.startswith("def"):
+                    cls.def_lines.append(line)
+                    cls.func_names.append(line.split()[1].split("(")[0])
+                    func_found = True
+                elif line.startswith("#") or line.startswith("import"):
+                    continue
+                else:
+                    cls.baseline_code.append(line)
+
+
             cls.imported = True
-        except:
+        except Exception as e:
+            cls.parse_exception = e
             cls.imported = False
             cls.docstrings = False
             cls.typehints = False
@@ -68,20 +100,40 @@ class TestFiles(unittest.TestCase):
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("on_fail")
-    def test_import(self):
-        """Check importable"""
+    def test_parsed(self):
+        """Check your script could be parsed"""
         if not self.imported:
-            try:
-                import triangle
-            except Exception as e:
-                self.fail(
-                    "Couldn't import your script due to the following error:\n"
-                    f"{e}"
-                )
-
-
+            self.fail(
+                "Couldn't import your script due to the following error.\n"
+                "Please bring this issue to the attention of Dr. Collins as this may be an"
+                "issue with his autograder code..."
+                f"{self.parse_exception}"
+            )
+        else:
+            print(f"Script parsed successfully and {len(self.func_names)} functions were found.")
+    
     # check base line code just functions and single call
 
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_single_baseline_line(self):
+        """Check your script uses functions for all code except one call"""
+        if not self.imported:
+            self.fail(
+                "Couldn't import your script."
+            )
+        if len(self.baseline_code) == 1:
+            print(
+                "Only one line of code found on the baseline:\n"
+                f"{self.baseline_code[0]}"  
+            )
+        else:
+            print("found multiple lines of code on the baseline:\n")
+            for line in self.baseline_code:
+                print("line")
+            self.fail()
+            
 
     # run script and check triangles
 
