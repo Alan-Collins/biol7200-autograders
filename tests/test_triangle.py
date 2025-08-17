@@ -64,7 +64,7 @@ class TestFiles(unittest.TestCase):
                     cls.def_lines.append(line)
                     cls.func_names.append(line.split()[1].split("(")[0])
                     func_found = True
-                elif line.startswith("#") or line.startswith("import"):
+                elif line.startswith("#") or line.startswith("import") or line.strip() == "":
                     continue
                 else:
                     cls.baseline_code.append(line)
