@@ -274,7 +274,7 @@ class TestFiles(unittest.TestCase):
             except Exception as e:
                 self.fail(
                     f"There was an issue processing your function {fname}:\n"
-                    "{e}"
+                    f"{e}"
                 )
             docstring = eval(f"{fname}.__doc__")
             if not docstring:
@@ -301,7 +301,7 @@ class TestFiles(unittest.TestCase):
             except Exception as e:
                 self.fail(
                     f"There was an issue processing your function {fname}:\n"
-                    "{e}"
+                    f"{e}"
                 )
             annots = eval(f"{fname}.__annotations__")
             if not annots:
