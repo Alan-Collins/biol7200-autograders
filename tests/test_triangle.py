@@ -178,9 +178,9 @@ class TestFiles(unittest.TestCase):
                 f"Your script does not begin with a correct shebang."
             )
         tests = [
-            (["'X'", "5"],"X\nXX\nXXX\nXX\nX\n"),
-            (["'#'", "3"],"#\n##\n#\n"),
-            (["'&'", "1"],"&\n"),
+            (["X", "5"],"X\nXX\nXXX\nXX\nX\n"),
+            (["#", "3"],"#\n##\n#\n"),
+            (["&", "1"],"&\n"),
         ]
         for input, expected in tests:
             command = [self.submission] + input
