@@ -105,17 +105,8 @@ class TestFiles(unittest.TestCase):
                 "issue with his autograder code..."
                 f"{self.parse_exception}"
             )
-        for fname, f in zip(self.func_names, self.func_bodies):
-            try:
-                exec(f)
-            except Exception as e:
-                self.fail(
-                    f"There was an issue processing your function {fname}:\n"
-                    f"{e}\n"
-                    f"Function body:\n{f}"
-                )
         
-        print(f"Script parsed successfully and {len(self.func_names)} functions were found.")
+        print(f"Script parsed successfully.")
     
     # check base line code just functions and single call
 

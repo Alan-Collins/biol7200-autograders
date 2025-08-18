@@ -56,8 +56,9 @@ class TestFiles(unittest.TestCase):
         try:
             cls.tree = ast.parse(cls.code)
             cls.imported = True
-        except:
+        except Exception as e:
             cls.imported = False
+            cls.parse_exception = e
         assembly =  Path(f"{cls.dir}/Vibrio_cholerae_N16961.fna")
         bed = Path(f"{cls.dir}/Vibrio_cholerae_N16961.bed")
         blast = Path(f"{cls.dir}/Vc_blastout.txt")
@@ -124,6 +125,25 @@ class TestFiles(unittest.TestCase):
                 f"Your script does not begin with a correct shebang."
             )
         print("Your script begins with a correct shebang.")
+    
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_parsed(self):
+        """Check your script could be parsed"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.imported:
+            self.fail(
+                "Couldn't parse your script due to the following error.\n"
+                "Please bring this issue to the attention of Dr. Collins as this may be an"
+                "issue with his autograder code..."
+                f"{self.parse_exception}"
+            )
+        
+        print(f"Script parsed successfully.")
+
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
