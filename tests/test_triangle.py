@@ -143,7 +143,8 @@ class TestFiles(unittest.TestCase):
             except Exception as e:
                 self.fail(
                     f"There was an issue processing your function {fname}:\n"
-                    "{e}"
+                    f"{e}"
+                    f"Function body:\n{f}"
                 )
         
         print(f"Script parsed successfully and {len(self.func_names)} functions were found.")
