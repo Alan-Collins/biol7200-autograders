@@ -2,6 +2,7 @@ import unittest
 from pathlib import Path
 import re
 import subprocess
+import ast
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
@@ -25,8 +26,7 @@ class TestFiles(unittest.TestCase):
             return cls
         cls.submission.chmod(0o777)
         cls.submitted = True
-        with open(cls.submission) as fin:
-            cls.code = fin.read()
+        cls.code = cls.submission.read_text()
         # check shebang
         pattern = re.compile(r"\#\![ ]?/usr/bin/env python3")
         with open(SCRIPT_PATH) as f:
@@ -68,7 +68,7 @@ class TestFiles(unittest.TestCase):
                     continue
                 else:
                     cls.baseline_code.append(line)
-
+            cls.tree = ast.parse(cls.code)
 
             cls.imported = True
         except Exception as e:
@@ -270,6 +270,8 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 f"Your script does not begin with a correct shebang."
             )
+        funcs = [n for n in self.tree.body if isinstance(n, (ast.FunctionDef))]
+        print([f for f in funcs])
         for fname, f in zip(self.func_names, self.func_bodies):
             try:
                 exec(f)
