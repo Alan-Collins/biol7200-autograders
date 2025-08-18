@@ -197,7 +197,8 @@ class TestFiles(unittest.TestCase):
             if len(out_chars) != 1:
                 self.fail(
                     "Your script should produce a triangle composed only of the specified character.\n"
-                    f"Instead, your script output including {len(out_chars)} different characters: {out_chars}"
+                    f"Instead, your script output including {len(out_chars)} different characters: {out_chars}\n"
+                    f"Your output was {result.stdout}"
                 )
             if result.stdout != expected:
                 self.fail(
