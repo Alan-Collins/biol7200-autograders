@@ -37,7 +37,7 @@ class TestFiles(unittest.TestCase):
             cls.shebang = False
         try:
             func_found = False
-            func_body = []
+            cls.func_bodies = []
             indent = None
             func_lines = []
             cls.def_lines = []
@@ -56,7 +56,7 @@ class TestFiles(unittest.TestCase):
                         func_lines.append(line)
                         continue
                     else:
-                        func_body.append("\n".join(func_lines))
+                        cls.func_bodies.append("\n".join(func_lines))
                         func_lines = []
                         func_found = False
                 if line.startswith("def"):
@@ -137,8 +137,16 @@ class TestFiles(unittest.TestCase):
                 "issue with his autograder code..."
                 f"{self.parse_exception}"
             )
-        else:
-            print(f"Script parsed successfully and {len(self.func_names)} functions were found.")
+        for fname, f in zip(self.func_names, self.func_bodies):
+            try:
+                eval(f)
+            except Exception as e:
+                self.fail(
+                    f"There was an issue processing your function {fname}:\n"
+                    "{e}"
+                )
+        
+        print(f"Script parsed successfully and {len(self.func_names)} functions were found.")
     
     # check base line code just functions and single call
 
@@ -163,9 +171,9 @@ class TestFiles(unittest.TestCase):
             for line in self.baseline_code:
                 print(line)
             self.fail("")
-            
-    # run script and check triangles
 
+
+    # run script and check triangles
     @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
@@ -207,8 +215,6 @@ class TestFiles(unittest.TestCase):
         print("Your script produced odd height triangles that match the expected output")
         
 
-    
-
     @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
@@ -249,6 +255,57 @@ class TestFiles(unittest.TestCase):
                 )
         print("Your script produced odd height triangles that match the expected output")
 
+
     # interrogate docstrings
+    @weight(2)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_docstrings_used(self):
+        """Check your functions have docstrings"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        for fname, f in zip(self.func_names, self.func_bodies):
+            try:
+                eval(f)
+            except Exception as e:
+                self.fail(
+                    f"There was an issue processing your function {fname}:\n"
+                    "{e}"
+                )
+            docstring = eval(f"{fname}.__doc__")
+            if not docstring:
+                self.fail(
+                    f"No docstring found for your function {fname}"
+                )
+        print("looks like docstrings were used. The quality of your docstrings will be assessed manually.")
 
     # check type hints
+    @weight(2)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_typehints_used(self):
+        """Check your functions have typehints"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        for fname, f in zip(self.func_names, self.func_bodies):
+            try:
+                eval(f)
+            except Exception as e:
+                self.fail(
+                    f"There was an issue processing your function {fname}:\n"
+                    "{e}"
+                )
+            annots = eval(f"{fname}.__annotations__")
+            if not annots:
+                self.fail(
+                    f"No annotations found for your function {fname}"
+                )
+        print("looks like annotations were used. The quality of your annotations will be assessed manually.")
