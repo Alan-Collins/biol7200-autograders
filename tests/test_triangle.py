@@ -271,7 +271,7 @@ class TestFiles(unittest.TestCase):
                 f"Your script does not begin with a correct shebang."
             )
         funcs = [n for n in self.tree.body if isinstance(n, (ast.FunctionDef))]
-        print([f for f in funcs])
+        print([f.name for f in funcs])
         for fname, f in zip(self.func_names, self.func_bodies):
             try:
                 exec(f)
