@@ -36,40 +36,7 @@ class TestFiles(unittest.TestCase):
         else:
             cls.shebang = False
         try:
-            func_found = False
-            cls.func_bodies = []
-            indent = None
-            func_lines = []
-            cls.def_lines = []
-            cls.func_names = []
-            cls.baseline_code = []
-            for line in cls.code.splitlines():
-                if func_found:
-                    if not indent:
-                        # If the function starts with a de-indented comment can't get indent amount
-                        if len(line.split("#")[0].strip()) == 0:
-                            continue
-                        indent = re.match(r"^\s*", line)[0]
-                    # Add appropriately indented lines and blank lines
-                    # If the line is neither it indicates the end of the function body
-                    if line.startswith(indent) or len(line.split("#")[0].strip()) == 0:
-                        func_lines.append(line)
-                        continue
-                    else:
-                        cls.func_bodies.append("\n".join(func_lines))
-                        func_lines = []
-                        func_found = False
-                if line.startswith("def"):
-                    func_lines.append(line)
-                    cls.def_lines.append(line)
-                    cls.func_names.append(line.split()[1].split("(")[0])
-                    func_found = True
-                elif line.startswith("#") or line.startswith("import") or line.strip() == "":
-                    continue
-                else:
-                    cls.baseline_code.append(line)
             cls.tree = ast.parse(cls.code)
-
             cls.imported = True
         except Exception as e:
             cls.parse_exception = e
@@ -163,15 +130,21 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "Couldn't parse your script."
             )
-        if len(self.baseline_code) == 1:
+        body = list(self.tree.body)
+        # remove module docstring if present (first node a string Expr)
+        if body and isinstance(body[0], ast.Expr) and isinstance(body[0].value, ast.Constant) and isinstance(body[0].value.value, str):
+            body = body[1:]
+        # count nodes that are not imports or function defs
+        baseline_code = [n for n in body if not isinstance(n, (ast.Import, ast.ImportFrom, ast.FunctionDef, ast.ClassDef))]
+        if len(baseline_code) == 1:
             print(
                 "Only one line of code found on the baseline:\n"
-                f"{self.baseline_code[0]}"  
+                f"{ast.unparse(baseline_code[0])}"
             )
         else:
             print("found multiple lines of code on the baseline:\n")
-            for line in self.baseline_code:
-                print(line)
+            for line in baseline_code:
+                print(ast.unparse(line))
             self.fail("")
 
 
