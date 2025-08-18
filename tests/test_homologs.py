@@ -55,6 +55,35 @@ class TestFiles(unittest.TestCase):
         cls.code = Path(f"{cls.dir}/{SOLUTION_SCRIPT}").read_text()
         try:
             cls.tree = ast.parse(cls.code)
+            cls.baseline_code = []
+            cls.func_bodies = []
+            cls.def_lines = []
+            cls.func_names = []
+            for line in cls.code.splitlines():
+                if func_found:
+                    if not indent:
+                        # If the function starts with a de-indented comment can't get indent amount
+                        if len(line.split("#")[0].strip()) == 0:
+                            continue
+                        indent = re.match(r"^\s*", line)[0]
+                    # Add appropriately indented lines and blank lines
+                    # If the line is neither it indicates the end of the function body
+                    if line.startswith(indent) or len(line.split("#")[0].strip()) == 0:
+                        func_lines.append(line)
+                        continue
+                    else:
+                        cls.func_bodies.append("\n".join(func_lines))
+                        func_lines = []
+                        func_found = False
+                if line.startswith("def"):
+                    func_lines.append(line)
+                    cls.def_lines.append(line)
+                    cls.func_names.append(line.split()[1].split("(")[0])
+                    func_found = True
+                elif line.startswith("#") or line.startswith("import") or line.strip() == "":
+                    continue
+                else:
+                    cls.baseline_code.append(line)
             cls.imported = True
         except:
             cls.imported = False
