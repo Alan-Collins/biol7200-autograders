@@ -60,6 +60,7 @@ class TestFiles(unittest.TestCase):
                         func_lines = []
                         func_found = False
                 if line.startswith("def"):
+                    func_lines.append(line)
                     cls.def_lines.append(line)
                     cls.func_names.append(line.split()[1].split("(")[0])
                     func_found = True
