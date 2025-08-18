@@ -1,7 +1,7 @@
 import unittest
-import sys
 from pathlib import Path
 import re
+import subprocess
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
@@ -16,17 +16,14 @@ Q_NUM = 1
 
 POINT_NUM = PointCounter(0)
 
-sys.path.append(SUBMISSION_PATH)
-
-
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        soln = Path(SCRIPT_PATH)
-        if not soln.exists():
+        cls.submission = Path(SCRIPT_PATH)
+        if not cls.submission.exists():
             cls.submitted = False
             return cls
-        with open(soln) as fin:
+        with open(cls.submission) as fin:
             cls.code = fin.read()
         # check shebang
         pattern = re.compile(r"\#\![ ]?/usr/bin/env python3")
@@ -101,9 +98,11 @@ class TestFiles(unittest.TestCase):
     @visibility("on_fail")
     def test_parsed(self):
         """Check your script could be parsed"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.imported:
             self.fail(
-                "Couldn't import your script due to the following error.\n"
+                "Couldn't parse your script due to the following error.\n"
                 "Please bring this issue to the attention of Dr. Collins as this may be an"
                 "issue with his autograder code..."
                 f"{self.parse_exception}"
@@ -113,14 +112,16 @@ class TestFiles(unittest.TestCase):
     
     # check base line code just functions and single call
 
-    @weight(0)
+    @weight(1)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    @visibility("on_fail")
+    @visibility("visible")
     def test_single_baseline_line(self):
         """Check your script uses functions for all code except one call"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.imported:
             self.fail(
-                "Couldn't import your script."
+                "Couldn't parse your script."
             )
         if len(self.baseline_code) == 1:
             print(
@@ -133,8 +134,54 @@ class TestFiles(unittest.TestCase):
                 print(line)
             self.fail("")
             
-
     # run script and check triangles
+
+    @weight(5)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_odd_numbers(self):
+        """Check your script works for odd height triangles"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        tests = [
+            (["'X'", "5"],"X\nXX\nXXX\nXX\nX\n"),
+            (["'#'", "3"],"#\n##\n#\n"),
+            (["'&'", "1"],"&\n"),
+        ]
+        for input, expected in tests:
+            command = [self.submission] + input
+            result = subprocess.run(
+                command,
+                text=True,
+                capture_output=True
+            )
+            if result.returncode != 0:
+                self.fail(
+                    "Your script returned a non-zero exit code"
+                )
+            out_chars = set("".join(result.stdout.split()))
+            if len(out_chars) != 1:
+                self.fail(
+                    "Your script should produce a triangle composed only of the specified character.\n"
+                    f"Instead, your script output including {len(out_chars)} different characters"
+                )
+            if result.stdout != expected:
+                self.fail(
+                    "Your script's output did not match the expected output for an odd height triangle."
+                    f"Yours:\n{result.stdout}\nExpected:{expected}"
+                )
+        print("Your script produced odd height triangles that match the expected output")
+        
+
+    
+
+    @weight(5)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_even_numbers(self):
+        """Check your script works for even height triangles"""
+        if not self.submitted:
+            self.fail("No script was submitted")
 
     # interrogate docstrings
 
