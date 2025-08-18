@@ -53,7 +53,11 @@ class TestFiles(unittest.TestCase):
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
         cls.code = Path(f"{cls.dir}/{SOLUTION_SCRIPT}").read_text()
-        cls.tree = ast.parse(cls.code)
+        try:
+            cls.tree = ast.parse(cls.code)
+            cls.imported = True
+        except:
+            cls.imported = False
         assembly =  Path(f"{cls.dir}/Vibrio_cholerae_N16961.fna")
         bed = Path(f"{cls.dir}/Vibrio_cholerae_N16961.bed")
         blast = Path(f"{cls.dir}/Vc_blastout.txt")
