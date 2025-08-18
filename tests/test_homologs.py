@@ -4,6 +4,7 @@ from tempfile import mkdtemp
 import shutil
 import subprocess
 import re
+import ast
 
 from gradescope_utils.autograder_utils.decorators import (
     weight,
@@ -51,6 +52,8 @@ class TestFiles(unittest.TestCase):
         cls.zero_exit = False
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
+        cls.code = Path(f"{cls.dir}/{SOLUTION_SCRIPT}").read_text()
+        cls.tree = ast.parse(cls.code)
         assembly =  Path(f"{cls.dir}/Vibrio_cholerae_N16961.fna")
         bed = Path(f"{cls.dir}/Vibrio_cholerae_N16961.bed")
         blast = Path(f"{cls.dir}/Vc_blastout.txt")
@@ -127,3 +130,75 @@ class TestFiles(unittest.TestCase):
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         print("Your script ran successfully.")
+
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_single_baseline_line(self):
+        """Check your script uses functions for all code except one call"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.imported:
+            self.fail(
+                "Couldn't parse your script."
+            )
+        if len(self.baseline_code) == 1:
+            print(
+                "Only one line of code found on the baseline:\n"
+                f"{self.baseline_code[0]}"  
+            )
+        else:
+            print("found multiple lines of code on the baseline:\n")
+            for line in self.baseline_code:
+                print(line)
+            self.fail("")
+
+
+    # interrogate docstrings
+    @weight(2)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_docstrings_used(self):
+        """Check your functions have docstrings"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        funcs = [n for n in self.tree.body if isinstance(n, (ast.FunctionDef))]
+        for f in funcs:
+            docstring = ast.get_docstring(f)
+            if not docstring.strip():
+                self.fail(
+                    f"No docstring found for your function {f.name}"
+                )
+        print("looks like docstrings were used. The quality of your docstrings will be assessed manually.")
+
+    # check type hints
+    @weight(2)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_typehints_used(self):
+        """Check your functions have typehints"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        funcs = [n for n in self.tree.body if isinstance(n, (ast.FunctionDef))]
+        for f in funcs:
+            if not f.returns:
+                self.fail(f"Missing return type annotation for {f.name}")
+            params = f.args.args
+            params.extend(f.args.posonlyargs)
+            params.extend(f.args.kwonlyargs)
+
+            for a in params:
+                if not a.annotation:
+                    self.fail(
+                        f"No annotation found for your function {f.name}'s param {a.arg}"
+                    )
+        print("looks like annotations were used. The quality of your annotations will be assessed manually.")
