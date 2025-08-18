@@ -140,11 +140,11 @@ class TestFiles(unittest.TestCase):
             )
         for fname, f in zip(self.func_names, self.func_bodies):
             try:
-                eval(f)
+                exec(f)
             except Exception as e:
                 self.fail(
                     f"There was an issue processing your function {fname}:\n"
-                    f"{e}"
+                    f"{e}\n"
                     f"Function body:\n{f}"
                 )
         
@@ -272,7 +272,7 @@ class TestFiles(unittest.TestCase):
             )
         for fname, f in zip(self.func_names, self.func_bodies):
             try:
-                eval(f)
+                exec(f)
             except Exception as e:
                 self.fail(
                     f"There was an issue processing your function {fname}:\n"
@@ -299,7 +299,7 @@ class TestFiles(unittest.TestCase):
             )
         for fname, f in zip(self.func_names, self.func_bodies):
             try:
-                eval(f)
+                exec(f)
             except Exception as e:
                 self.fail(
                     f"There was an issue processing your function {fname}:\n"
