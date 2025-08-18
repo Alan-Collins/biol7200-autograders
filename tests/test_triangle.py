@@ -23,6 +23,7 @@ class TestFiles(unittest.TestCase):
         if not cls.submission.exists():
             cls.submitted = False
             return cls
+        cls.submitted = True
         with open(cls.submission) as fin:
             cls.code = fin.read()
         # check shebang
