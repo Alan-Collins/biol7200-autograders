@@ -271,19 +271,11 @@ class TestFiles(unittest.TestCase):
                 f"Your script does not begin with a correct shebang."
             )
         funcs = [n for n in self.tree.body if isinstance(n, (ast.FunctionDef))]
-        print([f.name for f in funcs])
-        for fname, f in zip(self.func_names, self.func_bodies):
-            try:
-                exec(f)
-            except Exception as e:
+        for f in funcs:
+            docstring = ast.get_docstring(f)
+            if not docstring.strip():
                 self.fail(
-                    f"There was an issue processing your function {fname}:\n"
-                    f"{e}"
-                )
-            docstring = eval(f"{fname}.__doc__")
-            if not docstring:
-                self.fail(
-                    f"No docstring found for your function {fname}"
+                    f"No docstring found for your function {f.name}"
                 )
         print("looks like docstrings were used. The quality of your docstrings will be assessed manually.")
 
@@ -299,20 +291,17 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 f"Your script does not begin with a correct shebang."
             )
-        for fname, f in zip(self.func_names, self.func_bodies):
-            print(fname)
-            print(f)
-            try:
-                exec(f)
-            except Exception as e:
-                self.fail(
-                    f"There was an issue processing your function {fname}:\n"
-                    f"{e}"
-                )
-            print(dir())
-            annots = eval(f"{fname}.__annotations__")
-            if not annots:
-                self.fail(
-                    f"No annotations found for your function {fname}"
-                )
+        funcs = [n for n in self.tree.body if isinstance(n, (ast.FunctionDef))]
+        for f in funcs:
+            if not f.returns:
+                self.fail(f"Missing return type annotation for {f.name}")
+            params = f.args.args
+            params.extend(f.args.posonlyargs)
+            params.extend(f.args.kwonlyargs)
+
+            for a in params:
+                if not a.annotation:
+                    self.fail(
+                        f"No annotation found for your function {f.name}'s param {a.arg}"
+                    )
         print("looks like annotations were used. The quality of your annotations will be assessed manually.")
