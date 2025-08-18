@@ -198,7 +198,6 @@ class TestFiles(unittest.TestCase):
                 self.fail(
                     "Your script should produce a triangle composed only of the specified character.\n"
                     f"Instead, your script output including {len(out_chars)} different characters: {out_chars}\n"
-                    f"Your output was {result.stdout}"
                 )
             if result.stdout != expected:
                 self.fail(
@@ -221,6 +220,34 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 f"Your script does not begin with a correct shebang."
             )
+        tests = [
+            (["X", "6"],"X\nXX\nXXX\nXXX\nXX\nX\n"),
+            (["#", "4"],"#\n##\n##\n#\n"),
+            (["&", "2"],"&\n&\n"),
+        ]
+        for input, expected in tests:
+            command = [self.submission] + input
+            result = subprocess.run(
+                command,
+                text=True,
+                capture_output=True
+            )
+            if result.returncode != 0:
+                self.fail(
+                    "Your script returned a non-zero exit code"
+                )
+            out_chars = set("".join(result.stdout.split()))
+            if len(out_chars) != 1:
+                self.fail(
+                    "Your script should produce a triangle composed only of the specified character.\n"
+                    f"Instead, your script output including {len(out_chars)} different characters: {out_chars}\n"
+                )
+            if result.stdout != expected:
+                self.fail(
+                    "Your script's output did not match the expected output for an odd height triangle."
+                    f"Yours:\n{result.stdout}\nExpected:{expected}"
+                )
+        print("Your script produced odd height triangles that match the expected output")
 
     # interrogate docstrings
 
