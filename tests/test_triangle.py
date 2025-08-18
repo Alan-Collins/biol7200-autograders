@@ -23,6 +23,7 @@ class TestFiles(unittest.TestCase):
         if not cls.submission.exists():
             cls.submitted = False
             return cls
+        cls.submission.chmod(0o777)
         cls.submitted = True
         with open(cls.submission) as fin:
             cls.code = fin.read()
@@ -97,6 +98,34 @@ class TestFiles(unittest.TestCase):
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("on_fail")
+    def test_shebang_present(self):
+        """Check script uses shebang"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        with open(SCRIPT_PATH) as f:
+            first_two = f.read()[:2]
+        if first_two != "#!":
+            self.fail(
+                f"Your scripts should always start with a shebang to ensure the correct program executes them."
+            )
+        print("Your script begins with a shebang.")
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_shebang_correct(self):
+        """Check shebang correct"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+        print("Your script begins with a correct shebang.")
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
     def test_parsed(self):
         """Check your script could be parsed"""
         if not self.submitted:
@@ -144,6 +173,10 @@ class TestFiles(unittest.TestCase):
         """Check your script works for odd height triangles"""
         if not self.submitted:
             self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
         tests = [
             (["'X'", "5"],"X\nXX\nXXX\nXX\nX\n"),
             (["'#'", "3"],"#\n##\n#\n"),
@@ -183,6 +216,10 @@ class TestFiles(unittest.TestCase):
         """Check your script works for even height triangles"""
         if not self.submitted:
             self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
 
     # interrogate docstrings
 
