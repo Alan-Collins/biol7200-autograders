@@ -298,6 +298,8 @@ class TestFiles(unittest.TestCase):
                 f"Your script does not begin with a correct shebang."
             )
         for fname, f in zip(self.func_names, self.func_bodies):
+            print(fname)
+            print(f)
             try:
                 exec(f)
             except Exception as e:
@@ -305,6 +307,7 @@ class TestFiles(unittest.TestCase):
                     f"There was an issue processing your function {fname}:\n"
                     f"{e}"
                 )
+            print(dir())
             annots = eval(f"{fname}.__annotations__")
             if not annots:
                 self.fail(
