@@ -273,7 +273,7 @@ class TestFiles(unittest.TestCase):
         funcs = [n for n in self.tree.body if isinstance(n, (ast.FunctionDef))]
         for f in funcs:
             docstring = ast.get_docstring(f)
-            if not docstring.strip():
+            if not docstring or not docstring.strip():
                 self.fail(
                     f"No docstring found for your function {f.name}"
                 )
