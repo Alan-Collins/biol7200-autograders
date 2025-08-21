@@ -254,7 +254,7 @@ class TestFiles(unittest.TestCase):
             "blastn",
             "-query", str(self.outfile),
             "-subject", str(self.expected_out),
-            "-outfmt", "'6 std qlen slen'",
+            "-outfmt", "6 std qlen slen",
         ]
         result = subprocess.run(compare_command, text=True, capture_output=True)
         print(result)
