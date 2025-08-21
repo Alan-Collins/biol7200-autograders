@@ -10,6 +10,7 @@ from gradescope_utils.autograder_utils.decorators import (
     weight,
     number,
     visibility,
+    partial_credit
 )
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
@@ -32,12 +33,14 @@ class TestFiles(unittest.TestCase):
         cls.input_files = [
             "Vibrio_cholerae_N16961.fna",
             "Vibrio_cholerae_N16961.bed",
-            "Vc_blastout.txt"
+            "Vc_blastout.txt",
+            "Vc_out.fna"
         ]
         for file in cls.input_files:
             shutil.copy(f"{DATA_DIR}{file}", f"{cls.dir}/")
         cls.submitted = True
         cls.outfile = Path(f"{cls.dir}/Vc_student_out.fna")
+        cls.expected_out = Path(f"{cls.dir}/Vc_out.fna")
         if not Path(SCRIPT_PATH).exists():
             cls.submitted = False
             return cls
@@ -199,10 +202,13 @@ class TestFiles(unittest.TestCase):
             )
         funcs = [n for n in self.tree.body if isinstance(n, (ast.FunctionDef))]
         for f in funcs:
+            undocumented_funcs = []
             docstring = ast.get_docstring(f)
             if not docstring or not docstring.strip():
+                undocumented_funcs.append({f.name})
+            if len(undocumented_funcs) > 0:
                 self.fail(
-                    f"No docstring found for your function {f.name}"
+                    f"No docstring found for your function(s):\n{'\n'.join(undocumented_funcs)}"
                 )
         print("looks like docstrings were used. The quality of your docstrings will be assessed manually.")
 
@@ -225,10 +231,31 @@ class TestFiles(unittest.TestCase):
             params = f.args.args
             params.extend(f.args.posonlyargs)
             params.extend(f.args.kwonlyargs)
-
+            unannotated_funcs = []
             for a in params:
                 if not a.annotation:
-                    self.fail(
-                        f"No annotation found for your function {f.name}'s param {a.arg}"
-                    )
+                    unannotated_funcs.append({f.name})
+            if len(unannotated_funcs) > 0:
+                self.fail(
+                            f"No annotation found for your function(s):\n{'\n'.join(unannotated_funcs)}"
+                        )
         print("looks like annotations were used. The quality of your annotations will be assessed manually.")
+
+
+    @partial_credit(35)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_seqs_correct(self, set_score=None):
+        """Check your script produces the correct homolog sequences"""
+        if not self.outfile.exists():
+            set_score(0)
+            self.fail("Your script did not produce any output file.")
+        compare_command = [
+            "blastn",
+            "-query", self.outfile,
+            "-subject", self.expected_out,
+            "-outfmt", "'6 std qlen slen'",
+        ]
+
+        result = subprocess.run(compare_command, text=True, capture_output=True)
+        print(result.stdout)
