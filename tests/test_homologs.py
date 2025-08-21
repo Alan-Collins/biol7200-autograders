@@ -252,8 +252,8 @@ class TestFiles(unittest.TestCase):
             self.fail("Your script did not produce any output file.")
         compare_command = [
             "blastn",
-            "-query", self.outfile,
-            "-subject", self.expected_out,
+            "-query", str(self.outfile),
+            "-subject", str(self.expected_out),
             "-outfmt", "'6 std qlen slen'",
         ]
         result = subprocess.run(compare_command, text=True, capture_output=True)
