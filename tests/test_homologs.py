@@ -14,7 +14,7 @@ from gradescope_utils.autograder_utils.decorators import (
 )
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
-from utils import PointCounter
+from utils import PointCounter, BlastResult
 
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "get_homolog_seqs.py"
@@ -205,7 +205,7 @@ class TestFiles(unittest.TestCase):
             undocumented_funcs = []
             docstring = ast.get_docstring(f)
             if not docstring or not docstring.strip():
-                undocumented_funcs.append({f.name})
+                undocumented_funcs.append(f.name)
             if len(undocumented_funcs) > 0:
                 self.fail(
                     f"No docstring found for your function(s):\n{'\n'.join(undocumented_funcs)}"
@@ -234,7 +234,7 @@ class TestFiles(unittest.TestCase):
             unannotated_funcs = []
             for a in params:
                 if not a.annotation:
-                    unannotated_funcs.append({f.name})
+                    unannotated_funcs.append(f.name)
             if len(unannotated_funcs) > 0:
                 self.fail(
                             f"No annotation found for your function(s):\n{'\n'.join(unannotated_funcs)}"
@@ -257,4 +257,12 @@ class TestFiles(unittest.TestCase):
             "-outfmt", "6 std qlen slen",
         ]
         result = subprocess.run(compare_command, text=True, capture_output=True)
-        print(result.stdout)
+        if result.returncode != 0:
+            set_score(0)
+            self.fail("Error assessing your output file: {result.stderr}")
+
+        hits = []
+        for line in result.stdout.splitlines():
+            hit = BlastResult.from_outfmt_str(fmt_string="6 std qlen slen", result_line=line)
+            print(hit.is_perfect_match())
+            hits.append(hit)
