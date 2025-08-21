@@ -257,4 +257,4 @@ class TestFiles(unittest.TestCase):
             "-outfmt", "6 std qlen slen",
         ]
         result = subprocess.run(compare_command, text=True, capture_output=True)
-        print(result)
+        print(result.stdout)
