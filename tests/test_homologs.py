@@ -258,6 +258,7 @@ class TestFiles(unittest.TestCase):
         ]
         print(self.outfile.read_text())
         print("\n\n")
+        print(self.expected_out.exists())
         print(self.expected_out.read_text())
         result = subprocess.run(compare_command, text=True, capture_output=True)
         print(result.stdout)
