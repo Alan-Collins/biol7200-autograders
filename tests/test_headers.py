@@ -99,7 +99,7 @@ class TestFiles(unittest.TestCase):
             )
         print("Your script produced no errors.")
 
-    @weight(4)
+    @weight(2)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_infile_unchanged(self):
         """Check input file unchanged"""
@@ -112,7 +112,7 @@ class TestFiles(unittest.TestCase):
             )
         print("The input file was not modified")
 
-    @weight(4)
+    @weight(2)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_outfile_exists(self):
         """Check output file created correctly"""
@@ -126,7 +126,7 @@ class TestFiles(unittest.TestCase):
             self.fail("Your script produced an empty output file.")
         print("Your script produced the expected output file.")
     
-    @weight(3)
+    @weight(2)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_whitespace_in_headers(self):
         """Check whitespace in headers"""
@@ -141,7 +141,7 @@ class TestFiles(unittest.TestCase):
         print("You didn't add whitespace to the headers. Whitespace characters mark the end of the header "
               "so adding whitespace while simply renaming headers would be a mistake.")
     
-    @weight(5)
+    @weight(4)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_header_format_correct(self):
         """Check header formatting"""
@@ -156,7 +156,7 @@ class TestFiles(unittest.TestCase):
             )
         print("The headers in your output file look like they are correctly formatted")
 
-    @weight(5)
+    @weight(4)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_ext_not_in_header(self):
         """Check file extension not in header"""
@@ -167,7 +167,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Your script has added the file extension to the header lines.")
         print("You removed file extensions from the header.")
 
-    @weight(5)
+    @weight(4)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_sequence_lines_unchanged(self):
         """Check sequence lines unchanged"""
