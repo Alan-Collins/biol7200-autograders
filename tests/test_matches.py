@@ -30,6 +30,7 @@ class TestFiles(unittest.TestCase):
     def setUpClass(cls):
         cls.submitted = True
         cls.was_run = False
+        cls._dir = Path(tempfile.mkdtemp())
         if not Path(SCRIPT_PATH).exists():
             cls.submitted = False
             return cls
@@ -50,7 +51,6 @@ class TestFiles(unittest.TestCase):
             return cls
         cls._outfmt = outfmt_match.group(3)
         cls._qcov_hsp_perc = re.search(r"-qcov_hsp_perc[ ]+100", contents) is not None
-        cls._dir = Path(tempfile.mkdtemp())
         cls._q = shutil.copy(QUERY_PATH, cls._dir / QUERY_FILE)
         cls._no_match = shutil.copy(NO_MATCH_ASSEMBLY_PATH, cls._dir / NO_MATCH_ASSEMBLY_FILE)
         cls._match = shutil.copy(MATCH_ASSEMBLY_PATH, cls._dir / MATCH_ASSEMBLY_FILE)
