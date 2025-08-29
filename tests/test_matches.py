@@ -29,6 +29,7 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.submitted = True
+        cls.was_run = False
         if not Path(SCRIPT_PATH).exists():
             cls.submitted = False
             return cls
@@ -43,7 +44,11 @@ class TestFiles(unittest.TestCase):
         contents = "".join(lines)
         cls._all_outfmts = re.findall(outfmt_pattern, contents)
         cls._outfmt_count = len(cls._all_outfmts)
-        cls._outfmt = re.search(outfmt_pattern, contents).group(3)
+        outfmt_match = re.search(outfmt_pattern, contents)
+        if outfmt_match is None:
+            cls._outfmt = None
+            return cls
+        cls._outfmt = outfmt_match.group(3)
         cls._qcov_hsp_perc = re.search(r"-qcov_hsp_perc[ ]+100", contents) is not None
         cls._dir = Path(tempfile.mkdtemp())
         cls._q = shutil.copy(QUERY_PATH, cls._dir / QUERY_FILE)
@@ -57,6 +62,7 @@ class TestFiles(unittest.TestCase):
             text=True,
             capture_output=True
         )
+        cls.was_run = True
         cls._match_stdout = result.stdout
         cls._match_stderr = result.stderr
         cls._match_exit = result.returncode
@@ -79,6 +85,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_submitted_files(self):
         """Check submitted files"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
         for path in missing_files:
             print(f'Missing {path}')
@@ -92,6 +100,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_shebang_present(self):
         """Check script uses shebang"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(SCRIPT_PATH) as f:
             first_two = f.read()[:2]
         if first_two != "#!":
@@ -117,6 +127,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_zero_exit(self):
         """Check script runs successfully"""
+        if not self.was_run:
+            self.fail("Your script had issues and so was not run.")
         if self._match_exit !=  0:
             self.fail(
                 f"{SOLUTION_SCRIPT} returned a non-zero exit code. Something went wrong."
@@ -127,6 +139,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_no_err(self):
         """Check script produces no stderr"""
+        if not self.was_run:
+            self.fail("Your script had issues and so was not run.")
         if len(self._match_stderr.strip()) != 0 or len(self._no_match_stderr.strip()) != 0:
             self.fail(
                 f"{SOLUTION_SCRIPT} produced messages in the stderr indicating an issue."
@@ -138,6 +152,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_infile_unchanged(self):
         """Check input file unchanged"""
+        if not self.was_run:
+            self.fail("Your script had issues and so was not run.")
         match_eq = subprocess.call(["cmp", "-s", self._match, MATCH_ASSEMBLY_PATH])
         no_match_eq = subprocess.call(["cmp", "-s", self._no_match, NO_MATCH_ASSEMBLY_PATH])
         query_eq = subprocess.call(["cmp", "-s", self._q, QUERY_PATH])
@@ -152,6 +168,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_outfile_exists(self):
         """Check output file created"""
+        if not self.was_run:
+            self.fail("Your script had issues and so was not run.")
         if not all([
             self._match_out.exists,
             self._no_match_out.exists            
@@ -187,6 +205,10 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_can_determine_perf(self):
         """Check you include data for identifying perfect hits"""
+        if not self._outfmt:
+            self.fail(
+                "Your script does not include any specification of the outfmt. Consult the BLAST section of the assignment document if unsure."
+            )
         if not self._outfmt_count > 0:
             self.fail(
                 "Your script does not include any specification of the outfmt. Consult the BLAST section of the assignment document if unsure."
@@ -207,7 +229,10 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_perf_hits(self):
         """Check your script outputs perfect hits"""
-
+        if not self._outfmt:
+            self.fail(
+                "Your script does not include any specification of the outfmt. Consult the BLAST section of the assignment document if unsure."
+            )
         br = BlastResult.from_outfmt_str(self._outfmt)
         if not br.can_verify_perfect_match(self._qcov_hsp_perc):
             self.fail(
@@ -235,6 +260,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_file_match_number(self):
         """Check correct number of matches in output file"""
+        if not self.was_run:
+            self.fail("Your script had issues and so was not run.")
         if not self._match_out.exists:
             self.fail(
                 "Your script did not create the specified output file."
@@ -259,6 +286,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_stdout_match_number(self):
         """Check correct number of matches in stdout"""
+        if not self.was_run:
+            self.fail("Your script had issues and so was not run.")
         match_numbers = re.findall(r"\b\d+\b", self._match_stdout)
         no_match_numbers = re.findall(r"\b\d+\b", self._no_match_stdout)
 
