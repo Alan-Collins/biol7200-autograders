@@ -287,10 +287,13 @@ class TestFiles(unittest.TestCase):
             hits.append(hit)
 
         if all([h.is_perfect_match() for h in hits]) and len(hits) == 34:
-            print("all homologs were matched")
+            print("All homologs were matched")
             score += perfect_match_score
             if not wrong_orientation:
+                print("All homologs match in the correct orientation.")
                 score += correct_orientation_score
+            else:
+                print("One or more sequence is the wrong orientation.")
         else:
             score += perfect_match_score
             if len(hits) > 34:
@@ -318,6 +321,7 @@ class TestFiles(unittest.TestCase):
                 print("one or more homologs identified by your script differs from the expected sequence")
                 score -= mismatched_seqs_penalty
             if wrong_orientation:
+                print("One or more sequence is the wrong orientation.")
                 score -= wrong_orientation_penalty
         
         set_score(score)
