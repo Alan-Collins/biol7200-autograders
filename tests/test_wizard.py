@@ -1,5 +1,6 @@
 import unittest
 import subprocess
+from pathlib import Path
 from gradescope_utils.autograder_utils.decorators import weight, number
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
@@ -25,10 +26,19 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
 
 class TestVariables(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.submitted = True
+        if not Path(SCRIPT_PATH).exists():
+            cls.submitted = False
+            return cls
+    
     @weight(2)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_wizard_set(self):
         """Check wizard variable is set"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         command = f'source {SCRIPT_PATH}; if [[ -z "$wizard" ]]; then exit 1; else exit 0; fi'
         result = subprocess.call(command, shell=True, executable="/bin/bash", text=True)
         if result != 0:
@@ -39,6 +49,8 @@ class TestVariables(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_wizard_value_correct(self):
         """Check wizard variable has the right value"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         command = f'source {SCRIPT_PATH}; echo "$wizard"'
         result = subprocess.run(command, shell=True, executable="/bin/bash", text=True, capture_output=True).stdout.strip()
         expected = "Gandalf the Grey"
@@ -50,10 +62,20 @@ class TestVariables(unittest.TestCase):
 
 
 class TestAliases(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.submitted = True
+        if not Path(SCRIPT_PATH).exists():
+            cls.submitted = False
+            return cls
+    
+    
     @weight(2)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_view_wizard_set(self):
         """Check view_wizard alias is set"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         command = f'source {SCRIPT_PATH}; if alias view_wizard >/dev/null 2>&1; then exit 0; else exit 1; fi'
         result = subprocess.call(command, shell=True, executable="/bin/bash", text=True)
         if result != 0:
@@ -64,6 +86,8 @@ class TestAliases(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_view_wizard_alias_correct(self):
         """Check view_wizard alias works as expected"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         command = f'source {SCRIPT_PATH}; if alias view_wizard >/dev/null 2>&1; then grep -Po "(?<=view_wizard=).+" {SCRIPT_PATH}; exit 0; else exit 1; fi'
         alias = subprocess.run(command, capture_output=True, shell=True, executable="/bin/bash", text=True).stdout.strip('"\'\n ')
         if len(alias) == 0:

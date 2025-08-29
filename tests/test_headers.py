@@ -20,6 +20,10 @@ POINT_NUM = (i for i in range(1000))
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.submitted = True
+        if not Path(SCRIPT_PATH).exists():
+            cls.submitted = False
+            return cls
         cls._dir = Path(tempfile.mkdtemp())
         cls._infile = cls._dir / "sample_123.fna"
         cls._outfile = cls._dir / "output.fna"
@@ -57,6 +61,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_shebang_present(self):
         """Check script uses shebang"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(SCRIPT_PATH) as f:
             first_two = f.read()[:2]
         if first_two != "#!":
@@ -69,6 +75,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_shebang_correct(self):
         """Check shebang correct"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin/env))?bin/(?:(?<=usr/bin/)env )?bash")
         with open(SCRIPT_PATH) as f:
             first_line = f.readline()
@@ -82,6 +90,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_zero_exit(self):
         """Check script runs successfully"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if self._exit !=  0:
             self.fail(
                 f"{SOLUTION_SCRIPT} returned a non-zero exit code. Something went wrong."
@@ -92,6 +102,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_no_err(self):
         """Check script produces no stderr"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if len(self._stderr.strip()) != 0:
             self.fail(
                 f"{SOLUTION_SCRIPT} produced messages in the stderr indicating an issue."
@@ -103,6 +115,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_infile_unchanged(self):
         """Check input file unchanged"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(self._infile) as f:
             contents = f.read()
         if contents != INPUT_SEQUENCE:
@@ -116,6 +130,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_outfile_exists(self):
         """Check output file created correctly"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self._outfile.exists:
             self.fail(
                 "Your script did not create the specified output file."
@@ -130,6 +146,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_whitespace_in_headers(self):
         """Check whitespace in headers"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(self._outfile) as f:
             head = f.readline()
         pattern = re.compile(r"^\S*\s+\S*contig")
@@ -145,6 +163,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_header_format_correct(self):
         """Check header formatting"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(self._outfile) as f:
             head = f.readline()
         pattern = re.compile(r"^[^>]")
@@ -160,6 +180,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_ext_not_in_header(self):
         """Check file extension not in header"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(self._outfile) as f:
             head = f.readline()
         pattern = re.compile(r"^.*\.fna.*$")
@@ -171,6 +193,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_sequence_lines_unchanged(self):
         """Check sequence lines unchanged"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(self._outfile) as f:
             seq = f.readlines()[1].strip()
         expected = INPUT_SEQUENCE.split()[1]

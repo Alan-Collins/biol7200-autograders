@@ -18,6 +18,10 @@ POINT_NUM = (i for i in range(1000))
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.submitted = True
+        if not Path(SCRIPT_PATH).exists():
+            cls.submitted = False
+            return cls
         result = subprocess.run(
             ["bash", f"{SCRIPT_PATH}", f"{TEST_PATH}"],
             text=True,
@@ -54,6 +58,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_shebang_present(self):
         """Check script uses shebang"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(SCRIPT_PATH) as f:
             first_two = f.read()[:2]
         if first_two != "#!":
@@ -66,6 +72,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_shebang_correct(self):
         """Check shebang correct"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin/env))?bin/(?:(?<=usr/bin/)env )?bash")
         with open(SCRIPT_PATH) as f:
             first_line = f.readline()
@@ -79,6 +87,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_zero_exit(self):
         """Check script runs successfully"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if self._exit !=  0:
             self.fail(
                 f"{SOLUTION_SCRIPT} returned a non-zero exit code. Something went wrong."
@@ -89,6 +99,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_no_err(self):
         """Check script produces no stderr"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if len(self._stderr.strip()) != 0:
             self.fail(
                 f"{SOLUTION_SCRIPT} produced messages in the stderr indicating an issue."
@@ -100,6 +112,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_taking_cli(self):
         """Check script uses command line inputs"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         found = False # look for use of commandline inputs
         pattern = re.compile(r"^[^#]*([ =]\$\d+|\bgetopts)([ #]|$)")
         with open(SCRIPT_PATH) as fin:
@@ -117,6 +131,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_mkdir(self):
         """Check script makes directory"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self._path.exists():
             self.fail(
                 "Your script did not create the directory specified as commandline input."
@@ -127,6 +143,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_cd(self):
         """Check script changes directory"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         found = False # look for use of commandline inputs
         pattern = re.compile(r"^[^#]*cd ")
         with open(SCRIPT_PATH) as fin:
@@ -144,6 +162,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_stdout_has_path(self):
         """Check script writes path to stdout"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         found = False # look for use of commandline inputs
         pattern = re.compile(r"^[^#]*pwd")
         with open(SCRIPT_PATH) as fin:
@@ -165,6 +185,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_stdout_is_only_path(self):
         """Check script doesn't print extraneous information to stdout"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not TEST_PATH in self._stdout:
             self.fail("Your script's stdout does not include the new working directory")
         
@@ -180,6 +202,8 @@ class TestFiles(unittest.TestCase):
     @visibility("on_fail")
     def test_validating_cli(self):
         """Check script validates inputs"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         found = False # look for conditional checking cli
         pattern = re.compile(r"if.*\[.*\$\#.*\]")
         with open(SCRIPT_PATH) as fin:
@@ -202,6 +226,8 @@ class TestFiles(unittest.TestCase):
     @visibility("on_fail")
     def test_named_variables(self):
         """Check script uses named variables"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         found = False # look for assignment of cli to var
         pattern = re.compile(r"[^=]\$1")
         with open(SCRIPT_PATH) as fin:

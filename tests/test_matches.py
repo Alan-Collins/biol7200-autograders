@@ -28,6 +28,10 @@ POINT_NUM = (i for i in range(1000))
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.submitted = True
+        if not Path(SCRIPT_PATH).exists():
+            cls.submitted = False
+            return cls
         outfmt_pattern = re.compile(r"-outfmt[ ]*?(?:([\'\" ]?)[ ]*6[ ]*\1|([\'\"])[ ]*6[ ]*(.*?)\2)")
         with open(SCRIPT_PATH) as f:
             lines = []
