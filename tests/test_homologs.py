@@ -247,6 +247,16 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_seqs_correct(self, set_score=None):
         """Check your script produces the correct homolog sequences"""
+        perfect_match_score = 20
+        correct_orientation_score = 15
+        wrong_orientation_penalty = 5
+        off_by_one_penalty = 5
+        wrong_number_penalty = 10
+        mismatched_seqs_penalty = 5
+        score = 0
+
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.outfile.exists():
             set_score(0)
             self.fail("Your script did not produce any output file.")
@@ -262,7 +272,53 @@ class TestFiles(unittest.TestCase):
             self.fail("Error assessing your output file: {result.stderr}")
 
         hits = []
+        print("hits found:")
+        wrong_orientation = False
         for line in result.stdout.splitlines():
-            hit = BlastResult.from_outfmt_str(fmt_string="std qlen slen", result_line=line)
-            print(line, hit.is_perfect_match())
+            try:
+                hit = BlastResult.from_outfmt_str(fmt_string="std qlen slen", result_line=line)
+                print(hit)
+            except Exception as e:
+                self.fail(
+                    f"Unable to process your BLAST output for line\n{line}\nwith exception\n{e}"
+                )
+            if hit.qstart != hit.sstart:
+                wrong_orientation = True
             hits.append(hit)
+
+        if all([h.is_perfect_match() for h in hits]) and len(hits) == 34:
+            print("all homologs were matched")
+            score += perfect_match_score
+            if not wrong_orientation:
+                score += correct_orientation_score
+        else:
+            score += perfect_match_score
+            if len(hits) > 34:
+                print("too many hits found")
+                score -= wrong_number_penalty
+            if len(hits) < 34:
+                print("too few hits found")
+                score -= wrong_number_penalty
+            off_by_one = False
+            mismatched = False
+            for hit in hits:
+                if hit.is_perfect_match() and hit.qstart == hit.sstart:
+                    continue
+                if hit.length == hit.slen and hit.pident != 100:
+                    mismatched = True
+                if hit.length - hit.slen == -1 or hit.length - hit.slen == 1:
+                    # off by one
+                    off_by_one = True
+                
+            
+            if off_by_one:
+                print("off by one error found in one or more hit")
+                score -= off_by_one_penalty
+            if mismatched:
+                print("one or more homologs identified by your script differs from the expected sequence")
+                score -= mismatched_seqs_penalty
+            if wrong_orientation:
+                score -= wrong_orientation_penalty
+        
+        set_score(score)
+            
