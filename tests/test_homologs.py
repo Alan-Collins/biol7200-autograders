@@ -263,6 +263,6 @@ class TestFiles(unittest.TestCase):
 
         hits = []
         for line in result.stdout.splitlines():
-            hit = BlastResult.from_outfmt_str(fmt_string="6 std qlen slen", result_line=line)
+            hit = BlastResult.from_outfmt_str(fmt_string="std qlen slen", result_line=line)
             print(line, hit.is_perfect_match())
             hits.append(hit)
