@@ -19,6 +19,7 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.submitted = True
+        cls._path = Path(TEST_PATH)
         if not Path(SCRIPT_PATH).exists():
             cls.submitted = False
             return cls
@@ -27,7 +28,6 @@ class TestFiles(unittest.TestCase):
             text=True,
             capture_output=True
         )
-        cls._path = Path(TEST_PATH)
         cls._stdout = result.stdout
         cls._stderr = result.stderr
         cls._exit = result.returncode
