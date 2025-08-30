@@ -21,6 +21,7 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.submitted = True
+        cls._dir = Path(tempfile.mkdtemp())
         if not Path(SCRIPT_PATH).exists():
             cls.submitted = False
             return cls
