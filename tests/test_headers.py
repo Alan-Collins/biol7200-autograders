@@ -175,6 +175,11 @@ class TestFiles(unittest.TestCase):
                 f"The first character in a header line should be '>', not '{head[0]}'. "
                 "The '>' character is what indicates that a line is a header."
             )
+        pattern = re.compile(r"^>sample_123.*contig")
+        if not re.match(pattern, head):
+            self.fail(
+                "Your header does not appear to include the file name in the header"
+            )
         print("The headers in your output file look like they are correctly formatted")
 
     @weight(4)
