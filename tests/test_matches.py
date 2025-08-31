@@ -144,7 +144,8 @@ class TestFiles(unittest.TestCase):
         if len(self._match_stderr.strip()) != 0 or len(self._no_match_stderr.strip()) != 0:
             self.fail(
                 f"{SOLUTION_SCRIPT} produced messages in the stderr indicating an issue."
-                    "If you wrote to the stderr, remove those messages and resubmit."
+                    "If you wrote to the stderr, remove those messages and resubmit.\n"
+                    f"{self._match_stderr or self._no_match_stderr}"
             )
         print("Your script produced no errors.")
 
