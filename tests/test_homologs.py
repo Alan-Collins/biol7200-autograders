@@ -125,32 +125,37 @@ class TestFiles(unittest.TestCase):
             "Vibrio_cholerae_N16961.fna",
             "Wolbachia.fna"
         ]:
-            command = [
-                self.homolog_file,
-                f"{dir}/HK_domain.faa",
-                f"{dir}/{assembly}",
-                f"{dir}/out.txt"
-            ]
-            result = subprocess.run(
-                command,
-                capture_output=True,
-                cwd=dir,
-                text=True
-            )
-            if result.returncode != 0:
-                self.fail("Your script exited with a non-zero exit code.")
             try:
-                output_numbers = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
-                if len(output_numbers) > 1:
+                command = [
+                    self.homolog_file,
+                    f"{dir}/HK_domain.faa",
+                    f"{dir}/{assembly}",
+                    f"{dir}/out.txt"
+                ]
+                result = subprocess.run(
+                    command,
+                    capture_output=True,
+                    cwd=dir,
+                    text=True
+                )
+                if result.returncode != 0:
+                    self.fail("Your script exited with a non-zero exit code.")
+                try:
+                    output_numbers = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
+                    if len(output_numbers) > 1:
+                        self.fail(
+                            "Your script's stdout appears to contain more than one number. "
+                            "The stdout should only contain the number of matches"
+                        )
+                    count = int(output_numbers[0])
+                except Exception as e:
                     self.fail(
-                        "Your script's stdout appears to contain more than one number. "
-                        "The stdout should only contain the number of matches"
+                        "Unable to interpret the stdout as a number. "
+                        "The stdout should contain the number of matches"
                     )
-                count = int(output_numbers[0])
             except Exception as e:
                 self.fail(
-                    "Unable to interpret the stdout as a number. "
-                    "The stdout should contain the number of matches"
+                    f"Error running your script:\n{e}"
                 )
             with open(f"{dir}/out.txt") as f:
                 lines = [i for i in f]
@@ -183,41 +188,46 @@ class TestFiles(unittest.TestCase):
             "Vibrio_cholerae_N16961.fna",
             "Wolbachia.fna"
         ]:
-            command = [
-                self.homolog_file,
-                f"{dir}/HK_domain.faa",
-                f"{dir}/{assembly}",
-                f"{dir}/{assembly[:-4]}_out.txt"
-            ]
-            result = subprocess.run(
-                command,
-                capture_output=True,
-                cwd=dir,
-                text=True
-            )
-            all_results[assembly] = result
-            if result.returncode != 0:
-                self.fail("Your script exited with a non-zero exit code.")
             try:
-                output_numbers = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
-                if len(output_numbers) > 1:
-                    self.fail(
-                        "Your script's stdout appears to contain more than one number. "
-                        "The stdout should only contain the number of matches"
-                    )
-                count = int(output_numbers[0])
-            except:
-                self.fail(
-                    "Unable to interpret the stdout as a number. "
-                    "The stdout should contain the number of matches"
+                command = [
+                    self.homolog_file,
+                    f"{dir}/HK_domain.faa",
+                    f"{dir}/{assembly}",
+                    f"{dir}/{assembly[:-4]}_out.txt"
+                ]
+                result = subprocess.run(
+                    command,
+                    capture_output=True,
+                    cwd=dir,
+                    text=True
                 )
-            with open(f"{dir}/{assembly[:-4]}_out.txt") as f:
-                lines = [i for i in f]
-                if len(lines) < 2:
-                    self.fail("Your script produces an output file lacking hits")
-            
-            if count != len(lines):
-                self.fail("Your script's stdout and output file disagree about how many hits there are.")
+                all_results[assembly] = result
+                if result.returncode != 0:
+                    self.fail("Your script exited with a non-zero exit code.")
+                try:
+                    output_numbers = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
+                    if len(output_numbers) > 1:
+                        self.fail(
+                            "Your script's stdout appears to contain more than one number. "
+                            "The stdout should only contain the number of matches"
+                        )
+                    count = int(output_numbers[0])
+                except:
+                    self.fail(
+                        "Unable to interpret the stdout as a number. "
+                        "The stdout should contain the number of matches"
+                    )
+                with open(f"{dir}/{assembly[:-4]}_out.txt") as f:
+                    lines = [i for i in f]
+                    if len(lines) < 2:
+                        self.fail("Your script produces an output file lacking hits")
+                
+                if count != len(lines):
+                    self.fail("Your script's stdout and output file disagree about how many hits there are.")
+            except Exception as e:
+                self.fail(
+                    f"Error running your script:\n{e}"
+                )
         
         tblastn_expected = {
             "Escherichia_coli_K12.fna": 116,
