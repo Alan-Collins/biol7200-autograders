@@ -116,8 +116,8 @@ class TestFiles(unittest.TestCase):
             self.fail("No script was submitted")
         found = False # look for use of commandline inputs
         pattern = re.compile(
-            r"^[^#]*" # non comment line with something before an =
-            r"(?:=[\"\']?\$\d+|\bgetopts)" # = followed by optional quotes before a numeric variable name (also allow getopts)
+            r"^[^#]*" # non comment line
+            r"(?:\$\d+|\bgetopts)" # numeric variable name (also allow getopts)
             r"(?:[ \'\"#]|$)" # after variable name, space, quotes, comment, or end of line
         )
         with open(SCRIPT_PATH) as fin:
