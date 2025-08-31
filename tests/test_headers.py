@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 import shutil
 
-from gradescope_utils.autograder_utils.decorators import weight, number
+from gradescope_utils.autograder_utils.decorators import weight, number, partial_credit
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
 SUBMISSION_PATH = "/autograder/submission/"
@@ -127,9 +127,9 @@ class TestFiles(unittest.TestCase):
             )
         print("The input file was not modified")
 
-    @weight(2)
+    @partial_credit(2)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
-    def test_outfile_exists(self):
+    def test_outfile_exists(self, set_score=None):
         """Check output file created correctly"""
         if not self.submitted:
             self.fail("No script was submitted")
@@ -141,7 +141,18 @@ class TestFiles(unittest.TestCase):
             num_lines = len(f.readlines())
         if num_lines == 0:
             self.fail("Your script produced an empty output file.")
-        print("Your script produced the expected output file.")
+        with open(self._outfile) as f:
+            contents = f.read()
+        if contents == INPUT_SEQUENCE:
+            print(
+                "Your script created an output file, but did not change the test data. "
+                "Make sure not to hard code anything. "
+                "The test data is not the same as what you were provided (but is still valid FASTA)"
+            )
+            set_score(1)
+        else:
+            print("Your script produced the expected output file with modifications to the input.")
+            set_score(2)
     
     @weight(2)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
@@ -175,6 +186,8 @@ class TestFiles(unittest.TestCase):
                 f"The first character in a header line should be '>', not '{head[0]}'. "
                 "The '>' character is what indicates that a line is a header."
             )
+        if head.split() == ">contig.1":
+            self.fail("Your script did not change the headers of the test data")
         pattern = re.compile(r"^>sample_123.*contig")
         if not re.match(pattern, head):
             self.fail(
@@ -190,6 +203,8 @@ class TestFiles(unittest.TestCase):
             self.fail("No script was submitted")
         with open(self._outfile) as f:
             head = f.readline()
+        if head.split() == ">contig.1":
+            self.fail("Your script did not change the headers of the test data")
         pattern = re.compile(r"^>sample_123.*contig")
         if not re.match(pattern, head):
             self.fail(
