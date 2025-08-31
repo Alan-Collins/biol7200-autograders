@@ -222,7 +222,11 @@ class TestFiles(unittest.TestCase):
         if not self.submitted:
             self.fail("No script was submitted")
         with open(self._outfile) as f:
-            seq = f.readlines()[1].strip()
+            head = f.readline().strip()
+            seq = f.readline()[1].strip()
+        
+        if head == ">contig.1":
+            self.fail("Your script did not change the headers of the test data")
         expected = INPUT_SEQUENCE.split()[1]
         if seq != expected:
             self.fail(
