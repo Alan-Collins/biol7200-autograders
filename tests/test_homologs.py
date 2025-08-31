@@ -38,6 +38,11 @@ class TestFiles(unittest.TestCase):
             cls.homolog_file = Path(f"{cls.dir}/{repo_name}/find_homologs.sh")
             cls.homolog_file.chmod(0o777)
             cls.repo_cloned = True
+            with open(cls.homolog_file) as f:
+                if len(f.readlines) == 0:
+                    cls.empty_submission = True
+                else:
+                    cls.empty_submission = False
         except:
             cls.repo_cloned = False
             cls.homolog_file = Path("/not_submitted")
@@ -64,6 +69,10 @@ class TestFiles(unittest.TestCase):
                 "Unable to get the identify_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
             )
+        if self.empty_submission:
+            self.fail(
+                "Submitted script is empty"
+            )
         print(f"identify_homologs.sh script submitted successfully")
     
 
@@ -75,6 +84,10 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "Unable to get the identify_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
+            )
+        if self.empty_submission:
+            self.fail(
+                "Submitted script is empty"
             )
         dir = mkdtemp()
         for file in self.input_files:
@@ -115,6 +128,10 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "Unable to get the identify_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
+            )
+        if self.empty_submission:
+            self.fail(
+                "Submitted script is empty"
             )
         dir = mkdtemp()
         for file in self.input_files:
@@ -177,6 +194,10 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "Unable to get the identify_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
+            )
+        if self.empty_submission:
+            self.fail(
+                "Submitted script is empty"
             )
         dir = mkdtemp()
         for file in self.input_files:
