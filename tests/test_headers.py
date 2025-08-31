@@ -190,6 +190,11 @@ class TestFiles(unittest.TestCase):
             self.fail("No script was submitted")
         with open(self._outfile) as f:
             head = f.readline()
+        pattern = re.compile(r"^>sample_123.*contig")
+        if not re.match(pattern, head):
+            self.fail(
+                "Your header does not appear to include the file name in the header"
+            )
         pattern = re.compile(r"^.*\.fna.*$")
         if re.match(pattern, head):
             self.fail(f"Your script has added the file extension to the header lines.")
