@@ -186,6 +186,7 @@ class TestFiles(unittest.TestCase):
                 f"The first character in a header line should be '>', not '{head[0]}'. "
                 "The '>' character is what indicates that a line is a header."
             )
+        print([head.strip(), ">contig.1"])
         if head.strip() == ">contig.1":
             self.fail("Your script did not change the headers of the test data")
         pattern = re.compile(r"^>sample_123.*contig")
