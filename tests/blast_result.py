@@ -142,10 +142,13 @@ class BlastResult(BaseModel):
         return idx_flds
 
 
-    def can_verify_perfect_match(self, qcov_hsp_perc: bool=False):
+    def can_verify_perfect_match(self, qcov_hsp_perc: bool=False, perc_identity: bool=True):
         # qcov_hsp_perc option filters hits to only include those where the whole query matched within a single HSP
         # If the match is also 100% identical over its length then it is a perfect match.
         # can achieve the same effect by including qcovhsp in outfmt
+        fields_used = self.fields_used
+        if perc_identity:
+            fields_used.add("pident")
         if not qcov_hsp_perc and "qcovhsp" in self.fields_used:
             if self.qcovhsp == 100:
                 qcov_hsp_perc = True
@@ -174,7 +177,7 @@ class BlastResult(BaseModel):
         return no_mm_or_gap and full_length
     
 
-    def is_perfect_match(self, qcov_hsp_perc: bool=False) -> bool|None:
+    def is_perfect_match(self, qcov_hsp_perc: bool=False, perc_identity: bool=False) -> bool|None:
         """bool if knowable, None if unknowable"""
         if not self.can_verify_perfect_match(qcov_hsp_perc):
             return None
@@ -185,6 +188,8 @@ class BlastResult(BaseModel):
                 qcov_hsp_perc = True
 
         if qcov_hsp_perc:
+            if perc_identity:
+                return True
             # determine available fields
             if "pident" in self.fields_used:
                 return self.pident == 100
@@ -197,7 +202,9 @@ class BlastResult(BaseModel):
                 return self.mismatch == 0 and self.gaps == 0
 
         if "pident" in self.fields_used and "length" in self.fields_used:
-                return self.pident == 100 and self.length == self.qlen
+            return self.pident == 100 and self.length == self.qlen
+        elif perc_identity and "length" in self.fields_used:
+            return self.length == self.qlen
         
         if "nident" in self.fields_used:
             return self.nident == self.qlen
