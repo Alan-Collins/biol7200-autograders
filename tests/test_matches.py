@@ -51,6 +51,7 @@ class TestFiles(unittest.TestCase):
             return cls
         cls._outfmt = outfmt_match.group(3)
         cls._qcov_hsp_perc = re.search(r"-qcov_hsp_perc[ ]+100", contents) is not None
+        cls._perc_identity = re.search(r"-perc_identity[ ]+100", contents) is not None
         cls._q = shutil.copy(QUERY_PATH, cls._dir / QUERY_FILE)
         cls._no_match = shutil.copy(NO_MATCH_ASSEMBLY_PATH, cls._dir / NO_MATCH_ASSEMBLY_FILE)
         cls._match = shutil.copy(MATCH_ASSEMBLY_PATH, cls._dir / MATCH_ASSEMBLY_FILE)
@@ -219,7 +220,7 @@ class TestFiles(unittest.TestCase):
                 "Your script is running blast multiple times with (what look like) different outfmt specifications. For the sake of my sanity in writing these autograder checks please just run BLAST once in your script."
             )
         br = BlastResult.from_outfmt_str(self._outfmt)
-        if not br.can_verify_perfect_match(self._qcov_hsp_perc):
+        if not br.can_verify_perfect_match(self._qcov_hsp_perc, self._perc_identity):
             self.fail(
                 "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
             )
@@ -235,7 +236,7 @@ class TestFiles(unittest.TestCase):
                 "Your script does not include any specification of the outfmt. Consult the BLAST section of the assignment document if unsure."
             )
         br = BlastResult.from_outfmt_str(self._outfmt)
-        if not br.can_verify_perfect_match(self._qcov_hsp_perc):
+        if not br.can_verify_perfect_match(self._qcov_hsp_perc, self._perc_identity):
             self.fail(
                 "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
             )
@@ -248,7 +249,7 @@ class TestFiles(unittest.TestCase):
             for hit in f:
                 n += 1
                 br = BlastResult.from_outfmt_str(self._outfmt, hit)
-                if not br.is_perfect_match(self._qcov_hsp_perc):
+                if not br.is_perfect_match(self._qcov_hsp_perc, self._perc_identity):
                     self.fail(
                         "Your script output file includes BLAST results which are not perfect hits."
                     )
