@@ -304,14 +304,16 @@ class TestFiles(unittest.TestCase):
 
     @weight(0)
     @visibility("hidden")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_see_match_hits(self):
         """View hits for file that should have matches"""
         with open(self._match_out) as f:
-            print(f.read)
+            print(f.read())
     
     @weight(0)
     @visibility("hidden")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_see_no_match_hits(self):
         """View hits for file that shouldn't have matches"""
         with open(self._no_match_out) as f:
-            print(f.read)
+            print(f.read())
