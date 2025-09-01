@@ -301,3 +301,17 @@ class TestFiles(unittest.TestCase):
         if int(match_numbers[0]) != 10 or int(no_match_numbers[0]) != 0:
             self.fail("Your script prints the wrong number of matches to the stdout.")
         print("Your script printed the expected number of hits to stdout.")
+
+    @weight(0)
+    @visibility("hidden")
+    def test_see_match_hits(self):
+        """View hits for file that should have matches"""
+        with open(self._match_out) as f:
+            print(f.read)
+    
+    @weight(0)
+    @visibility("hidden")
+    def test_see_no_match_hits(self):
+        """View hits for file that shouldn't have matches"""
+        with open(self._no_match_out) as f:
+            print(f.read)
