@@ -240,7 +240,7 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
             )
-        if not self._match_out.exists:
+        if not self._match_out.exists():
             self.fail(
                 "Your script did not create the specified output file."
             )
@@ -264,7 +264,7 @@ class TestFiles(unittest.TestCase):
         """Check correct number of matches in output file"""
         if not self.was_run:
             self.fail("Your script had issues and so was not run.")
-        if not self._match_out.exists:
+        if not self._match_out.exists():
             self.fail(
                 "Your script did not create the specified output file."
             )

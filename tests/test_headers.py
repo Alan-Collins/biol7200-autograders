@@ -133,7 +133,7 @@ class TestFiles(unittest.TestCase):
         """Check output file created correctly"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exists:
+        if not self._outfile.exists():
             self.fail(
                 "Your script did not create the specified output file."
             )
@@ -160,7 +160,7 @@ class TestFiles(unittest.TestCase):
         """Check whitespace in headers"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exists:
+        if not self._outfile.exists():
             self.fail(
                 "Your script did not create the specified output file."
             )
@@ -181,7 +181,7 @@ class TestFiles(unittest.TestCase):
         """Check header formatting"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exists:
+        if not self._outfile.exists():
             self.fail(
                 "Your script did not create the specified output file."
             )
@@ -209,7 +209,7 @@ class TestFiles(unittest.TestCase):
         """Check file extension not in header"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exists:
+        if not self._outfile.exists():
             self.fail(
                 "Your script did not create the specified output file."
             )
@@ -233,7 +233,7 @@ class TestFiles(unittest.TestCase):
         """Check sequence lines unchanged"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exists:
+        if not self._outfile.exists():
             self.fail(
                 "Your script did not create the specified output file."
             )
