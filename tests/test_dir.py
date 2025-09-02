@@ -246,3 +246,17 @@ class TestFiles(unittest.TestCase):
                 'Consider assigning command line inputs to named variables instead. '
                 'Named variables make it much easier for a reader to understand what code is doing.'
             )
+
+    @weight(0)
+    @visibility("hidden")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_mkdir(self):
+        """Check script makes directory2"""
+        print("debugging")
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self._path_exists:
+            print(f"path: {self._path.resolve()}")
+            print(f"exists: {self._path.exists()}")
+            for thing in self._path.parent.iterdir():
+                print(f"{thing} is in the parent dir")
