@@ -28,10 +28,10 @@ class TestFiles(unittest.TestCase):
             text=True,
             capture_output=True
         )
-        print(f"Test path created by student code: {Path(TEST_PATH).exists()}")
         cls._stdout = result.stdout
         cls._stderr = result.stderr
         cls._exit = result.returncode
+        cls._path_exists = cls._path.exists()
 
     @classmethod
     def tearDownClass(cls):
@@ -138,7 +138,7 @@ class TestFiles(unittest.TestCase):
         """Check script makes directory"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._path.exists():
+        if not self._path_exists:
             self.fail(
                 "Your script did not create the directory specified as commandline input."
             )
