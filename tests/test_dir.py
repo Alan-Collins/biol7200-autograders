@@ -255,8 +255,7 @@ class TestFiles(unittest.TestCase):
         print("debugging")
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._path_exists:
-            print(f"path: {self._path.resolve()}")
-            print(f"exists: {self._path.exists()}")
-            for thing in self._path.parent.iterdir():
-                print(f"{thing} is in the parent dir and does it exist?: {thing.exists()}")
+        print(f"path: {self._path.resolve()}")
+        print(f"exists: {self._path.exists()}")
+        for thing in self._path.parent.iterdir():
+            print(f"{thing} is in the parent dir and does it exist?: {thing.exists()}")
