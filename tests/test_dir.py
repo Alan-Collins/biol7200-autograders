@@ -250,7 +250,7 @@ class TestFiles(unittest.TestCase):
     @weight(0)
     @visibility("hidden")
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
-    def test_mkdir(self):
+    def test_mkdi_debug(self):
         """Check script makes directory2"""
         print("debugging")
         if not self.submitted:
@@ -259,4 +259,4 @@ class TestFiles(unittest.TestCase):
             print(f"path: {self._path.resolve()}")
             print(f"exists: {self._path.exists()}")
             for thing in self._path.parent.iterdir():
-                print(f"{thing} is in the parent dir")
+                print(f"{thing} is in the parent dir and does it exist?: {thing.exists()}")
