@@ -28,6 +28,7 @@ class TestFiles(unittest.TestCase):
             text=True,
             capture_output=True
         )
+        print(f"Test path created by student code: {Path(TEST_PATH).exists()}")
         cls._stdout = result.stdout
         cls._stderr = result.stderr
         cls._exit = result.returncode
