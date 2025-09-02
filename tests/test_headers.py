@@ -137,8 +137,6 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "Your script did not create the specified output file."
             )
-        if not self._outfile.exits():
-            self.fail("Your script produced no output file")
         with open(self._outfile) as f:
             num_lines = len(f.readlines())
         if num_lines == 0:
@@ -162,8 +160,10 @@ class TestFiles(unittest.TestCase):
         """Check whitespace in headers"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exits():
-            self.fail("Your script produced no output file")
+        if not self._outfile.exists:
+            self.fail(
+                "Your script did not create the specified output file."
+            )
         with open(self._outfile) as f:
             head = f.readline()
         pattern = re.compile(r"^\S*\s+\S*contig")
@@ -181,8 +181,10 @@ class TestFiles(unittest.TestCase):
         """Check header formatting"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exits():
-            self.fail("Your script produced no output file")
+        if not self._outfile.exists:
+            self.fail(
+                "Your script did not create the specified output file."
+            )
         with open(self._outfile) as f:
             head = f.readline()
         pattern = re.compile(r"^[^>]")
@@ -207,8 +209,10 @@ class TestFiles(unittest.TestCase):
         """Check file extension not in header"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exits():
-            self.fail("Your script produced no output file")
+        if not self._outfile.exists:
+            self.fail(
+                "Your script did not create the specified output file."
+            )
         with open(self._outfile) as f:
             head = f.readline()
         if head.strip() == ">contig.1":
@@ -229,8 +233,10 @@ class TestFiles(unittest.TestCase):
         """Check sequence lines unchanged"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self._outfile.exits():
-            self.fail("Your script produced no output file")
+        if not self._outfile.exists:
+            self.fail(
+                "Your script did not create the specified output file."
+            )
         with open(self._outfile) as f:
             head = f.readline().strip()
             seq = f.readline().strip()
