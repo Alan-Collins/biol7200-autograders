@@ -55,6 +55,22 @@ class TestFiles(unittest.TestCase):
             )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
+    @weight(0)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_line_endings(self):
+        """Check unix line endings"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        with open(SCRIPT_PATH) as f:
+            f.readline()
+            newlines = f.newlines()
+        if newlines != "\n":
+            self.fail(
+                "Your script does not use unix line endings. "
+                "That might interfere with the functionality of autograder tests. "
+                f"Please change your line endings to the unix \\n instead of your current {repr(newlines)}"
+            )
+    
     @weight(1)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_shebang_present(self):
@@ -246,16 +262,3 @@ class TestFiles(unittest.TestCase):
                 'Consider assigning command line inputs to named variables instead. '
                 'Named variables make it much easier for a reader to understand what code is doing.'
             )
-
-    @weight(0)
-    @visibility("hidden")
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
-    def test_mkdi_debug(self):
-        """Check script makes directory2"""
-        print("debugging")
-        if not self.submitted:
-            self.fail("No script was submitted")
-        print(f"path: {self._path.resolve()}")
-        print(f"exists: {self._path.exists()}")
-        for thing in self._path.parent.iterdir():
-            print(f"{thing} is in the parent dir and does it exist?: {thing.exists()}")
