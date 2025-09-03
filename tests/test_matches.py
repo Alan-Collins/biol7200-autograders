@@ -105,7 +105,7 @@ class TestFiles(unittest.TestCase):
             self.fail("No script was submitted")
         with open(SCRIPT_PATH) as f:
             f.readline()
-            newlines = f.newlines()
+            newlines = f.newlines
         if newlines != "\n":
             self.fail(
                 "Your script does not use unix line endings. "
