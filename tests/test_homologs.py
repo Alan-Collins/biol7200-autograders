@@ -75,6 +75,26 @@ class TestFiles(unittest.TestCase):
             )
         print(f"identify_homologs.sh script submitted successfully")
     
+    @weight(0)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_line_endings(self):
+        """Check unix line endings"""
+        if not self.homolog_file.exists():
+            self.fail(
+                "Unable to get the identify_homologs.sh script from a git repo. "
+                "follow the instructions carefully."
+            )
+        with open(self.homolog_file) as f:
+            f.readline()
+            newlines = f.newlines
+        if newlines != "\n":
+            self.fail(
+                "Your script does not use unix line endings. "
+                "That might interfere with the functionality of autograder tests. "
+                f"Please change your line endings to the unix \\n instead of your current {repr(newlines)}"
+            )
+        print("Your script uses Unix line endings: '\\n'")
+    
 
     @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")

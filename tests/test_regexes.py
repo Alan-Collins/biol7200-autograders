@@ -53,6 +53,23 @@ class TestFiles(unittest.TestCase):
         )
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
+    @weight(0)
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    def test_line_endings(self):
+        """Check unix line endings"""
+        if not Path(SCRIPT_PATH).exists():
+            self.fail("No script was submitted")
+        with open(SCRIPT_PATH) as f:
+            f.readline()
+            newlines = f.newlines
+        if newlines != "\n":
+            self.fail(
+                "Your script does not use unix line endings. "
+                "That might interfere with the functionality of autograder tests. "
+                f"Please change your line endings to the unix \\n instead of your current {repr(newlines)}"
+            )
+        print("Your script uses Unix line endings: '\\n'")
+    
 
     @weight(1)
     @number(f"{Q_NUM}.{SUBQ_COUNTER.next()}.{POINT_NUM.reset(1)}")
