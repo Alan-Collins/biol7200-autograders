@@ -112,6 +112,7 @@ class TestFiles(unittest.TestCase):
                 "That might interfere with the functionality of autograder tests. "
                 f"Please change your line endings to the unix \\n instead of your current {repr(newlines)}"
             )
+        print("Your script uses Unix line endings: '\\n'")
 
     @weight(1)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
@@ -324,7 +325,7 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_see_match_hits(self):
         """View hits for file that should have matches"""
-        print(f"outfmt specification: self._outfmt")
+        print(f"outfmt specification: {self._outfmt}")
         with open(self._match_out) as f:
             print(f.read())
     
@@ -333,6 +334,6 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_see_no_match_hits(self):
         """View hits for file that shouldn't have matches"""
-        print(f"outfmt specification: self._outfmt")
+        print(f"outfmt specification: {self._outfmt}")
         with open(self._no_match_out) as f:
             print(f.read())

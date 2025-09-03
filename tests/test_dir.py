@@ -70,6 +70,7 @@ class TestFiles(unittest.TestCase):
                 "That might interfere with the functionality of autograder tests. "
                 f"Please change your line endings to the unix \\n instead of your current {repr(newlines)}"
             )
+        print("Your script uses Unix line endings: '\\n'")
     
     @weight(1)
     @number(f"{Q_NUM}.{next(POINT_NUM)}")
