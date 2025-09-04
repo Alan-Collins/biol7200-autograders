@@ -89,7 +89,7 @@ class TestFiles(unittest.TestCase):
             cls.submitted = False
             return cls
         
-        if "__init__.py" in os.listdir():
+        if "__init__.py" in os.listdir(SUBMISSION_PATH):
             cls.format = "package"
             os.mkdir(f"{SUBMISSION_PATH}ispcr")
             for file in os.listdir():
