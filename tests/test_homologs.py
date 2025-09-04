@@ -4,6 +4,7 @@ import re
 from tempfile import mkdtemp
 import shutil
 import subprocess
+import os
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 
@@ -25,9 +26,9 @@ class TestFiles(unittest.TestCase):
         try:
             with open(SCRIPT_PATH) as f:
                 repo = f.read().strip()
-            repo_name = repo.split("/")[-1]
-            if repo_name.endswith(".git"):
-                repo_name = repo_name[:-4]
+            cls.repo_name = repo.split("/")[-1]
+            if cls.repo_name.endswith(".git"):
+                cls.repo_name = cls.repo_name[:-4]
             result = subprocess.run(
                 ["git", "clone", repo],
                 cwd=cls.dir,
@@ -35,7 +36,7 @@ class TestFiles(unittest.TestCase):
             )
             if result.returncode != 0:
                 raise
-            cls.homolog_file = Path(f"{cls.dir}/{repo_name}/find_homologs.sh")
+            cls.homolog_file = Path(f"{cls.dir}/{cls.repo_name}/find_homologs.sh")
             cls.homolog_file.chmod(0o777)
             cls.repo_cloned = True
             with open(cls.homolog_file) as f:
@@ -64,6 +65,13 @@ class TestFiles(unittest.TestCase):
     @visibility("on_fail")
     def test_submitted_files(self):
         """Check submitted files"""
+        if not self.repo_cloned:
+            self.fail(
+                "Unable to clone the repo. Confirm that you provided the right URL, "
+                "the repo is public, and that you are able to clone it."
+            )
+        print("Repo cloned successfully.")
+        print(f"repo includes files {', '.join(os.listdir(self.dir/self.repo_name))}")
         if not self.homolog_file.exists():
             self.fail(
                 "Unable to get the find_homologs.sh script from a git repo. "
