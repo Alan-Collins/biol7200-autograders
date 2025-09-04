@@ -206,7 +206,11 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
@@ -296,7 +300,11 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
@@ -349,7 +357,11 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         outfile = Path(f"{dir}/out_4.txt")
         if not outfile.exists():
@@ -380,7 +392,11 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         outfile = Path(f"{dir}/out_4.txt")
         if not outfile.exists():
@@ -419,7 +435,11 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         outfile = Path(f"{dir}/out_5.txt")
         if not outfile.exists():
@@ -457,7 +477,11 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         outfile = Path(f"{dir}/out_6.txt")
         if not outfile.exists():
@@ -495,7 +519,11 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         outfile = Path(f"{dir}/out_7.txt")
         if not outfile.exists():
@@ -539,7 +567,11 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         gene_files = [file.name for file in gene_dir.iterdir()]
         protein_files = [file.name for file in protein_dir.iterdir()]
