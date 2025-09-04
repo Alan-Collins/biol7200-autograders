@@ -44,7 +44,8 @@ class TestFiles(unittest.TestCase):
                     cls.empty_submission = True
                 else:
                     cls.empty_submission = False
-        except:
+        except Exception as e:
+            cls.exception = e
             cls.repo_cloned = False
             cls.homolog_file = Path("/not_submitted")
         
@@ -66,6 +67,7 @@ class TestFiles(unittest.TestCase):
     def test_submitted_files(self):
         """Check submitted files"""
         if not self.repo_cloned:
+            print(f"cloning error: {self.exception}")
             self.fail(
                 "Unable to clone the repo. Confirm that you provided the right URL, "
                 "the repo is public, and that you are able to clone it."
