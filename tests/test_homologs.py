@@ -66,14 +66,14 @@ class TestFiles(unittest.TestCase):
         """Check submitted files"""
         if not self.homolog_file.exists():
             self.fail(
-                "Unable to get the identify_homologs.sh script from a git repo. "
+                "Unable to get the find_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
             )
         if self.empty_submission:
             self.fail(
                 "Submitted script is empty"
             )
-        print(f"identify_homologs.sh script submitted successfully")
+        print(f"find_homologs.sh script submitted successfully")
     
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -81,7 +81,7 @@ class TestFiles(unittest.TestCase):
         """Check unix line endings"""
         if not self.homolog_file.exists():
             self.fail(
-                "Unable to get the identify_homologs.sh script from a git repo. "
+                "Unable to get the find_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
             )
         with open(self.homolog_file) as f:
@@ -102,7 +102,7 @@ class TestFiles(unittest.TestCase):
         """Check script runs without error"""
         if not self.homolog_file.exists():
             self.fail(
-                "Unable to get the identify_homologs.sh script from a git repo. "
+                "Unable to get the find_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
             )
         if self.empty_submission:
@@ -146,7 +146,7 @@ class TestFiles(unittest.TestCase):
         """Check script produces expected outputs"""
         if not self.homolog_file.exists():
             self.fail(
-                "Unable to get the identify_homologs.sh script from a git repo. "
+                "Unable to get the find_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
             )
         if self.empty_submission:
@@ -212,7 +212,7 @@ class TestFiles(unittest.TestCase):
         """Check script identifies correct number of matches"""
         if not self.homolog_file.exists():
             self.fail(
-                "Unable to get the identify_homologs.sh script from a git repo. "
+                "Unable to get the find_homologs.sh script from a git repo. "
                 "follow the instructions carefully."
             )
         if self.empty_submission:
