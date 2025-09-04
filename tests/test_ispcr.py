@@ -92,7 +92,7 @@ class TestFiles(unittest.TestCase):
         if "__init__.py" in os.listdir(SUBMISSION_PATH):
             cls.format = "package"
             os.mkdir(f"{SUBMISSION_PATH}ispcr")
-            for file in os.listdir():
+            for file in os.listdir(SUBMISSION_PATH):
                 if file.endswith(".py"):
                     shutil.move(f"{SUBMISSION_PATH}{file}", f"{SUBMISSION_PATH}ispcr")
         else:
