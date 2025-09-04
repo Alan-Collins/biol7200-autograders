@@ -56,7 +56,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{SUBQ_COUNTER}.{POINT_NUM.next()}")
     def test_line_endings(self):
         """Check unix line endings"""
         if not Path(SCRIPT_PATH).exists():
