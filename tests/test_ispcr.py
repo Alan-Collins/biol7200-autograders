@@ -96,8 +96,9 @@ class TestFiles(unittest.TestCase):
         for file in os.listdir(SUBMISSION_PATH):
             if file[-6:] == "tar.gz":
                 try:
+                    sys.stderr.write(f"untarring {file}\n")
                     subprocess.run(
-                        ["tar", "-xzf", SUBMISSION_PATH / file]
+                        ["tar", "-xzf", f"{SUBMISSION_PATH}{file}"]
                     )
                 except Exception as e:
                     print(f"couldn't untar: {e}")
