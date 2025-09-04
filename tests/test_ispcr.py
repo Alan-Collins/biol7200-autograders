@@ -159,10 +159,6 @@ class TestFiles(unittest.TestCase):
             cls.error = e
 
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(cls.dir)
-
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM}")
     @visibility("hidden")
