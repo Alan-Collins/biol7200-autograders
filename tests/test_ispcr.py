@@ -84,6 +84,7 @@ POINT_NUM = PointCounter(0)
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.dir = Path(tempfile.mkdtemp())
         if not Path(SCRIPT_PATH).exists():
             cls.submitted = False
             return cls
@@ -103,9 +104,6 @@ class TestFiles(unittest.TestCase):
         for file in cls.input_files:
             shutil.copy(f"{DATA_DIR}{file}", f"{cls.dir}/")
         cls.submitted = True
-        
-        
-
         try: # import the package
             sys.path.append(SUBMISSION_PATH)
             import ispcr
@@ -158,6 +156,9 @@ class TestFiles(unittest.TestCase):
             cls.step_three_ran = False
             cls.error = e
 
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.dir)
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM}")
