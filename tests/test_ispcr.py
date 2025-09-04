@@ -88,7 +88,7 @@ class TestFiles(unittest.TestCase):
             cls.submitted = False
             return cls
         
-        if "__init__.py" in os.listdir:
+        if "__init__.py" in os.listdir():
             cls.format = "package"
             os.mkdir(f"{SUBMISSION_PATH}ispcr")
             for file in os.listdir():
@@ -164,6 +164,7 @@ class TestFiles(unittest.TestCase):
     @visibility("hidden")
     def test_check_outputs(self):
         """secretly check student outputs"""
+
         if self.step_one_ran:
             print("step one output:")
             for thing in self.step_one_result:
