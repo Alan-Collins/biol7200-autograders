@@ -8,7 +8,6 @@ import os
 import subprocess
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
-from gradescope_utils.autograder_utils.files import check_submitted_files
 
 from utils import PointCounter
 
@@ -184,14 +183,10 @@ class TestFiles(unittest.TestCase):
     @visibility("on_fail")
     def test_submitted_files(self):
         """Check submitted files"""
-        missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}', f'{SOLUTION_DIR}'])
-        for path in missing_files:
-            print(f'Missing {path}')
-        self.assertEqual(
-            len(missing_files),
-            1,
-            f'Missing your ispcr package or module, follow instructions carefully'
-        )
+        if not self.submitted:
+            self.fail(
+                f'Missing your ispcr package or module, follow instructions carefully'
+            )
         print(f'ispcr submitted successfully')
         print(f"Your submission was determined to be a {self.format}")
 
