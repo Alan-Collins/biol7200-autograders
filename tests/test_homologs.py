@@ -40,7 +40,7 @@ class TestFiles(unittest.TestCase):
             cls.homolog_file.chmod(0o777)
             cls.repo_cloned = True
             with open(cls.homolog_file) as f:
-                if len(f.readlines) == 0:
+                if len(f.readlines()) == 0:
                     cls.empty_submission = True
                 else:
                     cls.empty_submission = False
@@ -67,7 +67,6 @@ class TestFiles(unittest.TestCase):
     def test_submitted_files(self):
         """Check submitted files"""
         if not self.repo_cloned:
-            print(f"cloning error: {self.exception}")
             self.fail(
                 "Unable to clone the repo. Confirm that you provided the right URL, "
                 "the repo is public, and that you are able to clone it."
