@@ -62,7 +62,7 @@ class TestFiles(unittest.TestCase):
         shutil.rmtree(cls.dir)
 
     @weight(0)
-    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @number(f"{Q_NUM}.{POINT_NUM}")
     @visibility("on_fail")
     def test_submitted_files(self):
         """Check submitted files"""
@@ -85,16 +85,7 @@ class TestFiles(unittest.TestCase):
         print(f"find_homologs.sh script submitted successfully")
     
 
-    @weight(0)
-    @number(f"{Q_NUM}.{POINT_NUM}")
-    @visibility("hidden")
-    def test_debug_clone(self):
-        """debugging info if clone fails"""
-        if not self.repo_cloned:
-            self.fail(
-                f"Clone error was: {self.exception}"
-            )
-        print("cloned fine")
+    
 
     
     @weight(0)

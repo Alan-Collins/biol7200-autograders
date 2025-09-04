@@ -87,6 +87,17 @@ class TestFiles(unittest.TestCase):
                 "the repo is public, and that you are able to clone it."
             )
         print("Repo cloned successfully.")
+    
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM}.1")
+    @visibility("hidden")
+    def test_debug_clone(self):
+        """debugging info if clone fails"""
+        if not self.repo_cloned:
+            self.fail(
+                f"Clone error was: {self.exception}"
+            )
+        print("cloned fine")
 
     @weight(6)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
