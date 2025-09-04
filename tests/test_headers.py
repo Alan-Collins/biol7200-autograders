@@ -8,6 +8,8 @@ import shutil
 from gradescope_utils.autograder_utils.decorators import weight, number, partial_credit
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
+from utils import PointCounter
+
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "change_headers.sh"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
@@ -15,7 +17,7 @@ SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 INPUT_SEQUENCE = """>contig.1\nATCG\nGCTA\n>contig.2\nAAAA\nTTTT\n>contig.3\nCCCC\nGGGG\n"""
 
 Q_NUM = 5
-POINT_NUM = (i for i in range(1000))
+POINT_NUM = PointCounter(0)
 
 class TestFiles(unittest.TestCase):
     @classmethod
@@ -46,7 +48,7 @@ class TestFiles(unittest.TestCase):
             shutil.rmtree(cls._dir)
 
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM}")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -59,7 +61,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
 
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_line_endings(self):
         """Check unix line endings"""
         if not self.submitted:
@@ -76,7 +78,7 @@ class TestFiles(unittest.TestCase):
         print("Your script uses Unix line endings: '\\n'")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_shebang_present(self):
         """Check script uses shebang"""
         if not self.submitted:
@@ -90,7 +92,7 @@ class TestFiles(unittest.TestCase):
         print("Your script begins with a shebang.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_shebang_correct(self):
         """Check shebang correct"""
         if not self.submitted:
@@ -105,7 +107,7 @@ class TestFiles(unittest.TestCase):
         print("Your script begins with a correct shebang.")
     
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_zero_exit(self):
         """Check script runs successfully"""
         if not self.submitted:
@@ -117,7 +119,7 @@ class TestFiles(unittest.TestCase):
         print("Your script ran successfully.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_no_err(self):
         """Check script produces no stderr"""
         if not self.submitted:
@@ -130,7 +132,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced no errors.")
 
     @weight(2)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_infile_unchanged(self):
         """Check input file unchanged"""
         if not self.submitted:
@@ -145,7 +147,7 @@ class TestFiles(unittest.TestCase):
         print("The input file was not modified")
 
     @partial_credit(2)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_outfile_exists(self, set_score=None):
         """Check output file created correctly"""
         if not self.submitted:
@@ -172,7 +174,7 @@ class TestFiles(unittest.TestCase):
             set_score(2)
     
     @weight(2)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_whitespace_in_headers(self):
         """Check whitespace in headers"""
         if not self.submitted:
@@ -193,7 +195,7 @@ class TestFiles(unittest.TestCase):
               "so adding whitespace while simply renaming headers would be a mistake.")
     
     @weight(4)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_header_format_correct(self):
         """Check header formatting"""
         if not self.submitted:
@@ -221,7 +223,7 @@ class TestFiles(unittest.TestCase):
         print("The headers in your output file look like they are correctly formatted")
 
     @weight(4)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_ext_not_in_header(self):
         """Check file extension not in header"""
         if not self.submitted:
@@ -245,7 +247,7 @@ class TestFiles(unittest.TestCase):
         print("You removed file extensions from the header.")
 
     @weight(4)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_sequence_lines_unchanged(self):
         """Check sequence lines unchanged"""
         if not self.submitted:

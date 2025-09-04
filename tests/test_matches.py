@@ -8,7 +8,7 @@ from pathlib import Path
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
-from blast_result import BlastResult
+from utils import PointCounter, BlastResult
 
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "find_perfect_matches.sh"
@@ -23,7 +23,7 @@ MATCH_ASSEMBLY_PATH = TEST_DATA_PATH / MATCH_ASSEMBLY_FILE
 NO_MATCH_ASSEMBLY_PATH = TEST_DATA_PATH / NO_MATCH_ASSEMBLY_FILE
 
 Q_NUM = 6
-POINT_NUM = (i for i in range(1000))
+POINT_NUM = PointCounter(0)
 
 class TestFiles(unittest.TestCase):
     @classmethod
@@ -83,7 +83,7 @@ class TestFiles(unittest.TestCase):
             shutil.rmtree(cls._dir)
 
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM}")
     def test_submitted_files(self):
         """Check submitted files"""
         if not self.submitted:
@@ -98,7 +98,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_line_endings(self):
         """Check unix line endings"""
         if not self.submitted:
@@ -115,7 +115,7 @@ class TestFiles(unittest.TestCase):
         print("Your script uses Unix line endings: '\\n'")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_shebang_present(self):
         """Check script uses shebang"""
         if not self.submitted:
@@ -129,7 +129,7 @@ class TestFiles(unittest.TestCase):
         print("Your script begins with a shebang.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_shebang_correct(self):
         """Check shebang correct"""
         pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin/env))?bin/(?:(?<=usr/bin/)env )?bash")
@@ -142,7 +142,7 @@ class TestFiles(unittest.TestCase):
         print("Your script begins with a correct shebang.")
     
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_zero_exit(self):
         """Check script runs successfully"""
         if not self.was_run:
@@ -154,7 +154,7 @@ class TestFiles(unittest.TestCase):
         print("Your script ran successfully.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_no_err(self):
         """Check script produces no stderr"""
         if not self.was_run:
@@ -168,7 +168,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced no errors.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_infile_unchanged(self):
         """Check input file unchanged"""
         if not self.was_run:
@@ -184,7 +184,7 @@ class TestFiles(unittest.TestCase):
         print("The input files were not modified")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_outfile_exists(self):
         """Check output file created"""
         if not self.was_run:
@@ -205,7 +205,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced the expected output file.")
 
     @weight(4)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_task_blastn_short(self):
         """Check task used"""
         with open(SCRIPT_PATH) as f:
@@ -221,7 +221,7 @@ class TestFiles(unittest.TestCase):
         print("Your script uses -task as instructed.")
 
     @weight(5)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_can_determine_perf(self):
         """Check you include data for identifying perfect hits"""
         if not self._outfmt:
@@ -245,7 +245,7 @@ class TestFiles(unittest.TestCase):
         print("Your script uses BLAST settings that allow you to identify perfect hits.")
 
     @weight(5)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_perf_hits(self):
         """Check your script outputs perfect hits"""
         if not self._outfmt:
@@ -276,7 +276,7 @@ class TestFiles(unittest.TestCase):
         print("Your script's output file contains pefect hits")
 
     @weight(5)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_file_match_number(self):
         """Check correct number of matches in output file"""
         if not self.was_run:
@@ -302,7 +302,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced an output file containing the expected number of matches.")
 
     @weight(5)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_stdout_match_number(self):
         """Check correct number of matches in stdout"""
         if not self.was_run:
@@ -322,7 +322,7 @@ class TestFiles(unittest.TestCase):
 
     @weight(0)
     @visibility("hidden")
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_see_match_hits(self):
         """View hits for file that should have matches"""
         print(f"outfmt specification: {self._outfmt}")
@@ -331,7 +331,7 @@ class TestFiles(unittest.TestCase):
     
     @weight(0)
     @visibility("hidden")
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_see_no_match_hits(self):
         """View hits for file that shouldn't have matches"""
         print(f"outfmt specification: {self._outfmt}")

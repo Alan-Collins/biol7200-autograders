@@ -6,6 +6,8 @@ from pathlib import Path
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
+from utils import PointCounter
+
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "dir_script.sh"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
@@ -13,7 +15,7 @@ SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 TEST_PATH = "/test/childdir"
 
 Q_NUM = 4
-POINT_NUM = (i for i in range(1000))
+POINT_NUM = PointCounter(0)
 
 class TestFiles(unittest.TestCase):
     @classmethod
@@ -43,7 +45,7 @@ class TestFiles(unittest.TestCase):
                 dir.rmdir()
 
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM}")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -56,7 +58,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_line_endings(self):
         """Check unix line endings"""
         if not self.submitted:
@@ -73,7 +75,7 @@ class TestFiles(unittest.TestCase):
         print("Your script uses Unix line endings: '\\n'")
     
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_shebang_present(self):
         """Check script uses shebang"""
         if not self.submitted:
@@ -87,7 +89,7 @@ class TestFiles(unittest.TestCase):
         print("Your script begins with a shebang.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_shebang_correct(self):
         """Check shebang correct"""
         if not self.submitted:
@@ -102,7 +104,7 @@ class TestFiles(unittest.TestCase):
         print("Your script begins with a correct shebang.")
     
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_zero_exit(self):
         """Check script runs successfully"""
         if not self.submitted:
@@ -114,7 +116,7 @@ class TestFiles(unittest.TestCase):
         print("Your script ran successfully.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_no_err(self):
         """Check script produces no stderr"""
         if not self.submitted:
@@ -127,7 +129,7 @@ class TestFiles(unittest.TestCase):
         print("Your script produced no errors.")
     
     @weight(2)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_taking_cli(self):
         """Check script uses command line inputs"""
         if not self.submitted:
@@ -150,7 +152,7 @@ class TestFiles(unittest.TestCase):
         print("your script uses the provided command line arguments.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_mkdir(self):
         """Check script makes directory"""
         if not self.submitted:
@@ -162,7 +164,7 @@ class TestFiles(unittest.TestCase):
         print("Your script created the expected directory")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_cd(self):
         """Check script changes directory"""
         if not self.submitted:
@@ -181,7 +183,7 @@ class TestFiles(unittest.TestCase):
         print("Your script changes its working directory.")
 
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_stdout_has_path(self):
         """Check script writes path to stdout"""
         if not self.submitted:
@@ -204,7 +206,7 @@ class TestFiles(unittest.TestCase):
         print("Your script prints the path of its current working directory")
     
     @weight(1)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_stdout_is_only_path(self):
         """Check script doesn't print extraneous information to stdout"""
         if not self.submitted:
@@ -220,7 +222,7 @@ class TestFiles(unittest.TestCase):
         print("The stdout of your script only contains the instructed contents: the path of your scripts working directory.")
     
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("on_fail")
     def test_validating_cli(self):
         """Check script validates inputs"""
@@ -244,7 +246,7 @@ class TestFiles(unittest.TestCase):
             )
 
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("on_fail")
     def test_named_variables(self):
         """Check script uses named variables"""

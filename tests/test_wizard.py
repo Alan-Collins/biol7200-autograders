@@ -4,16 +4,18 @@ from pathlib import Path
 from gradescope_utils.autograder_utils.decorators import weight, number
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
+from utils import PointCounter
+
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_SCRIPT = "wizard.sh"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 
 Q_NUM = 3
-POINT_NUM = (i for i in range(1000))
+POINT_NUM = PointCounter(0)
 
 class TestFiles(unittest.TestCase):
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM}")
     def test_submitted_files(self):
         """Check submitted files"""
         missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
@@ -34,7 +36,7 @@ class TestVariables(unittest.TestCase):
             return cls
     
     @weight(2)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_wizard_set(self):
         """Check wizard variable is set"""
         if not self.submitted:
@@ -46,7 +48,7 @@ class TestVariables(unittest.TestCase):
         print('The wizard variable is set')
 
     @weight(2)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_wizard_value_correct(self):
         """Check wizard variable has the right value"""
         if not self.submitted:
@@ -71,7 +73,7 @@ class TestAliases(unittest.TestCase):
     
     
     @weight(2)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_view_wizard_set(self):
         """Check view_wizard alias is set"""
         if not self.submitted:
@@ -83,7 +85,7 @@ class TestAliases(unittest.TestCase):
         print('The view_wizard alias is set')
 
     @weight(2)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_view_wizard_alias_correct(self):
         """Check view_wizard alias works as expected"""
         if not self.submitted:
