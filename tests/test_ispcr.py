@@ -94,7 +94,7 @@ class TestFiles(unittest.TestCase):
         cls.submitted = True
 
         for file in os.listdir(SUBMISSION_PATH):
-            if file.endswith("tar.gz"):
+            if file[-6:] == "tar.gz":
                 try:
                     subprocess.run(
                         ["tar", "-xzf", SUBMISSION_PATH / file]
