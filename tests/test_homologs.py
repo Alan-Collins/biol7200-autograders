@@ -72,7 +72,7 @@ class TestFiles(unittest.TestCase):
                 "the repo is public, and that you are able to clone it."
             )
         print("Repo cloned successfully.")
-        print(f"repo includes files {', '.join(os.listdir(self.dir/self.repo_name))}")
+        print(f"repo includes files {', '.join(os.listdir(f"{self.dir}/{self.repo_name}"))}")
         if not self.homolog_file.exists():
             self.fail(
                 "Unable to get the find_homologs.sh script from a git repo. "
@@ -83,6 +83,19 @@ class TestFiles(unittest.TestCase):
                 "Submitted script is empty"
             )
         print(f"find_homologs.sh script submitted successfully")
+    
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM}")
+    @visibility("hidden")
+    def test_debug_clone(self):
+        """debugging info if clone fails"""
+        if not self.repo_cloned:
+            self.fail(
+                f"Clone error was: {self.exception}"
+            )
+        print("cloned fine")
+
     
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
