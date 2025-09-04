@@ -120,7 +120,10 @@ class TestFiles(unittest.TestCase):
             capture_output=True
         )
         if result.returncode != 0:
-            self.fail("Your command returned a non-zero exit code.")
+            self.fail(
+                "Your command returned a non-zero exit code.\n"
+                f"Error: {result.stderr}"
+            )
         # Check output
         with open(f"{DATA_DIR}HK_domain.faa") as f:
             original = [i for i in f]
