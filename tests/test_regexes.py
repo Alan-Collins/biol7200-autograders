@@ -30,6 +30,8 @@ class TestFiles(unittest.TestCase):
             return cls
         with open(submission) as f:
             for line in f:
+                if line.strip() == "":
+                    continue
                 q_num = line.strip()[0]
                 command = line.strip()[1:].strip()
                 if not re.match(r"\d", q_num):
@@ -54,7 +56,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
     
     @weight(0)
-    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @number(f"{Q_NUM}.{next(POINT_NUM)}")
     def test_line_endings(self):
         """Check unix line endings"""
         if not Path(SCRIPT_PATH).exists():
