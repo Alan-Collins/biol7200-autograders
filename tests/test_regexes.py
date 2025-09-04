@@ -122,6 +122,7 @@ class TestFiles(unittest.TestCase):
         if result.returncode != 0:
             self.fail(
                 "Your command returned a non-zero exit code.\n"
+                f"command run: {result.args}\n"
                 f"Error: {result.stderr}"
             )
         # Check output
