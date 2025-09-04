@@ -84,7 +84,18 @@ POINT_NUM = PointCounter(0)
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.dir = Path(tempfile.mkdtemp())
+        if not Path(SCRIPT_PATH).exists():
+            cls.submitted = False
+            return cls
+        
+        if "__init__.py" in os.listdir:
+            cls.format = "package"
+            os.mkdir(f"{SUBMISSION_PATH}ispcr")
+            for file in os.listdir():
+                if file.endswith(".py"):
+                    shutil.move(f"{SUBMISSION_PATH}{file}", f"{SUBMISSION_PATH}ispcr")
+        else:
+            cls.format = "module"
         cls.input_files = [
             "Vibrio_cholerae_N16961.fna",
             "general_16S_515f_806r.fna"
@@ -92,20 +103,8 @@ class TestFiles(unittest.TestCase):
         for file in cls.input_files:
             shutil.copy(f"{DATA_DIR}{file}", f"{cls.dir}/")
         cls.submitted = True
-
-        for file in os.listdir(SUBMISSION_PATH):
-            if file[-6:] == "tar.gz":
-                try:
-                    sys.stderr.write(f"untarring {file}\n")
-                    subprocess.run(
-                        ["tar", "-xzf", f"{SUBMISSION_PATH}{file}"]
-                    )
-                except Exception as e:
-                    print(f"couldn't untar: {e}")
         
-        if not Path(SCRIPT_PATH).exists() and not Path(PACKAGE_PATH).exists():
-            cls.submitted = False
-            return cls
+        
 
         try: # import the package
             sys.path.append(SUBMISSION_PATH)
@@ -196,6 +195,7 @@ class TestFiles(unittest.TestCase):
             f'Missing your ispcr package or module, follow instructions carefully'
         )
         print(f'ispcr submitted successfully')
+        print(f"Your submission was determined to be a {self.format}")
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
