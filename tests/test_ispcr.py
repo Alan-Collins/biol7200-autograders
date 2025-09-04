@@ -4,6 +4,8 @@ import shutil
 import tempfile
 import sys
 import inspect
+import os
+import subprocess
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
@@ -90,6 +92,15 @@ class TestFiles(unittest.TestCase):
         for file in cls.input_files:
             shutil.copy(f"{DATA_DIR}{file}", f"{cls.dir}/")
         cls.submitted = True
+
+        for file in os.listdir(SUBMISSION_PATH):
+            if file.endswith("tar.gz"):
+                try:
+                    subprocess.run(
+                        ["tar", "-xzf", SUBMISSION_PATH / file]
+                    )
+                except Exception as e:
+                    print(f"couldn't untar: {e}")
         
         if not Path(SCRIPT_PATH).exists() and not Path(PACKAGE_PATH).exists():
             cls.submitted = False
@@ -139,7 +150,7 @@ class TestFiles(unittest.TestCase):
             if not inspect.isfunction(ispcr.step_three):
                 raise("ispcr.step_three is not a function")
             cls.step_three_result = ispcr.step_three(
-                sorted_hits=Q3_INPUT,
+                hit_pairs=Q3_INPUT,
                 assembly_file=f"{DATA_DIR}/Vibrio_cholerae_N16961.fna"
             )
             cls.step_three_ran = True
