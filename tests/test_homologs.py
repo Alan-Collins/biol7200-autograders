@@ -76,7 +76,7 @@ class TestFiles(unittest.TestCase):
         print(f"identify_homologs.sh script submitted successfully")
     
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_line_endings(self):
         """Check unix line endings"""
         if not self.homolog_file.exists():
