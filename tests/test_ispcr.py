@@ -164,7 +164,6 @@ class TestFiles(unittest.TestCase):
     @visibility("hidden")
     def test_check_outputs(self):
         """secretly check student outputs"""
-        print(os.listdir(SUBMISSION_PATH))
         if self.step_one_ran:
             print("step one output:")
             for thing in self.step_one_result:
