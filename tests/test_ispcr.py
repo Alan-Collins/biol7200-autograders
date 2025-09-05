@@ -7,7 +7,7 @@ import inspect
 import os
 import subprocess
 
-from gradescope_utils.autograder_utils.decorators import weight, number, visibility
+from gradescope_utils.autograder_utils.decorators import weight, number, visibility, partial_credit
 
 from utils import PointCounter
 
@@ -76,6 +76,8 @@ CCTGTTTGCTCCCCACGCTTTCGCATCTGAGTGTCAGTATCTGTCCAGGGGGCCGCCTTCGCCACCGGTATTCCTTCAGA
 CCTGTTTGCTCCCCACGCTTTCGCATCTGAGTGTCAGTATCTGTCCAGGGGGCCGCCTTCGCCACCGGTATTCCTTCAGATCTCTACGCATTTCACCGCTACACCTGAAATTCTACCCCCCTCTACAGTACTCTAGCTTGTCAGTTTCAAATGCGATTCCTAGGTTGAGCCCAGGGCTTTCACATCTGACTTAACAAACCACCTGCATGCGCTTTACGCCCAGTAATTCCGATTAACGCTTGCACCCTCCGTA
 """
 
+MAX_AMPLICON_SIZE=2000
+
 Q_NUM = PointCounter(0)
 
 POINT_NUM = PointCounter(0)
@@ -134,7 +136,7 @@ class TestFiles(unittest.TestCase):
                 raise("ispcr.step_two is not a function")
             cls.step_two_result = ispcr.step_two(
                 sorted_hits=Q2_INPUT,
-                max_amplicon_size=2000
+                max_amplicon_size=MAX_AMPLICON_SIZE
             )
             cls.step_two_ran = True
         except Exception as e:
@@ -214,7 +216,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Step one failed with the error: {self.error}")
         print("step_one ran")
     
-    @weight(0)
+    @weight(15)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_step_one_output(self):
@@ -257,7 +259,7 @@ class TestFiles(unittest.TestCase):
         print("step_two ran")
 
 
-    @weight(0)
+    @weight(20)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_step_two_output(self):
@@ -282,6 +284,73 @@ class TestFiles(unittest.TestCase):
             self.fail("step_two output does not match expected output")
         print("step_two output matches expected output")
 
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_step_two_output_format(self, set_score=None):
+        for annealing_sites in self.step_two_result:
+            if len(annealing_sites) != 2:
+                self.fail(
+                    "Your script returns the wrong size tuples of primer annealing sites.\n"
+                    f"There should be two primer annealing sites per tuple, but there are {len(annealing_sites)}"
+                )
+            left, right = annealing_sites
+            if len(left) != 13 or len(right) != 13:
+                self.fail(
+                    "The specified output includes a pair of BLAST results, each with 13 fields.\,"
+                    "Your output includes the wrong number of fields.\n"
+                    f"{annealing_sites}"
+                )
+            try:
+                int(left[8])
+                int(right[8])
+            except:
+                self.fail(
+                    "Fields in your output that should be numbers don't seem to be."
+                )
+            if int(left[8]) > int(right[8]):
+                self.fail(
+                    "Your BLAST hits are not sorted based on the location in the genome where they match."
+                )
+        print("format looks right")
+    
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("on_fail")
+    def test_step_two_max_amp_used(self):
+        """Check step_two applies max amplicon size limit"""
+        for annealing_sites in self.step_two_result:
+            if len(annealing_sites) != 2:
+                self.fail(
+                    "Your script returns the wrong size tuples of primer annealing sites.\n"
+                    f"There should be two primer annealing sites per tuple, but there are {len(annealing_sites)}"
+                )
+            left, right = annealing_sites
+            if len(left) != 13 or len(right) != 13:
+                self.fail(
+                    "The specified output includes a pair of BLAST results, each with 13 fields.\,"
+                    "Your output includes the wrong number of fields.\n"
+                    f"{annealing_sites}"
+                )
+            try:
+                int(left[8])
+                int(right[8])
+            except:
+                self.fail(
+                    "Fields in your output that should be numbers don't seem to be."
+                )
+            if int(left[8]) > int(right[8]):
+                self.fail(
+                    "Your BLAST hits are not sorted based on the location in the genome where they match."
+                )
+            if (int(right[8]) - int(left[8])) > MAX_AMPLICON_SIZE:
+                self.fail(
+                    "It looks like you aren't applying the provided max_amplicon_size value as a limit to your returned amplicons."
+                )
+        print("max_amplicon_size value seems to be used")
+    
+        
+
 
 
 
@@ -298,7 +367,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Step three failed with the error: {self.error}")
         print("step_two ran")
 
-    @weight(0)
+    @weight(15)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_step_three_output(self):
