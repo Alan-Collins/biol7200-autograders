@@ -134,7 +134,7 @@ class TestFiles(unittest.TestCase):
                 raise("ispcr.step_two is not a function")
             cls.step_two_result = ispcr.step_two(
                 sorted_hits=Q2_INPUT,
-                max_amplicon_size=1000
+                max_amplicon_size=2000
             )
             cls.step_two_ran = True
         except Exception as e:
@@ -160,7 +160,7 @@ class TestFiles(unittest.TestCase):
         shutil.rmtree(cls.dir)
 
     @weight(0)
-    @number(f"{Q_NUM}.{POINT_NUM}")
+    @number(f"999.{POINT_NUM}")
     @visibility("hidden")
     def test_check_outputs(self):
         """secretly check student outputs"""
