@@ -297,7 +297,7 @@ class TestFiles(unittest.TestCase):
             left, right = annealing_sites
             if len(left) != 13 or len(right) != 13:
                 self.fail(
-                    "The specified output includes a pair of BLAST results, each with 13 fields.\,"
+                    "The specified output includes a pair of BLAST results, each with 13 fields.\n"
                     "Your output includes the wrong number of fields.\n"
                     f"{annealing_sites}"
                 )
