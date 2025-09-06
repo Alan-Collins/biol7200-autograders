@@ -554,8 +554,8 @@ class TestFiles(unittest.TestCase):
             self.fail("Your solution should use find to identify the gene files.")
         if not "-regex" in command:
             self.fail("Your solution should use a regex to identify gene files.")
-        if not re.match(r".*[^\\]\s*;", command):
-            self.fail("Your sultion should be composed of two bash commands.")
+        if not re.match(r".+[^\\](?:;|&&).+", command):
+            self.fail("Your solution should be composed of two bash commands.")
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
