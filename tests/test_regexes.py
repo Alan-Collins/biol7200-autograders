@@ -582,9 +582,15 @@ class TestFiles(unittest.TestCase):
         gene_files = [file.name for file in gene_dir.iterdir()]
         protein_files = [file.name for file in protein_dir.iterdir()]
         if len(gene_files) != 4334:
-            self.fail("Your command copied the wrong number of files to the genes directory")
+            self.fail(
+                "Your command copied the wrong number of files to the genes directory.\n"
+                f"you copied {len(gene_files)}"
+                )
         if len(protein_files) != 3992:
-            self.fail("Your command copied the wrong number of files to the proteins directory")
+            self.fail(
+                "Your command copied the wrong number of files to the proteins directory.\n"
+                f"you copied {len(protein_files)}"
+                )
         gene_regex = re.compile(r"[a-z]{3}[A-Z]")
         protein_regex = re.compile(r"[A-Z][a-z]{2}[A-Z]")
         for f in gene_files:
