@@ -470,7 +470,7 @@ class TestFiles(unittest.TestCase):
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
         Path.mkdir(f"{dir}/data")
-        Path(f"{dir}/find_data").symlink_to(Path(f"{dir}/data/find_data"))
+        Path(f"{dir}/data/find_data").symlink_to(Path(f"{dir}/find_data"))
         result = subprocess.run(
             command,
             shell=True,
@@ -514,7 +514,7 @@ class TestFiles(unittest.TestCase):
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
         Path.mkdir(f"{dir}/data")
-        Path(f"{dir}/find_data").symlink_to(Path(f"{dir}/data/find_data"))
+        Path(f"{dir}/data/find_data").symlink_to(Path(f"{dir}/find_data"))
         result = subprocess.run(
             command,
             shell=True,
