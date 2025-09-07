@@ -11,7 +11,7 @@ from gradescope_utils.autograder_utils.files import check_submitted_files
 from utils import PointCounter, BlastResult
 
 SUBMISSION_PATH = "/autograder/submission/"
-SOLUTION_SCRIPT = "find_perfect_matches.sh"
+SOLUTION_SCRIPT = "extract_spacers.sh"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 DATA_DIR = "/autograder/biol7200-autograders/data/"
 
