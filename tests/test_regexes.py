@@ -4,6 +4,8 @@ import re
 from tempfile import mkdtemp
 import shutil
 import subprocess
+import warnings
+warnings.filterwarnings("ignore")
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
