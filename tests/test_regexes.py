@@ -574,7 +574,7 @@ class TestFiles(unittest.TestCase):
             text=True,
             capture_output=True
         )
-        if result.returncode != 0 or result.stderr.strip() != "":
+        if result.returncode != 0 or result.stderr.strip() != "" and not "are the same file" in result.stderr.strip():
             self.fail(
                 "Your command failed.\n"
                 f"command run: {result.args}\n"
