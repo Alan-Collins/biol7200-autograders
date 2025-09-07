@@ -137,8 +137,11 @@ class TestFiles(unittest.TestCase):
             cwd=dir,
             text=True
         )
-        if result.returncode != 0:
-            self.fail("Your script exited with a non-zero exit code.")
+        if result.returncode != 0 or result.stderr.strip() != "":
+            self.fail(f"Your script failed with this error:\n{result.stderr}")
+        
+        if not Path(f"{dir}/out.txt").exists():
+            self.fail("Your script did not create the specified outfile")
 
         task_regex = re.compile(r"^[^\#]*tblastn-fast")
         with open(self.homolog_file) as f:
@@ -188,8 +191,8 @@ class TestFiles(unittest.TestCase):
                     cwd=dir,
                     text=True
                 )
-                if result.returncode != 0:
-                    self.fail("Your script exited with a non-zero exit code.")
+                if result.returncode != 0 or result.stderr.strip() != "":
+                    self.fail(f"Your script failed with this error:\n{result.stderr}")
                 try:
                     output_numbers = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
                     if len(output_numbers) > 1:
@@ -207,6 +210,9 @@ class TestFiles(unittest.TestCase):
                 self.fail(
                     f"Error running your script:\n{e}"
                 )
+            if not Path(f"{dir}/out.txt").exists():
+                self.fail("Your script did not create the specified outfile")
+
             with open(f"{dir}/out.txt") as f:
                 lines = [i for i in f]
                 if len(lines) < 2:
@@ -256,8 +262,8 @@ class TestFiles(unittest.TestCase):
                     text=True
                 )
                 all_results[assembly] = result
-                if result.returncode != 0:
-                    self.fail("Your script exited with a non-zero exit code.")
+                if result.returncode != 0 or result.stderr.strip() != "":
+                    self.fail(f"Your script failed with this error:\n{result.stderr}")
                 try:
                     output_numbers = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
                     if len(output_numbers) > 1:
@@ -283,6 +289,9 @@ class TestFiles(unittest.TestCase):
                     f"Error running your script:\n{e}"
                 )
         
+        if not Path(f"{dir}/out.txt").exists():
+            self.fail("Your script did not create the specified outfile")
+
         tblastn_expected = {
             "Escherichia_coli_K12.fna": 116,
             "Vibrio_cholerae_N16961.fna": 125,
