@@ -497,9 +497,7 @@ class TestFiles(unittest.TestCase):
         except:
             self.fail("The output of your command is not a number.")
         if gene_count != 4334:
-            if 4332 < gene_count < 4335:
-                self.fail("You're off by one. Perhaps your regex is too permissive and is catching a file in the test environment.")
-            self.fail("Your command returned the wrong value.")
+            self.fail(f"Your command returned the wrong value: {gene_count}.")
         print("Your command returned the correct value.")
     
     @weight(4)
@@ -543,9 +541,7 @@ class TestFiles(unittest.TestCase):
         except:
             self.fail("The output of your command is not a number.")
         if gene_count != 3992:
-            if 3990 < gene_count < 3994:
-                self.fail("You're off by one. Perhaps your regex is too permissive and is catching a file in the test environment.")
-            self.fail("Your command returned the wrong value.")
+            self.fail(f"Your command returned the wrong value: {gene_count}.")
         print("Your command returned the correct value.")
     
     @weight(2)
