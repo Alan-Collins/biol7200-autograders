@@ -493,10 +493,12 @@ class TestFiles(unittest.TestCase):
         with open(outfile) as f:
             gene_count = f.read().strip()
         try:
-            gene_count = float(gene_count)
+            gene_count = int(gene_count)
         except:
             self.fail("The output of your command is not a number.")
         if gene_count != 4334:
+            if 4332 < gene_count < 4336:
+                self.fail("You're off by one. Perhaps your regex is too permissive and is catching a file in the test environment.")
             self.fail(f"Your command returned the wrong value: {gene_count}.")
         print("Your command returned the correct value.")
     
@@ -537,10 +539,12 @@ class TestFiles(unittest.TestCase):
         with open(outfile) as f:
             gene_count = f.read().strip()
         try:
-            gene_count = float(gene_count)
+            gene_count = int(gene_count)
         except:
             self.fail("The output of your command is not a number.")
         if gene_count != 3992:
+            if 3990 < gene_count < 3994:
+                self.fail("You're off by one. Perhaps your regex is too permissive and is catching a file in the test environment.")
             self.fail(f"Your command returned the wrong value: {gene_count}.")
         print("Your command returned the correct value.")
     
