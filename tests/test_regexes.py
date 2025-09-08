@@ -467,12 +467,13 @@ class TestFiles(unittest.TestCase):
         if not command.strip().startswith("find "):
             self.fail("Your command should use find to identify the gene files.")
         if not "-regex " in command:
-            if "-E " in command:
-                self.fail(
-                    "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
-                    "which used in this autograder. Use -regex instead of -E."
-                    )
             self.fail("Your command should use a regex to identify gene files.")
+        if "-E " in command:
+            self.fail(
+                "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
+                "which used in this autograder. Use '-regextype egrep instead of -E.\n"
+                "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
+                )
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
@@ -518,12 +519,13 @@ class TestFiles(unittest.TestCase):
         if not command.strip().startswith("find "):
             self.fail("Your command should use find to identify the gene files.")
         if not "-regex " in command:
-            if "-E " in command:
-                self.fail(
-                    "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
-                    "which used in this autograder. Use -regex instead of -E."
-                    )
             self.fail("Your command should use a regex to identify gene files.")
+        if "-E " in command:
+            self.fail(
+                "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
+                "which used in this autograder. Use '-regextype egrep instead of -E.\n"
+                "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
+                )
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
@@ -569,12 +571,13 @@ class TestFiles(unittest.TestCase):
         if not command.strip().startswith("find "):
             self.fail("Your solution should use find to identify the gene files.")
         if not "-regex " in command:
-            if "-E " in command:
-                self.fail(
-                    "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
-                    "which used in this autograder. Use -regex instead of -E."
-                    )
             self.fail("Your solution should use a regex to identify gene files.")
+        if "-E " in command:
+            self.fail(
+                "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
+                "which used in this autograder. Use '-regextype egrep instead of -E.\n"
+                "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
+                )
         if not re.match(r".+[^\\](?:;|&&).+", command):
             self.fail("Your solution should be composed of two bash commands.")
         # set up temp dir and test command
