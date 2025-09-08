@@ -472,7 +472,7 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
                 "which used in this autograder. Use '-regextype egrep instead of -E.\n"
-                "For the purposes of findutils from conda-forge to use the GNU find."
+                "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
                 )
         # set up temp dir and test command
         dir = mkdtemp()
@@ -524,7 +524,7 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
                 "which used in this autograder. Use '-regextype egrep instead of -E.\n"
-                "For the purposes of findutils from conda-forge to use the GNU find."
+                "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
                 )
         # set up temp dir and test command
         dir = mkdtemp()
@@ -576,7 +576,7 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
                 "which used in this autograder. Use '-regextype egrep instead of -E.\n"
-                "For the purposes of findutils from conda-forge to use the GNU find."
+                "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
                 )
         if not re.match(r".+[^\\](?:;|&&).+", command):
             self.fail("Your solution should be composed of two bash commands.")
