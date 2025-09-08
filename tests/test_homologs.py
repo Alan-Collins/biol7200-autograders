@@ -172,8 +172,6 @@ class TestFiles(unittest.TestCase):
         dir = mkdtemp()
         for file in self.input_files:
             shutil.copy(f"{DATA_DIR}{file}", f"{dir}/")
-        print(Path(dir).resolve())
-        print([i for i in Path(dir).iterdir()])
         for assembly in [
             "Escherichia_coli_K12.fna",
             "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
