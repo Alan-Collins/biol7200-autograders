@@ -466,7 +466,7 @@ class TestFiles(unittest.TestCase):
         # check command uses find with a regex
         if not command.strip().startswith("find "):
             self.fail("Your command should use find to identify the gene files.")
-        if not "-regex" in command:
+        if not "-regex " in command:
             self.fail("Your command should use a regex to identify gene files.")
         # set up temp dir and test command
         dir = mkdtemp()
@@ -512,7 +512,7 @@ class TestFiles(unittest.TestCase):
         # check command uses find with a regex
         if not command.strip().startswith("find "):
             self.fail("Your command should use find to identify the gene files.")
-        if not "-regex" in command:
+        if not "-regex " in command:
             self.fail("Your command should use a regex to identify gene files.")
         # set up temp dir and test command
         dir = mkdtemp()
@@ -558,7 +558,7 @@ class TestFiles(unittest.TestCase):
         # check command uses find with a regex
         if not command.strip().startswith("find "):
             self.fail("Your solution should use find to identify the gene files.")
-        if not "-regex" in command:
+        if not "-regex " in command:
             self.fail("Your solution should use a regex to identify gene files.")
         if not re.match(r".+[^\\](?:;|&&).+", command):
             self.fail("Your solution should be composed of two bash commands.")
