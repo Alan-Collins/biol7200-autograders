@@ -223,7 +223,7 @@ class TestFiles(unittest.TestCase):
 
         print(
             "Your script produces outputs of the correct format.\n"
-            "The number of homologs identified for each assembly is being assessed in a hidden test "
+            "The number of homologs identified for each assembly is being assessed in a hidden test. "
             "The results of that test will be shown after the assignment due date."
             )
 
