@@ -486,9 +486,9 @@ class TestFiles(unittest.TestCase):
             text=True,
             capture_output=True
         )
-        if result.returncode != 0:
+        if result.returncode != 0 or result.stderr.strip() != "":
             self.fail(
-                "Your command returned a non-zero exit code.\n"
+                "Your command failed.\n"
                 f"command run: {result.args}\n"
                 f"Error: {result.stderr}"
             )
@@ -538,9 +538,9 @@ class TestFiles(unittest.TestCase):
             text=True,
             capture_output=True
         )
-        if result.returncode != 0:
+        if result.returncode != 0 or result.stderr.strip() != "":
             self.fail(
-                "Your command returned a non-zero exit code.\n"
+                "Your command failed.\n"
                 f"command run: {result.args}\n"
                 f"Error: {result.stderr}"
             )
