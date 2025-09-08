@@ -88,7 +88,7 @@ class TestFiles(unittest.TestCase):
             self.fail("You must use the sed regex mode to complete this question.")
         # Try to grab the regex from the sed command
         regex_found = False
-        for _, script in re.findall(r"([\"\'])(.+?)\1", command):
+        for _, script in re.findall(r"s([\"\'])(.+?)\1", command):
             search_string = re.match(r"s(.)(.*)\1", script)
             if not search_string:
                 continue
@@ -174,7 +174,7 @@ class TestFiles(unittest.TestCase):
             self.fail("You must use a regex to complete this question.")
         # Try to grab the regex from the sed command
         regex_found = False
-        for _, script in re.findall(r"([\"\'])(.+?)\1", command):
+        for _, script in re.findall(r"s([\"\'])(.+?)\1", command):
             search_string = re.match(r"s(.)(.*)\1", script)
             if not search_string:
                 continue
@@ -262,7 +262,7 @@ class TestFiles(unittest.TestCase):
         # Try to grab the regex from the sed command
         regex_found = False
         case_convert_found = False
-        for _, script in re.findall(r"([\"\'])(.+?)\1", command):
+        for _, script in re.findall(r"s([\"\'])(.+?)\1", command):
             regex_parts = re.match(r"s(.)(.*)\1(.*)\1", script)
             if not regex_parts:
                 continue
