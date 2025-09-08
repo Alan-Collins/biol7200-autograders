@@ -256,6 +256,7 @@ class TestFiles(unittest.TestCase):
                 print(f"Array {n} found")
             elif this_array_count == 0:
                 print(f"Array {n} not found")
+                continue
             else:
                 print(f"Array {n} has issues")
             
