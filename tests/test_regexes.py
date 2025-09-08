@@ -89,7 +89,7 @@ class TestFiles(unittest.TestCase):
         # Try to grab the regex from the sed command
         regex_found = False
         for _, script in re.findall(r"([\"\'])(.+?)\1", command):
-            search_string = re.match(r"s(.)(.*)\1", script)
+            search_string = re.match(r".*?s(.)(.*?)\1", script)
             if not search_string:
                 continue
             regex = search_string.group(2)
@@ -175,7 +175,7 @@ class TestFiles(unittest.TestCase):
         # Try to grab the regex from the sed command
         regex_found = False
         for _, script in re.findall(r"([\"\'])(.+?)\1", command):
-            search_string = re.match(r"s(.)(.*)\1", script)
+            search_string = re.match(r".*?s(.)(.*?)\1", script)
             if not search_string:
                 continue
             regex = search_string.group(2)
@@ -263,7 +263,7 @@ class TestFiles(unittest.TestCase):
         regex_found = False
         case_convert_found = False
         for _, script in re.findall(r"([\"\'])(.+?)\1", command):
-            regex_parts = re.match(r"s(.)(.*)\1(.*)\1", script)
+            regex_parts = re.match(r".*?s(.)(.*?)\1(.*?)\1", script)
             if not regex_parts:
                 continue
             search_string = regex_parts.group(2)
