@@ -211,10 +211,10 @@ class TestFiles(unittest.TestCase):
                     f"Error running your script:\n{e}"
                 )
             if not Path(f"{dir}/out.txt").exists():
-                self.fail("Your script did not create the specified outfile")
+                self.fail(f"Your script did not create the specified outfile for {assembly}")
 
             with open(f"{dir}/out.txt") as f:
-                lines = [i for i in f]
+                lines = [i for i in f if i.strip() != ""]
                 if len(lines) < 2:
                     self.fail("Your script produces an output file lacking hits")
             
@@ -223,7 +223,6 @@ class TestFiles(unittest.TestCase):
 
         print(f"Your script produces outputs of the correct format.")
 
-    
     @weight(20)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("after_due_date")
@@ -277,6 +276,9 @@ class TestFiles(unittest.TestCase):
                         "Unable to interpret the stdout as a number. "
                         "The stdout should contain the number of matches"
                     )
+                if not Path(f"{dir}/{assembly[:-4]}_out.txt").exists():
+                    self.fail(f"Your script did not create the specified outfile for {assembly}")
+
                 with open(f"{dir}/{assembly[:-4]}_out.txt") as f:
                     lines = [i for i in f]
                     if len(lines) < 2:
@@ -289,9 +291,6 @@ class TestFiles(unittest.TestCase):
                     f"Error running your script:\n{e}"
                 )
         
-        if not Path(f"{dir}/out.txt").exists():
-            self.fail("Your script did not create the specified outfile")
-
         tblastn_expected = {
             "Escherichia_coli_K12.fna": 116,
             "Vibrio_cholerae_N16961.fna": 125,
