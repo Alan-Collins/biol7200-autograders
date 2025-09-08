@@ -164,6 +164,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_exit_codes(self):
         """Check script ran without error"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         print("Your script ran successfully.")
@@ -171,6 +173,8 @@ class TestFiles(unittest.TestCase):
     @leaderboard(column_name="run time", sort_order="asc")
     def test_run_time_leaderboard(self, set_leaderboard_value=None):
         """Set script run time for leaderboard"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if EXPECTED_OUTPUTS.get(counts, None) != "correct":
             self.fail()
@@ -182,6 +186,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_run_time(self):
         """Check script run time for leaderboard"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         print(f"Your script took {self.run_time}s to run on all four species.")
@@ -194,6 +200,8 @@ class TestFiles(unittest.TestCase):
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_result_correct(self, set_score=None):
         """Check script identifies correct number of homologs"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         
@@ -224,10 +232,12 @@ class TestFiles(unittest.TestCase):
             )
 
 
-    @visibility("hidden")
+    @visibility("after_due_date")
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_result_correct_tas(self):
-        """Indicate identified issues to TAs"""
+        """Indicate identified issues"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.zero_exit:
             self.fail("Your script exited with a non-zero exit code.")
         print("The number of identified homologs was:")
