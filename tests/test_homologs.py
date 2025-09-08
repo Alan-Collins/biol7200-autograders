@@ -221,7 +221,11 @@ class TestFiles(unittest.TestCase):
             if count != len(lines):
                 self.fail("Your script's stdout and output file disagree about how many hits there are.")
 
-        print(f"Your script produces outputs of the correct format.")
+        print(
+            "Your script produces outputs of the correct format.\n"
+            "The number of homologs identified for each assembly is being assessed in a hidden test "
+            "The results of that test will be shown after the assignment due date."
+            )
 
     @weight(20)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
