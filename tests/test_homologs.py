@@ -337,7 +337,7 @@ class TestFiles(unittest.TestCase):
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("hidden")
-    def test_gets_right_number(self):
+    def test_print_script(self):
         """Print script content for grading"""
         if not self.homolog_file.exists():
             self.fail(
