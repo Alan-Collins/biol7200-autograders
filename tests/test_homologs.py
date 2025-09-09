@@ -332,3 +332,17 @@ class TestFiles(unittest.TestCase):
             self.fail("Your script identifies the wrong number of matches.")        
 
         print("Your script identifies the correct number of matches.")
+
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("hidden")
+    def test_gets_right_number(self):
+        """Print script content for grading"""
+        if not self.homolog_file.exists():
+            self.fail(
+                "Unable to get the find_homologs.sh script from a git repo. "
+                "follow the instructions carefully."
+            )
+        with open(self.homolog_file) as f:
+            print(f.read())
