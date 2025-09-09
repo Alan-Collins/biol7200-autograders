@@ -469,11 +469,12 @@ class TestFiles(unittest.TestCase):
         if not "-regex " in command:
             self.fail("Your command should use a regex to identify gene files.")
         if "-E " in command:
-            self.fail(
+            print(
                 "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
                 "which used in this autograder. Use '-regextype egrep instead of -E.\n"
                 "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
                 )
+            command = command.replace("-E ", "-regextype egrep ")
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
@@ -519,11 +520,12 @@ class TestFiles(unittest.TestCase):
         if not "-regex " in command:
             self.fail("Your command should use a regex to identify gene files.")
         if "-E " in command:
-            self.fail(
+            print(
                 "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
                 "which used in this autograder. Use '-regextype egrep instead of -E.\n"
                 "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
                 )
+            command = command.replace("-E ", "-regextype egrep ")
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
@@ -569,11 +571,12 @@ class TestFiles(unittest.TestCase):
         if not "-regex " in command:
             self.fail("Your solution should use a regex to identify gene files.")
         if "-E " in command:
-            self.fail(
+            print(
                 "The -E flag is found on Mac's version of find, but not the GNU version found on Linux, "
                 "which used in this autograder. Use '-regextype egrep instead of -E.\n"
                 "For the purposes of this course, consider installing findutils from conda-forge to use the GNU find."
                 )
+            command = command.replace("-E ", "-regextype egrep ")
         if not re.match(r".+[^\\](?:;|&&).+", command):
             self.fail("Your solution should be composed of two bash commands.")
         # set up temp dir and test command
