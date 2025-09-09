@@ -478,6 +478,8 @@ class TestFiles(unittest.TestCase):
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
+        Path.mkdir(Path(f"{dir}/data"))
+        Path(f"{dir}/data/find_data").symlink_to(Path(f"{dir}/find_data"))
         result = subprocess.run(
             command,
             shell=True,
@@ -529,6 +531,8 @@ class TestFiles(unittest.TestCase):
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
+        Path.mkdir(Path(f"{dir}/data"))
+        Path(f"{dir}/data/find_data").symlink_to(Path(f"{dir}/find_data"))
         result = subprocess.run(
             command,
             shell=True,
@@ -582,6 +586,8 @@ class TestFiles(unittest.TestCase):
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/find_data")
+        Path.mkdir(Path(f"{dir}/data"))
+        shutil.copytree(f"{DATA_DIR}find_data", f"{dir}/data/find_data")
         gene_dir = Path(f"{dir}/genes")
         protein_dir = Path(f"{dir}/proteins")
         Path.mkdir(gene_dir)
