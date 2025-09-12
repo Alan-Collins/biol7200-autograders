@@ -144,7 +144,7 @@ class TestFiles(unittest.TestCase):
             if line in cls.stderr_trimmed:
                 continue
             cls.stderr_trimmed.append(line)
-        cls.stderr_trimmed = "".join(cls.stderr_trimmed)
+        cls.stderr_trimmed = "\n".join(cls.stderr_trimmed)
         end = time.perf_counter()
         cls.run_time = int(end-start)
 
