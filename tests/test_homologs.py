@@ -167,8 +167,11 @@ class TestFiles(unittest.TestCase):
         """Check script ran without error"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self.zero_exit:
-            self.fail("Your script exited with a non-zero exit code.")
+        if not self.zero_exit or len(self.stderrs) != 0:
+            self.fail(
+                "Your script exited an error:\n"
+                f"{self.stderrs[0]}"
+                )
         print("Your script ran successfully.")
 
     @leaderboard(column_name="run time", sort_order="asc")
@@ -189,8 +192,11 @@ class TestFiles(unittest.TestCase):
         """Check script run time for leaderboard"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self.zero_exit:
-            self.fail("Your script produced an error.")
+        if not self.zero_exit or len(self.stderrs) != 0:
+            self.fail(
+                "Your script exited an error:\n"
+                f"{self.stderrs[0]}"
+                )
         print(f"Your script took {self.run_time}s to run on all four species.")
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if EXPECTED_OUTPUTS.get(counts, None) != "correct":
@@ -203,8 +209,11 @@ class TestFiles(unittest.TestCase):
         """Check script identifies correct number of homologs"""
         if not self.submitted:
             self.fail("No script was submitted")
-        if not self.zero_exit:
-            self.fail("Your script exited with a non-zero exit code.")
+        if not self.zero_exit or len(self.stderrs) != 0:
+            self.fail(
+                "Your script exited an error:\n"
+                f"{self.stderrs[0]}"
+                )
         
         counts = tuple(
             self.counts[species] for species in [
