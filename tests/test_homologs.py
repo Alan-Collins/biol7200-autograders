@@ -138,6 +138,7 @@ class TestFiles(unittest.TestCase):
             with open(cls.outfiles[basename]) as f:
                 lines = len([i for i in f])
             cls.counts[basename] = lines
+        cls.stderrs = [res.stderr for res in cls.results.values() if res.stderr.strip() != ""]
         end = time.perf_counter()
         cls.run_time = int(end-start)
 
@@ -189,7 +190,7 @@ class TestFiles(unittest.TestCase):
         if not self.submitted:
             self.fail("No script was submitted")
         if not self.zero_exit:
-            self.fail("Your script exited with a non-zero exit code.")
+            self.fail("Your script produced an error.")
         print(f"Your script took {self.run_time}s to run on all four species.")
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if EXPECTED_OUTPUTS.get(counts, None) != "correct":
@@ -254,4 +255,8 @@ class TestFiles(unittest.TestCase):
             print("\nThe issues with the script likely include:")
             for iss in result:
                 print(ISSUES[iss])
-            self.fail("")
+            if len(self.stderrs) != 0:
+                error = self.stderrs[0]
+            else:
+                error = ""
+            self.fail(error)
