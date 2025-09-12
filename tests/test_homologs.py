@@ -139,6 +139,12 @@ class TestFiles(unittest.TestCase):
                 lines = len([i for i in f])
             cls.counts[basename] = lines
         cls.stderrs = [res.stderr for res in cls.results.values() if res.stderr.strip() != ""]
+        cls.stderr_trimmed = []
+        for line in cls.stderrs[0].split_lines():
+            if line in cls.stderr_trimmed:
+                continue
+            cls.stderr_trimmed.append(line)
+        cls.stderr_trimmed = "".join(cls.stderr_trimmed)
         end = time.perf_counter()
         cls.run_time = int(end-start)
 
@@ -170,7 +176,7 @@ class TestFiles(unittest.TestCase):
         if not self.zero_exit or len(self.stderrs) != 0:
             self.fail(
                 "Your script exited an error:\n"
-                f"{self.stderrs[0]}"
+                f"{self.stderr_trimmed}"
                 )
         print("Your script ran successfully.")
 
@@ -195,7 +201,7 @@ class TestFiles(unittest.TestCase):
         if not self.zero_exit or len(self.stderrs) != 0:
             self.fail(
                 "Your script exited an error:\n"
-                f"{self.stderrs[0]}"
+                f"{self.stderr_trimmed}"
                 )
         print(f"Your script took {self.run_time}s to run on all four species.")
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
@@ -212,7 +218,7 @@ class TestFiles(unittest.TestCase):
         if not self.zero_exit or len(self.stderrs) != 0:
             self.fail(
                 "Your script exited an error:\n"
-                f"{self.stderrs[0]}"
+                f"{self.stderr_trimmed}"
                 )
         
         counts = tuple(
@@ -265,7 +271,7 @@ class TestFiles(unittest.TestCase):
             for iss in result:
                 print(ISSUES[iss])
             if len(self.stderrs) != 0:
-                error = self.stderrs[0]
+                error = self.stderr_trimmed
             else:
                 error = ""
             self.fail(error)
