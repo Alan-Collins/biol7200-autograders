@@ -140,7 +140,7 @@ class TestFiles(unittest.TestCase):
             cls.counts[basename] = lines
         cls.stderrs = [res.stderr for res in cls.results.values() if res.stderr.strip() != ""]
         cls.stderr_trimmed = []
-        for line in cls.stderrs[0].split_lines():
+        for line in cls.stderrs[0].splitlines():
             if line in cls.stderr_trimmed:
                 continue
             cls.stderr_trimmed.append(line)
