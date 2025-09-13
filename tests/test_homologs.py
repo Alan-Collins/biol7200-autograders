@@ -4,6 +4,7 @@ from tempfile import mkdtemp
 import shutil
 import subprocess
 import time
+import re
 
 from gradescope_utils.autograder_utils.decorators import (
     weight,
@@ -108,6 +109,12 @@ class TestFiles(unittest.TestCase):
         cls.zero_exit = True
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
+        pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin/env))?bin/(?:(?<=usr/bin/)env )?bash")
+        cls.shebang = True
+        with open(SCRIPT_PATH) as f:
+            first_line = f.readline()
+        if not re.match(pattern, first_line):
+            cls.shebang = False
         start = time.perf_counter()
         for assembly in [
             "Escherichia_coli_K12.fna",
@@ -180,6 +187,10 @@ class TestFiles(unittest.TestCase):
         """Check script ran without error"""
         if not self.submitted:
             self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                "Your script is either lacking a shebang or the shebang is not correct."
+            )
         if not self.zero_exit or len(self.stderrs) != 0:
             self.fail(
                 "Your script exited an error:\n"
@@ -192,6 +203,15 @@ class TestFiles(unittest.TestCase):
         """Set script run time for leaderboard"""
         if not self.submitted:
             self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                "Your script is either lacking a shebang or the shebang is not correct."
+            )
+        if not self.zero_exit or len(self.stderrs) != 0:
+            self.fail(
+                "Your script exited an error:\n"
+                f"{self.stderr_trimmed}"
+                )
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if EXPECTED_OUTPUTS.get(counts, None) != "correct":
             self.fail()
@@ -205,6 +225,10 @@ class TestFiles(unittest.TestCase):
         """Check script run time for leaderboard"""
         if not self.submitted:
             self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                "Your script is either lacking a shebang or the shebang is not correct."
+            )
         if not self.zero_exit or len(self.stderrs) != 0:
             self.fail(
                 "Your script exited an error:\n"
