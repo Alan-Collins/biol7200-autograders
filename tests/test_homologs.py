@@ -136,6 +136,7 @@ class TestFiles(unittest.TestCase):
             except Exception as e:
                 cls.stderrs = [e]
                 cls.stderr_trimmed = e
+                return cls
             cls.results[basename] = result
             if result.returncode != 0:
                 cls.zero_exit = False
