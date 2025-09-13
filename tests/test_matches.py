@@ -246,34 +246,20 @@ class TestFiles(unittest.TestCase):
 
     @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    def test_perf_hits(self):
-        """Check your script outputs perfect hits"""
-        if not self._outfmt:
+    def test_attempts_filtering(self):
+        """Check your script filters hits"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.was_run:
+            self.fail("Your script had issues and so was not run.")
+        with open(SCRIPT_PATH) as fin:
+            contents = fin.read()
+        if not "awk" in contents or not "==" in contents:
             self.fail(
-                "Your script does not include any specification of the outfmt. Consult the BLAST section of the assignment document if unsure."
+                "It looks like your script does not include a step to filter BLAST hits"
             )
-        br = BlastResult.from_outfmt_str(self._outfmt)
-        if not br.can_verify_perfect_match(self._qcov_hsp_perc, self._perc_identity):
-            self.fail(
-                "You do not use BLAST settings that can allow you to identify perfect hits.\nIf you are convinced this automated check is wrong, you can ask me or a TA to confirm."
-            )
-        if not self._match_out.exists():
-            self.fail(
-                "Your script did not create the specified output file."
-            )
-        with open(self._match_out) as f:
-            n = 0 # confirm there are hits to avoid giving points for empty files
-            for hit in f:
-                n += 1
-                br = BlastResult.from_outfmt_str(self._outfmt, hit)
-                if not br.is_perfect_match(self._qcov_hsp_perc, self._perc_identity):
-                    self.fail(
-                        "Your script output file includes BLAST results which are not perfect hits."
-                    )
-        if n == 0:
-            self.fail("Your script produced an empty output file.")
-
-        print("Your script's output file contains pefect hits")
+        
+        print("Your script includes filtering of hits")
 
     @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
