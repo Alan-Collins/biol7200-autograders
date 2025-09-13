@@ -126,18 +126,24 @@ class TestFiles(unittest.TestCase):
                 bed,
                 outfile
             ]
-            result = subprocess.run(
-                command,
-                text=True,
-                capture_output=True,
-                cwd=cls.dir
-            )
+            try:
+                result = subprocess.run(
+                    command,
+                    text=True,
+                    capture_output=True,
+                    cwd=cls.dir
+                )
+            except Exception as e:
+                cls.stderrs = [e]
+                cls.stderr_trimmed = e
             cls.results[basename] = result
             if result.returncode != 0:
                 cls.zero_exit = False
             with open(cls.outfiles[basename]) as f:
                 lines = len([i for i in f])
             cls.counts[basename] = lines
+        end = time.perf_counter()
+        cls.run_time = int(end-start)
         cls.stderrs = [res.stderr for res in cls.results.values() if res.stderr.strip() != ""]
         cls.stderr_trimmed = []
         if len(cls.stderrs) != 0:
@@ -146,8 +152,7 @@ class TestFiles(unittest.TestCase):
                     continue
                 cls.stderr_trimmed.append(line)
         cls.stderr_trimmed = "\n".join(cls.stderr_trimmed)
-        end = time.perf_counter()
-        cls.run_time = int(end-start)
+        
 
     @classmethod
     def tearDownClass(cls):
