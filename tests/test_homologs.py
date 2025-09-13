@@ -140,10 +140,11 @@ class TestFiles(unittest.TestCase):
             cls.counts[basename] = lines
         cls.stderrs = [res.stderr for res in cls.results.values() if res.stderr.strip() != ""]
         cls.stderr_trimmed = []
-        for line in cls.stderrs[0].splitlines():
-            if line in cls.stderr_trimmed:
-                continue
-            cls.stderr_trimmed.append(line)
+        if len(cls.stderrs) != 0:
+            for line in cls.stderrs[0].splitlines():
+                if line in cls.stderr_trimmed:
+                    continue
+                cls.stderr_trimmed.append(line)
         cls.stderr_trimmed = "\n".join(cls.stderr_trimmed)
         end = time.perf_counter()
         cls.run_time = int(end-start)
