@@ -301,6 +301,10 @@ class TestFiles(unittest.TestCase):
                 "Your script produces stdout with too many numbers for this simple autograder to interpret.\n"
                 "It should only print the number of perfect hits identified to stdout."
             )
+        if len(match_numbers) == 0 or len(no_match_numbers) == 0:
+            self.fail(
+                "No numbers were found in your script's stdout"
+            )
 
         if int(match_numbers[0]) != 10 or int(no_match_numbers[0]) != 0:
             self.fail("Your script prints the wrong number of matches to the stdout.")
