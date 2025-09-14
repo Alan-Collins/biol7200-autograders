@@ -197,6 +197,22 @@ class TestFiles(unittest.TestCase):
             self.fail("Could not find command. Make sure you follow the submission instructions")
         if not "sed" in command:
             self.fail("You must use sed for this question.")
+        # Try to grab the regex from the sed command
+        regex_found = False
+        for _, script in re.findall(r"([\"\'])(.+?)\1", command):
+            search_string = re.match(r".*?s(.)(.*?)\1", script)
+            if not search_string:
+                continue
+            regex = search_string.group(2)
+            try:
+                re.compile(regex)
+                if re.match(regex, "AbcD"):
+                    regex_found = True
+            except re.error:
+                continue
+        if not regex_found:
+            self.fail("Your regex did not match the string specified in the assignment.")
+        
         # set up temp dir and test command
         dir = mkdtemp()
         shutil.copy(f"{DATA_DIR}HK_domain.faa", dir)
