@@ -109,7 +109,7 @@ class TestFiles(unittest.TestCase):
         cls.zero_exit = True
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
-        pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin/env))?bin/(?:(?<=usr/bin/)env )?bash")
+        pattern = re.compile(r"\#\![ ]?/(?:usr/(?=bin(?:/env)?))?bin/(?:(?<=usr/bin/)env )?bash")
         cls.shebang = True
         with open(SCRIPT_PATH) as f:
             first_line = f.readline()
