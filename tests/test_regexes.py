@@ -466,6 +466,9 @@ class TestFiles(unittest.TestCase):
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         # check command uses find with a regex
+        if command.startswith("gfind"):
+            print("Note gfind is just a name used on Macs. Use 'find' instead")
+            command = command.replace("gfind", "find")
         if not command.strip().startswith("find "):
             self.fail("Your command should use find to identify the gene files.")
         if not "-regex " in command:
@@ -519,6 +522,9 @@ class TestFiles(unittest.TestCase):
         if not command:
             self.fail("Could not find command. Make sure you follow the submission instructions")
         # check command uses find with a regex
+        if command.startswith("gfind"):
+            print("Note gfind is just a name used on Macs. Use 'find' instead")
+            command = command.replace("gfind", "find")
         if not command.strip().startswith("find "):
             self.fail("Your command should use find to identify the gene files.")
         if not "-regex " in command:
