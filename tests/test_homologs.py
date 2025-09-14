@@ -115,6 +115,7 @@ class TestFiles(unittest.TestCase):
             first_line = f.readline()
         if not re.match(pattern, first_line):
             cls.shebang = False
+        cls.stderrs = []
         start = time.perf_counter()
         for assembly in [
             "Escherichia_coli_K12.fna",
@@ -145,14 +146,17 @@ class TestFiles(unittest.TestCase):
                 cls.stderr_trimmed = e
                 return cls
             cls.results[basename] = result
-            if result.returncode != 0:
+            if result.returncode != 0 or result.stderr.strip() != "":
                 cls.zero_exit = False
-            with open(cls.outfiles[basename]) as f:
-                lines = len([i for i in f])
+                cls.stderrs.append(result.stderr)
+            if Path(basename).exists():
+                with open(cls.outfiles[basename]) as f:
+                    lines = len([i for i in f])
+            else:
+                lines = 0
             cls.counts[basename] = lines
         end = time.perf_counter()
         cls.run_time = int(end-start)
-        cls.stderrs = [res.stderr for res in cls.results.values() if res.stderr.strip() != ""]
         cls.stderr_trimmed = []
         if len(cls.stderrs) != 0:
             for line in cls.stderrs[0].splitlines():
