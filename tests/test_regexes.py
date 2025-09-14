@@ -339,6 +339,8 @@ class TestFiles(unittest.TestCase):
                 continue
             if not re.match(header_regex, line):
                 self.fail("The headers in your output do not match the expected format.")
+        if r"\u" not in command and r"\U" not in command:
+            self.fail("You do not convert the case of the matched string.")
         print("Your output looks good.")
 
     @weight(2)
