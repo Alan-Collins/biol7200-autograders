@@ -149,7 +149,7 @@ class TestFiles(unittest.TestCase):
             if result.returncode != 0 or result.stderr.strip() != "":
                 cls.zero_exit = False
                 cls.stderrs.append(result.stderr)
-            if Path(f"{basename}.txt").exists():
+            if cls.outfiles[basename].exists():
                 with open(cls.outfiles[basename]) as f:
                     lines = len([i for i in f])
             else:
