@@ -264,6 +264,9 @@ class TestFiles(unittest.TestCase):
                 "Wolbachia"
             ]
         )
+        print("The number of identified homologs was:")
+        for species, count in self.counts.items():
+            print(f"{species+':':<35} {count}")
         if counts not in EXPECTED_OUTPUTS:
             print(
                 "Your script has issues that could not be diagnosed automatically by the autograder."
