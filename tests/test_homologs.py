@@ -301,10 +301,10 @@ class TestFiles(unittest.TestCase):
             "Vibrio_cholerae_N16961": 34,
             "Wolbachia": 2
         }
-        print(f"{'assembly:':<35} found\texpected")
+        print(f"{'assembly:':<35}\t{'found':<10}\texpected")
         for species, count in self.counts.items():
             ex = expected[species]
-            print(f"{species+':':<35} {count}\t{ex}")
+            print(f"{species+':':<35}\t{count:<10}\t{ex}")
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if counts not in EXPECTED_OUTPUTS:
             self.fail("The script has issues that could not be diagnosed automatically by the autograder.")
