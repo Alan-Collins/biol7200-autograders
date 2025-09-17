@@ -74,12 +74,10 @@ class TestFiles(unittest.TestCase):
                 raise("magnumopus has no function 'ispcr'")
             if not inspect.isfunction(magnumopus.ispcr):
                 raise("magnumopus.ispcr is not a function")
-            cls.ispcr_result = FastaSeq.from_fasta(
-                magnumopus.ispcr(
-                    primer_file=f"{DATA_DIR}/rpoD.fna",
-                    assembly_file=f"{DATA_DIR}/Pseudomonas_aeruginosa_PAO1.fna",
-                    max_amplicon_size=2000
-                )
+            cls.ispcr_result = magnumopus.ispcr(
+                primer_file=f"{DATA_DIR}/rpoD.fna",
+                assembly_file=f"{DATA_DIR}/Pseudomonas_aeruginosa_PAO1.fna",
+                max_amplicon_size=2000
             )
             cls.ispcr_ran = True
         except Exception as e:
@@ -184,7 +182,9 @@ class TestFiles(unittest.TestCase):
             print("ispcr return type matches expectation")
         else:
             self.fail("ispcr return type is wrong")
-        if self.ispcr_result != FastaSeq.from_fasta(ISPCR_OUTPUT):
+        result = FastaSeq.from_fasta(self.ispcr_result)
+        expected = FastaSeq.from_fasta(ISPCR_OUTPUT)
+        if result != expected:
             self.fail(
                 "ispcr output does not match expected output.\n"
                 f"Your output was:\n{self.ispcr_result}"
