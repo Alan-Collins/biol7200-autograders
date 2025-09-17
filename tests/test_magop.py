@@ -31,6 +31,19 @@ ISPCR_OUTPUT = (
     "GCCTTCCTCGATG"
 )
 
+POSSIBLE_ALNS = {
+	('CTTCTCGT-CGGTCTCGTGGTTCGGGAAC', 'CTT-TCATCCACT-TCGTTGCCCGGGAAC'),
+	('CTTCTCGTC-GGTCTCGTGGTTCGGGAAC', 'CTT-TCATCCACT-TCGTTGCCCGGGAAC'),
+	('CTTCTCGTCG-GTCTCGTGGTTCGGGAAC', 'CTT-TCATCCACT-TCGTTGCCCGGGAAC'),
+	('CTTCTCGTCGG-TCTCGTGGTTCGGGAAC', 'CTT-TCATCCACT-TCGTTGCCCGGGAAC'),
+	('CTTCTCGTCGGTC-TCGTGGTTCGGGAAC', 'CTT-TCATC-CACTTCGTTGCCCGGGAAC'),
+	('CTTCTCGTCGGTC-TCGTGGTTCGGGAAC', 'CTT-TCATCC-ACTTCGTTGCCCGGGAAC'),
+	('CTTCTCGTCGGTC-TCGTGGTTCGGGAAC', 'CTT-TCATCCA-CTTCGTTGCCCGGGAAC'),
+	('CTTCTCGTCGGTCT-CGTGGTTCGGGAAC', 'CTT-TCATC-CACTTCGTTGCCCGGGAAC'),
+	('CTTCTCGTCGGTCT-CGTGGTTCGGGAAC', 'CTT-TCATCC-ACTTCGTTGCCCGGGAAC'),
+	('CTTCTCGTCGGTCT-CGTGGTTCGGGAAC', 'CTT-TCATCCA-CTTCGTTGCCCGGGAAC')
+}
+
 Q_NUM = PointCounter(0)
 
 POINT_NUM = PointCounter(0)
@@ -69,7 +82,7 @@ class TestFiles(unittest.TestCase):
             cls.imported = False
             cls.error = e
         
-        try: # run step 1
+        try: # run ispcr
             if not hasattr(magnumopus, "ispcr"):
                 raise("magnumopus has no function 'ispcr'")
             if not inspect.isfunction(magnumopus.ispcr):
@@ -84,19 +97,16 @@ class TestFiles(unittest.TestCase):
             cls.ispcr_ran = False
             cls.ispcr_error = e
         
-        # try: # run step 2
-        #     if not hasattr(magnumopus, "step_two"):
-        #         raise("magnumopus has no function 'step_two'")
-        #     if not inspect.isfunction(magnumopus.step_two):
-        #         raise("magnumopus.step_two is not a function")
-        #     cls.step_two_result = magnumopus.step_two(
-        #         sorted_hits=Q2_INPUT,
-        #         max_amplicon_size=MAX_AMPLICON_SIZE
-        #     )
-        #     cls.step_two_ran = True
-        # except Exception as e:
-        #     cls.step_two_ran = False
-        #     cls.error = e
+        try: # run needleman_wunsch
+            if not hasattr(magnumopus, "needleman_wunsch"):
+                raise("magnumopus has no function 'needleman_wunsch'")
+            if not inspect.isfunction(magnumopus.needleman_wunsch):
+                raise("magnumopus.needleman_wunsch is not a function")
+            cls.needleman_wunsch_result = magnumopus.needleman_wunsch(seq1, seq2, 1, -1, -1)
+            cls.needleman_wunsch_ran = True
+        except Exception as e:
+            cls.needleman_wunsch_ran = False
+            cls.error = e
         
         # try: # run step 3
         #     if not hasattr(magnumopus, "step_three"):
@@ -127,6 +137,18 @@ class TestFiles(unittest.TestCase):
         else:
             print("ispcr error:")
             self.ispcr_error
+        print("\n\n")
+        if self.needleman_wunsch_ran:
+            print("needleman_wunsch output:")
+            print(f"score: {self.needleman_wunsch_result[1]}")
+            print("\n".join(self.needleman_wunsch_result[0]))
+            if self.needleman_wunsch_result[0] in POSSIBLE_ALNS or self.needleman_wunsch_result[0][::-1] in POSSIBLE_ALNS:
+                print("alignment matches expected.")
+            else:
+                print("alignment was not in the expected set.")
+        else:
+            print("needleman_wunsch error:")
+            self.needleman_wunsch_error
 
 
 
@@ -190,3 +212,16 @@ class TestFiles(unittest.TestCase):
                 f"Your output was:\n{self.ispcr_result}"
             )
         print("ispcr output matches expected output")
+
+    @weight(0)
+    @number(f"{Q_NUM.next()}.{POINT_NUM.reset(1)}")
+    @visibility("visible")
+    def test_nw_runs(self):
+        """Check needleman_wunsch runs"""
+        if not self.submitted:
+            self.fail("magnumopus was not submitted.")
+        if not self.imported:
+            self.fail(f"magnumopus could not be imported due to an error:\n{self.error}")
+        if not self.needleman_wunsch_ran:
+            self.fail(f"needleman_wunsch failed with the error: {self.error}")
+        print("needleman_wunsch ran")
