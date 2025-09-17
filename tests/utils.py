@@ -240,3 +240,70 @@ class BlastResult(BaseModel):
                 and self.gaps == 0
                 and self.length == self.qlen
             )
+
+class Seq():
+    _rc = {
+        "A": "T",
+        "T": "A",
+        "C": "G",
+        "G": "C",
+        "N": "N"
+    }
+    def __init__(self, header: str, seq: str):
+        self.header = header
+        self.seq = seq
+    
+    def reverse_complement(self) -> "Seq":
+        revseq = [self._rc[b] for b in self.seq[::-1]]
+        return Seq(self.header, revseq)
+
+    def __eq__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.seq == other.seq
+    
+    def __gt__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"ordering not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.header > other.header
+    
+    def __ge__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"ordering not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.header >= other.header
+    
+    def __lt__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"ordering not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.header < other.header
+    
+    def __le__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"ordering not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.header <= other.header
+
+    def __str__(self) -> str:
+        return f"{self.header}\n{self.seq}"
+
+class FastaSeq():
+    def __init__(self, seqs: list[Seq]=None):
+        if seqs is None:
+            self.seqs = []
+        else:
+            self.seqs = seqs
+        
+    @classmethod
+    def from_fasta(cls, fasta_str: str):
+        seqs = []
+        if ">" not in fasta_str or "\n" not in fasta_str:
+             return cls()
+        
+        for entry in fasta_str.split(">"):
+            lines = [l for l in entry.split("\n") if l != ""]
+            head = lines[0]
+            seq = "".join(lines[1])
+            seqs.append(Seq(head, seq))
+        return cls(seqs)
+
+    def __str__(self) -> str:
+        return "\n".join(self.seqs)
