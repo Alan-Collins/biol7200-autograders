@@ -300,6 +300,8 @@ class FastaSeq():
         
         for entry in fasta_str.split(">"):
             lines = [l for l in entry.split("\n") if l != ""]
+            if len(lines) < 2:
+                return cls()
             head = lines[0]
             seq = "".join(lines[1:])
             seqs.append(Seq(head, seq))
