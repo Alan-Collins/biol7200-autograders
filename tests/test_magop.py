@@ -104,6 +104,8 @@ class TestFiles(unittest.TestCase):
                 raise("magnumopus has no function 'needleman_wunsch'")
             if not inspect.isfunction(magnumopus.needleman_wunsch):
                 raise("magnumopus.needleman_wunsch is not a function")
+            seq1 = "CTTCTCGTCGGTCTCGTGGTTCGGGAAC"
+            seq2 = "CTTTCATCCACTTCGTTGCCCGGGAAC"
             cls.needleman_wunsch_result = magnumopus.needleman_wunsch(seq1, seq2, 1, -1, -1)
             cls.needleman_wunsch_ran = True
         except Exception as e:
