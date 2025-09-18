@@ -269,7 +269,9 @@ class TestFiles(unittest.TestCase):
             print(f"{species+':':<35} {count}")
         if counts not in EXPECTED_OUTPUTS:
             print(
-                "Your script has issues that could not be diagnosed automatically by the autograder."
+                "Your script has issues that could not be diagnosed automatically by the autograder.\n\n"
+                "Your score will need to be determined manually. "
+                "As long as you followed the assignment instructions your score will not be 0, but closer to 20-30."
             )
             set_score(0)
             self.fail()
