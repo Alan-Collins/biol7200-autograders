@@ -14,7 +14,7 @@ from utils import PointCounter, FastaSeq, Seq
 
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_DIR = "magnumopus"
-SOLUTION_SCRIPT = "magnumopus.py"
+SOLUTION_SCRIPT = "amplicon_align.py"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 PACKAGE_PATH = f"{SUBMISSION_PATH}{SOLUTION_DIR}"
 DATA_DIR = "/autograder/biol7200-autograders/data/"
@@ -52,14 +52,14 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.dir = Path(tempfile.mkdtemp())
-        if not Path(SCRIPT_PATH).exists():
-            cls.submitted = False
-            return cls
+        cls.submitted = False
         
         if "__init__.py" in os.listdir(SUBMISSION_PATH):
             cls.format = "package"
             os.mkdir(f"{SUBMISSION_PATH}magnumopus")
             for file in os.listdir(SUBMISSION_PATH):
+                if file == "amplicon_align.py":
+                    continue
                 if file.endswith(".py"):
                     shutil.move(f"{SUBMISSION_PATH}{file}", f"{SUBMISSION_PATH}magnumopus")
         else:
