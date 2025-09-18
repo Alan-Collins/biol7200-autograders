@@ -17,7 +17,7 @@ SOLUTION_DIR = "magnumopus"
 SOLUTION_SCRIPT = "amplicon_align.py"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 PACKAGE_PATH = f"{SUBMISSION_PATH}{SOLUTION_DIR}"
-DATA_DIR = "/autograder/biol7200-autograders/source/"
+DATA_DIR = "/autograder/biol7200-autograders/data/"
 
 ISPCR_OUTPUT = (
     ">Pseudomonas_aeruginosa_PAO1_NC_002516.2:635141-635853 Pseudomonas aeruginosa PAO1, complete genome\n"
