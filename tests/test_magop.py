@@ -62,8 +62,10 @@ class TestFiles(unittest.TestCase):
                     continue
                 if file.endswith(".py"):
                     shutil.move(f"{SUBMISSION_PATH}{file}", f"{SUBMISSION_PATH}magnumopus")
-        else:
+        elif "magnumopus.py" in os.listdir(SUBMISSION_PATH):
             cls.format = "module"
+        else:
+            return cls
         cls.input_files = [
             "Pseudomonas_aeruginosa_PAO1.fna",
             "Pseudomonas_protegens_CHA0.fna",
@@ -163,6 +165,8 @@ class TestFiles(unittest.TestCase):
             )
         print(f'magnumopus submitted successfully')
         print(f"Your submission was determined to be a {self.format}")
+        if "amplicon_align.py" in os.listdir(SUBMISSION_PATH):
+            print("amplicon_align.py submitted successfully.")
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
