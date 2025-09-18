@@ -309,3 +309,25 @@ class FastaSeq():
 
     def __str__(self) -> str:
         return "\n".join(self.seqs)
+    
+    def __len__(self) -> int:
+        return len(self.seqs)
+
+    def __iter__(self, ordered=False):
+        if ordered:
+            yield from sorted(self.seqs)
+        else:
+            yield from self.seqs
+
+    def __eq__(self, other: "FastaSeq") -> bool:
+        if not isinstance(other, FastaSeq):
+            raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        if len(self) != len(other):
+            return False
+        for a, b in zip(self, other):
+            if a != b:
+                return False
+        return True
+    
+    def __ne__(self, other: "FastaSeq"):
+        return not self == other
