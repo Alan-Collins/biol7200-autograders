@@ -4,11 +4,13 @@ from tempfile import mkdtemp
 import shutil
 import subprocess
 import re
+import time
 
 from gradescope_utils.autograder_utils.decorators import (
     weight,
     number,
     visibility,
+    leaderboard
 )
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
@@ -67,6 +69,8 @@ class TestFiles(unittest.TestCase):
         cls.zero_exit = False
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
+        cls.runtime = 999_999
+        start = time.perf_counter()
         for assembly in [
             "Escherichia_coli_K12.fna",
             "Pseudomonas_aeruginosa_UCBPP-PA14.fna",
@@ -107,6 +111,7 @@ class TestFiles(unittest.TestCase):
             else:
                 lines = 0
             cls.counts[basename] = lines
+        cls.runtime = round(time.perf_counter() - start, 2)
 
     @classmethod
     def tearDownClass(cls):
@@ -195,3 +200,25 @@ class TestFiles(unittest.TestCase):
             for species, count in self.counts.items():
                 print(f"{species+':':<35} {count}")
             self.fail("Your script identified the wrong number of homologs")
+    
+    @weight(0)
+    @leaderboard(column_name="run time", sort_order="asc")
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    def test_set_leaderboard(self, set_leaderboard_value=None):
+        """Check time for leaderboard"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.zero_exit:
+            self.fail("Your script exited with a non-zero exit code.")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+
+        counts = tuple(self.counts[species] for species in SPECIES_LIST)
+        if counts != (27, 38, 34, 2):
+            self.fail("only correct answers will be used for the leaderboard")
+        
+        print(f"Your run time was {self.runtime}s")
+        set_leaderboard_value(self.runtime)
+        
