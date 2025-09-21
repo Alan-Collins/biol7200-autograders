@@ -163,7 +163,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
 
     @weight(65)
-    @visibility("hidden")
+    @visibility("visible")
     def test_any_worked(self):
         """Check if submitted script works for any test cases"""
         worked = False
@@ -174,11 +174,10 @@ class TestFiles(unittest.TestCase):
                 comparator = EXPECTED
             if result.stdout.strip() == comparator.strip() and result.returncode == 0:
                 worked = True
-                print(f"{category} was correct")
-            else:
-                print(f"{category} was incorrect")
         if worked == False:
             self.fail("No outputs match the expected output.")
+        else:
+            print("Your script works for at least one of the test cases.")
 
     @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -244,7 +243,7 @@ class TestFiles(unittest.TestCase):
                 a, b,
                 "Your output does not match the expected output for multi-line sequences"
             )
-        print("Your ouput matches the expected output for the first test case.")
+        print("Your output matches the expected output for the first test case.")
 
     @weight(10)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -269,5 +268,3 @@ class TestFiles(unittest.TestCase):
         print("Your output matches the expected output for the second test case.")
         
         
-
-
