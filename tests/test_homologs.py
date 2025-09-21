@@ -203,7 +203,7 @@ class TestFiles(unittest.TestCase):
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    def test_set_leaderboard(self, set_leaderboard_value=None):
+    def test_show_leaderboard(self):
         """Show time for leaderboard"""
         if not self.submitted:
             self.fail("No script was submitted")
