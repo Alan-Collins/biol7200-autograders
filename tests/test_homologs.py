@@ -219,7 +219,6 @@ class TestFiles(unittest.TestCase):
             self.fail("only correct answers will be used for the leaderboard")
         
         print(f"Your run time was {self.runtime}s")
-        set_leaderboard_value(self.runtime)
     
     @weight(0)
     @leaderboard(column_name="run time", sort_order="asc")
