@@ -141,7 +141,6 @@ class TestFiles(unittest.TestCase):
         else:
             print("ispcr error:")
             self.ispcr_error
-        print("\n\n")
         if self.needleman_wunsch_ran:
             print("needleman_wunsch output:")
             print(f"score: {self.needleman_wunsch_result[1]}")
