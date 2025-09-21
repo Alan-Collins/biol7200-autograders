@@ -101,8 +101,11 @@ class TestFiles(unittest.TestCase):
             cls.results[basename] = result
             if result.returncode == 0:
                 cls.zero_exit = True
-            with open(cls.outfiles[basename]) as f:
-                lines = len([i for i in f])
+            if cls.outfiles[basename].exists():
+                with open(cls.outfiles[basename]) as f:
+                    lines = len([i for i in f])
+            else:
+                lines = 0
             cls.counts[basename] = lines
 
     @classmethod
@@ -174,6 +177,14 @@ class TestFiles(unittest.TestCase):
             self.fail(
                 f"Your script does not begin with a correct shebang."
             )
+        
+        outfiles_made = True
+        for sample, outfile in self.outfiles.items():
+            if not outfile.exists():
+                outfiles_made = False
+                print(f"The output file was not created for {sample}")
+        if not outfiles_made:
+            self.fail("one or more output files not created.")
         
         counts = tuple(self.counts[species] for species in SPECIES_LIST)
         if counts == (27, 38, 34, 2):
