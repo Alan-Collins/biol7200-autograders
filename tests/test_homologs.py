@@ -200,6 +200,26 @@ class TestFiles(unittest.TestCase):
             for species, count in self.counts.items():
                 print(f"{species+':':<35} {count}")
             self.fail("Your script identified the wrong number of homologs")
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    def test_set_leaderboard(self, set_leaderboard_value=None):
+        """Show time for leaderboard"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.zero_exit:
+            self.fail("Your script exited with a non-zero exit code.")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
+
+        counts = tuple(self.counts[species] for species in SPECIES_LIST)
+        if counts != (27, 38, 34, 2):
+            self.fail("only correct answers will be used for the leaderboard")
+        
+        print(f"Your run time was {self.runtime}s")
+        set_leaderboard_value(self.runtime)
     
     @weight(0)
     @leaderboard(column_name="run time", sort_order="asc")
