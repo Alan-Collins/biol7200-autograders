@@ -95,7 +95,8 @@ class TestFiles(unittest.TestCase):
         cls.zero_exit = False
         shutil.copy(SCRIPT_PATH, cls.dir)
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
-
+        if not cls.shebang:
+            return cls
         wrapped_result = subprocess.run(
             ["./pretty_align.py", f"{wrapped.resolve()}"],
             text=True,
