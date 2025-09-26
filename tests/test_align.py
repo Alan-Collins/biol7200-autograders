@@ -163,6 +163,7 @@ class TestFiles(unittest.TestCase):
         print(f'{SOLUTION_SCRIPT} script submitted successfully')
 
     @weight(65)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_any_worked(self):
         """Check if submitted script works for any test cases"""
