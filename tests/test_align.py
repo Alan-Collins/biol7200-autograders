@@ -166,6 +166,8 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_any_worked(self):
         """Check if submitted script works for any test cases"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         worked = False
         for category, result in self.results.items():
             if "hidden" in category:
@@ -184,6 +186,8 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_shebang_present(self):
         """Check script uses shebang"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         with open(SCRIPT_PATH) as f:
             first_two = f.read()[:2]
         if first_two != "#!":
@@ -197,6 +201,8 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_shebang_correct(self):
         """Check shebang correct"""
+        if not self.submitted:
+            self.fail("No script was submitted")
         if not self.shebang:
             self.fail(
                 f"Your script does not begin with a correct shebang."
@@ -208,6 +214,12 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_zero_exit(self):
         """Check zero exit"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
         for category, result in self.results.items():
             if result.returncode != 0:
                 if not "un" in category:
@@ -230,6 +242,12 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_matches_expected_shown(self):
         """Check output matches expected"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self.shebang:
+            self.fail(
+                f"Your script does not begin with a correct shebang."
+            )
         one_line_res = self.results["unwrapped"]
         for a, b in zip(one_line_res.stdout.split("\n"), EXPECTED.split("\n")):
             self.assertEqual(
