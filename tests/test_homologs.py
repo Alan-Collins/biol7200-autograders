@@ -167,6 +167,9 @@ class TestFiles(unittest.TestCase):
         if not self.submitted:
             self.fail("No script was submitted")
         if not self.zero_exit:
+            res = self.results.get("Wolbachia")
+            if res.stderr.strip():
+                print("Your script produced the following error:\n{res.stderr}")
             self.fail("Your script exited with a non-zero exit code.")
         print("Your script ran successfully.")
 
