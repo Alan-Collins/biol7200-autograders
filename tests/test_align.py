@@ -296,13 +296,29 @@ class TestFiles(unittest.TestCase):
         print("expected for known sequence")
         print(EXPECTED)
         print("student unwrapped output for known sequence")
-        print(self.results.get("unwrapped"))
+        res = self.results.get("unwrapped")
+        if res:
+            print(res.stdout)
+        else:
+            print("none")
         print("student wrapped output for known sequence")
-        print(self.results.get("wrapped"))
+        res = self.results.get("wrapped")
+        if res:
+            print(res.stdout)
+        else:
+            print("none")
         print("\n")
         print("expected for hidden sequence")
         print(HIDDEN_EXPECTED)
         print("student unwrapped output for hidden sequence")
-        print(self.results.get("hidden_unwrapped"))
+        res = self.results.get("hidden_unwrapped")
+        if res:
+            print(res.stdout)
+        else:
+            print("none")
         print("student wrapped output for hidden sequence")
-        print(self.results.get("hidden_wrapped"))
+        res = self.results.get("hidden_wrapped")
+        if res:
+            print(res.stdout)
+        else:
+            print("none")
