@@ -286,5 +286,23 @@ class TestFiles(unittest.TestCase):
                 "Your output does not match the expected output for multi-line sequences"
             )
         print("Your output matches the expected output for the second test case.")
-        
-        
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("hidden")
+    def test_view_output(self):
+        """secretly print outputs for grading"""
+        one_line_res = self.results["hidden_unwrapped"]
+        print("expected for known sequence")
+        print(EXPECTED)
+        print("student unwrapped output for known sequence")
+        print(self.results.get("unwrapped"))
+        print("student wrapped output for known sequence")
+        print(self.results.get("wrapped"))
+        print("\n")
+        print("expected for hidden sequence")
+        print(HIDDEN_EXPECTED)
+        print("student unwrapped output for hidden sequence")
+        print(self.results.get("hidden_unwrapped"))
+        print("student wrapped output for hidden sequence")
+        print(self.results.get("hidden_wrapped"))
