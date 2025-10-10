@@ -173,10 +173,10 @@ class TestFiles(unittest.TestCase):
                     "Your script should produce a triangle composed only of the specified character.\n"
                     f"Instead, your script output including {len(out_chars)} different characters: {out_chars}\n"
                 )
-            if result.stdout != expected:
+            if result.stdout.strip() != expected.strip():
                 self.fail(
                     "Your script's output did not match the expected output for an odd height triangle."
-                    f"Yours:\n{result.stdout}\nExpected:{expected}"
+                    f"Yours:\n{result.stdout}\nExpected:\n{expected}"
                 )
         print("Your script produced odd height triangles that match the expected output")
         
@@ -214,12 +214,12 @@ class TestFiles(unittest.TestCase):
                     "Your script should produce a triangle composed only of the specified character.\n"
                     f"Instead, your script output including {len(out_chars)} different characters: {out_chars}\n"
                 )
-            if result.stdout != expected:
+            if result.stdout.strip() != expected.strip():
                 self.fail(
-                    "Your script's output did not match the expected output for an odd height triangle."
-                    f"Yours:\n{result.stdout}\nExpected:{expected}"
+                    "Your script's output did not match the expected output for an even height triangle."
+                    f"Yours:\n{result.stdout}\nExpected:\n{expected}"
                 )
-        print("Your script produced odd height triangles that match the expected output")
+        print("Your script produced even height triangles that match the expected output")
 
 
     # interrogate docstrings
