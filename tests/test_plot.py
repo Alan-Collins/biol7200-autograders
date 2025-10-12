@@ -115,7 +115,7 @@ class TestFiles(unittest.TestCase):
         if not self.size_same:
             self.fail(
                 "The image you uploaded is not the same size as the image produced by your script.\n"
-                f"Your submission image is {' x '.join(self.dims['submission'])} pixels, while your script "
+                f"Your submission image is {' x '.join(self.dims['submitted'])} pixels, while your script "
                 f"produces an image with dimensions of {' x '.join(self.dims['output'])} pixels"
             )
 
