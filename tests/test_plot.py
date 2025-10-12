@@ -68,7 +68,7 @@ class TestFiles(unittest.TestCase):
             "output": (out_img.height, out_img.width)
         }
 
-        if sub_img.height != out_img.height or sub_img.width != out_img.width:
+        if cls.dims["submitted"] == cls.dims["output"]:
             cls.size_same = True
         else:
             cls.size_same = False
@@ -115,8 +115,8 @@ class TestFiles(unittest.TestCase):
         if not self.size_same:
             self.fail(
                 "The image you uploaded is not the same size as the image produced by your script.\n"
-                f"Your submission image is {' x '.join(self.dims['submitted'])} pixels, while your script "
-                f"produces an image with dimensions of {' x '.join(self.dims['output'])} pixels"
+                f"Your submission image is {' x '.join([str(d) for d in self.dims['submitted']])} pixels, while your script "
+                f"produces an image with dimensions of {' x '.join([str(d) for d in self.dims['output']])} pixels"
             )
 
         if self.prcnt_diff > 5:
