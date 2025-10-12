@@ -43,7 +43,7 @@ class TestFiles(unittest.TestCase):
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
 
         cls.result = subprocess.run(
-            [f"./{SOLUTION_SCRIPT}"]
+            [f"./{SOLUTION_SCRIPT}"],
             text=True,
             capture_output=True,
             cwd=cls.dir
