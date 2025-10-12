@@ -155,7 +155,10 @@ class TestFiles(unittest.TestCase):
         if not self.submitted:
             self.fail("No script was submitted")
         if not self.zero_exit:
-            self.fail("Your script exited with a non-zero exit code.")
+            self.fail(
+                    "Your script returned a non-zero exit code\n"
+                    f"The stderr was {self.result.stderr}"
+                )
         print("Your script ran successfully.")
 
 

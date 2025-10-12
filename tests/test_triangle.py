@@ -165,7 +165,8 @@ class TestFiles(unittest.TestCase):
             )
             if result.returncode != 0:
                 self.fail(
-                    "Your script returned a non-zero exit code"
+                    "Your script returned a non-zero exit code\n"
+                    f"The stderr was {result.stderr}"
                 )
             out_chars = set("".join(result.stdout.split()))
             if len(out_chars) != 1:
@@ -206,7 +207,8 @@ class TestFiles(unittest.TestCase):
             )
             if result.returncode != 0:
                 self.fail(
-                    "Your script returned a non-zero exit code"
+                    "Your script returned a non-zero exit code\n"
+                    f"The stderr was {result.stderr}"
                 )
             out_chars = set("".join(result.stdout.split()))
             if len(out_chars) != 1:
