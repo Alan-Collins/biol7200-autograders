@@ -8,7 +8,14 @@ git pull
 # I think the next line is only necessary if you change the requirements after the first version of the assignment
 /root/conda/condabin/mamba run -n biol7200 pip3 install -r $BASE_DIR/requirements.txt
 
-tar -xzf /autograder/source/*_data.tar.gz
+
+if [[ $(ls /autograder/source/*_data.tar.gz | wc -l) -ne 0 ]]
+then
+    mkdir -p /autograder/biol7200-autograders/data/
+    cd /autograder/biol7200-autograders/data/
+    tar -xzf /autograder/source/*_data.tar.gz
+    cd /autograder/
+fi
 
 # change to tests directory
 cd $BASE_DIR/tests
