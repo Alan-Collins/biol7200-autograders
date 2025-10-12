@@ -31,7 +31,7 @@ class TestFiles(unittest.TestCase):
             "global_temperature"
         ]
         for file in cls.input_files:
-            shutil.copytree(f"{DATA_DIR}{file}", f"{cls.dir}/")
+            shutil.copytree(f"{DATA_DIR}{file}", f"{cls.dir}/{file}")
         cls.submitted = True
         cls.outfile = Path(f"{cls.dir}/plot.png")
        
