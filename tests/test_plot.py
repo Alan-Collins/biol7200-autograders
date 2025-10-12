@@ -63,6 +63,10 @@ class TestFiles(unittest.TestCase):
         out_img = Image.open(cls.outfile)
 
         size = sub_img.height * sub_img.width
+        cls.dims = {
+            "submitted": (sub_img.height, sub_img.width),
+            "output": (out_img.height, out_img.width)
+        }
 
         if sub_img.height != out_img.height or sub_img.width != out_img.width:
             cls.size_same = True
@@ -109,7 +113,11 @@ class TestFiles(unittest.TestCase):
             self.fail("Your script did not produce a plot.png file")
 
         if not self.size_same:
-            self.fail("The image you uploaded is not the same size as the image produced by your script")
+            self.fail(
+                "The image you uploaded is not the same size as the image produced by your script.\n"
+                f"Your submission image is {' x '.join(self.dims['submission'])} pixels, while your script "
+                f"produces an image with dimensions of {' x '.join(self.dims['output'])} pixels"
+            )
 
         if self.prcnt_diff > 5:
             self.fail(
