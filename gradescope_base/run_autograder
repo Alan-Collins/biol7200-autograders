@@ -11,7 +11,10 @@ git pull
 
 if [[ $(ls /autograder/source/*_data.tar.gz | wc -l) -ne 0 ]]
 then
+    mkdir -p /autograder/biol7200-autograders/data/
+    cd /autograder/biol7200-autograders/data/
     tar -xzf /autograder/source/*_data.tar.gz
+    cd /autograder/
 fi
 
 # change to tests directory
