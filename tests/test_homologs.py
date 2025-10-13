@@ -303,7 +303,7 @@ class TestFiles(unittest.TestCase):
                 print("too many hits found")
                 score -= wrong_number_penalty
             if len(hits) < 34:
-                print("too few hits found")
+                print("too few hits found (sequences not shown above are either missing or don't match any expected sequences)")
                 score -= wrong_number_penalty
             off_by_one = False
             mismatched = False
