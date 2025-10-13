@@ -275,7 +275,7 @@ class TestFiles(unittest.TestCase):
             self.fail("Error assessing your output file: {result.stderr}")
 
         hits = []
-        print("hits found for Vibrio cholerae:")
+        print("hits found for Vibrio cholerae when comparing expected results against your script's output:")
         wrong_orientation = False
         for line in result.stdout.splitlines():
             try:
