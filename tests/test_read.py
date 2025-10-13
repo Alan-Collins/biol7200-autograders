@@ -2,6 +2,7 @@ import unittest
 from pathlib import Path
 import shutil
 import tempfile
+import os
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
@@ -21,16 +22,17 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.dir = Path(tempfile.mkdtemp())
-        cls.input_files = [
-        ]
-        for file in cls.input_files:
-            shutil.copy(f"{DATA_DIR}{file}", f"{cls.dir}/")
-        cls.submitted = True
-        cls.outfile = Path(f"{cls.dir}/out")
-        cls.submitted = True
+        cls.submitted = False
         
-        if not Path(SCRIPT_PATH).exists():
-            cls.submitted = False
+        if "__init__.py" in os.listdir(SUBMISSION_PATH):
+            cls.format = "package"
+            os.mkdir(f"{SUBMISSION_PATH}magnumopus")
+            for file in os.listdir(SUBMISSION_PATH):
+                if file.endswith(".py"):
+                    shutil.move(f"{SUBMISSION_PATH}{file}", f"{SUBMISSION_PATH}magnumopus")
+        elif "magnumopus.py" in os.listdir(SUBMISSION_PATH):
+            cls.format = "module"
+        else:
             return cls
 
     @classmethod
