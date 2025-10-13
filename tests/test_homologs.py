@@ -275,7 +275,7 @@ class TestFiles(unittest.TestCase):
             self.fail("Error assessing your output file: {result.stderr}")
 
         hits = []
-        print("hits found:")
+        print("hits found for Vibrio cholerae:")
         wrong_orientation = False
         for line in result.stdout.splitlines():
             try:
@@ -288,7 +288,7 @@ class TestFiles(unittest.TestCase):
             if hit.qstart != hit.sstart:
                 wrong_orientation = True
             hits.append(hit)
-
+        print()
         if all([h.is_perfect_match() for h in hits]) and len(hits) == 34:
             print("All homologs were matched")
             score += perfect_match_score
