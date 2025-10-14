@@ -285,7 +285,7 @@ class TestFiles(unittest.TestCase):
                 self.fail(
                     f"Unable to process your BLAST output for line\n{line}\nwith exception\n{e}"
                 )
-            if hit.qstart != hit.sstart:
+            if (hit.qstart < hit.qend) != (hit.sstart < hit.send):
                 wrong_orientation = True
             hits.append(hit)
         print()
@@ -305,6 +305,11 @@ class TestFiles(unittest.TestCase):
             if len(hits) < 34:
                 print("too few hits found (sequences not shown above are either missing or don't match any expected sequences)")
                 score -= wrong_number_penalty
+            if not wrong_orientation:
+                print("All detected homologs match in the correct orientation.")
+                score += correct_orientation_score
+            else:
+                print("One or more sequence is the wrong orientation.")
             off_by_one = False
             mismatched = False
             for hit in hits:
@@ -328,4 +333,5 @@ class TestFiles(unittest.TestCase):
                 score -= wrong_orientation_penalty
         
         set_score(score)
-            
+
+    
