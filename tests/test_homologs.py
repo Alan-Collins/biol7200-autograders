@@ -238,6 +238,7 @@ class TestFiles(unittest.TestCase):
             for a in params:
                 if not a.annotation:
                     unannotated_funcs.append(f.name)
+                    break
             if len(unannotated_funcs) > 0:
                 self.fail(
                             f"No annotation found for your function(s):\n{'\n'.join(unannotated_funcs)}"
