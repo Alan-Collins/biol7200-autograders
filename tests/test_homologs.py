@@ -300,10 +300,10 @@ class TestFiles(unittest.TestCase):
         else:
             score += perfect_match_score
             if len(hits) > 34:
-                print("too many hits found")
+                print(f"too many hits found. {len(hits)} were found")
                 score -= wrong_number_penalty
             if len(hits) < 34:
-                print("too few hits found (sequences not shown above are either missing or don't match any expected sequences)")
+                print(f"too few hits found (sequences not shown above are either missing or don't match any expected sequences). {len(hits)} were found")
                 score -= wrong_number_penalty
             if not wrong_orientation:
                 print("All detected homologs match in the correct orientation.")
