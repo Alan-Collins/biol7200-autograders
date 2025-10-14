@@ -331,3 +331,6 @@ class FastaSeq():
     
     def __ne__(self, other: "FastaSeq"):
         return not self == other
+
+def recursive_type_str(obj: object) -> str:
+    #TODO
