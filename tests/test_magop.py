@@ -7,7 +7,7 @@ import inspect
 import os
 import subprocess
 
-from gradescope_utils.autograder_utils.decorators import weight, number, visibility
+from gradescope_utils.autograder_utils.decorators import weight, number, visibility, partial_credit
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
 from utils import PointCounter, FastaSeq, Seq
@@ -53,7 +53,6 @@ class TestFiles(unittest.TestCase):
     def setUpClass(cls):
         cls.dir = Path(tempfile.mkdtemp())
         cls.submitted = False
-        
         if "__init__.py" in os.listdir(SUBMISSION_PATH):
             cls.format = "package"
             os.mkdir(f"{SUBMISSION_PATH}magnumopus")
@@ -110,8 +109,9 @@ class TestFiles(unittest.TestCase):
             cls.needleman_wunsch_ran = True
         except Exception as e:
             cls.needleman_wunsch_ran = False
-            cls.error = e
+            cls.needleman_wunsch_error = e
         
+        ### Modify to run amplicon_align.py
         # try: # run step 3
         #     if not hasattr(magnumopus, "step_three"):
         #         raise("magnumopus has no function 'step_three'")
@@ -140,7 +140,7 @@ class TestFiles(unittest.TestCase):
             print(self.ispcr_result)
         else:
             print("ispcr error:")
-            self.ispcr_error
+            print(self.ispcr_error)
         if self.needleman_wunsch_ran:
             print("needleman_wunsch output:")
             print(f"score: {self.needleman_wunsch_result[1]}")
@@ -151,7 +151,7 @@ class TestFiles(unittest.TestCase):
                 print("alignment was not in the expected set.")
         else:
             print("needleman_wunsch error:")
-            self.needleman_wunsch_error
+            print(self.needleman_wunsch_error)
 
 
 
@@ -190,7 +190,7 @@ class TestFiles(unittest.TestCase):
         if not self.imported:
             self.fail(f"magnumopus could not be imported due to an error:\n{self.error}")
         if not self.ispcr_ran:
-            self.fail(f"ispcr failed with the error: {self.error}")
+            self.fail(f"ispcr failed with the error: {self.ispcr_error}")
         print("ispcr ran")
     
     @weight(20)
@@ -199,11 +199,11 @@ class TestFiles(unittest.TestCase):
     def test_ispcr_output(self):
         """Check ispcr output correct"""
         if not self.submitted:
-            self.fail("ispcr was not submitted.")
+            self.fail("magnumopus was not submitted.")
         if not self.imported:
-            self.fail(f"ispcr could not be imported due to an error:\n{self.error}")
+            self.fail(f"magnumopus could not be imported due to an error:\n{self.error}")
         if not self.ispcr_ran:
-            self.fail(f"Step one failed with the error: {self.error}")
+            self.fail(f"ispcr failed with the error: {self.ispcr_error}")
         # Check return type matches expected str
         if isinstance(self.ispcr_result, str):
             print("ispcr return type matches expectation")
@@ -228,5 +228,30 @@ class TestFiles(unittest.TestCase):
         if not self.imported:
             self.fail(f"magnumopus could not be imported due to an error:\n{self.error}")
         if not self.needleman_wunsch_ran:
-            self.fail(f"needleman_wunsch failed with the error: {self.error}")
+            self.fail(f"needleman_wunsch failed with the error: {self.needleman_wunsch_error}")
         print("needleman_wunsch ran")
+
+    
+    @partial_credit(50)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_nw_output(self, set_score=None):
+        """Check needleman-wunsch output correct"""
+        if not self.submitted:
+            self.fail("magnumopus was not submitted.")
+        if not self.imported:
+            self.fail(f"magnumopus could not be imported due to an error:\n{self.error}")
+        if not self.needleman_wunsch_ran:
+            self.fail(f"needleman_wunsch failed with the error: {self.error}")
+        penalty = 0
+        # Check return type matches expected str
+        if isinstance(self.ispcr_result, str):
+            print("needleman_wunsch return type matches expectation")
+        else:
+            print("needleman_wunsch return type is wrong")
+        if self.needleman_wunsch_result[0] not in POSSIBLE_ALNS and self.needleman_wunsch_result[0][::-1] not in POSSIBLE_ALNS:
+            print(
+                "needleman_wunsch output does not match expected output.\n"
+                f"Your output was:\n{self.needleman_wunsch_result}"
+            )
+        print("needleman_wunsch output matches expected output")
