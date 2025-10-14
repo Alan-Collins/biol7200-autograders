@@ -196,7 +196,7 @@ class TestFiles(unittest.TestCase):
             (")((())", "NOT PAIRED"),
             ("))((", "NOT PAIRED"),
             ("())(", "NOT PAIRED"),
-            # ("())(()", "NOT PAIRED")  ##### Uncomment after assignment is done
+            ("())(()", "NOT PAIRED")
         ]
         for input, expected in tests:
             command = [self.submission, input]
