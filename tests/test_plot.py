@@ -83,7 +83,7 @@ class TestFiles(unittest.TestCase):
         shutil.rmtree(cls.dir)
 
     @weight(0)
-    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @number(f"{Q_NUM}.{POINT_NUM}")
     @visibility("on_fail")
     def test_submitted_files(self):
         """Check submitted files"""
