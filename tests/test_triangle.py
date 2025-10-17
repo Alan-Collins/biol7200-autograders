@@ -137,6 +137,19 @@ class TestFiles(unittest.TestCase):
             for line in baseline_code:
                 print(ast.unparse(line))
             self.fail("")
+        
+        # Check only line is a function call
+        if not isinstance(baseline_code[0], ast.Expr):
+            if isinstance(baseline_code[0], ast.If):
+                if ast.unparse(baseline_code[0].test) == "__name__ == '__main__'":
+                    print(
+                        "While `if __name__ == '__main__':` is generally correct to have on the baseline "
+                        "of a script,\none of the goals for goals for this assignment is for students who are "
+                        "new to coding to be encouraged to put everything in functions.\n"
+                        "In order for the autograder to assess that students did so without the tests being too complex,\n"
+                        "I am requiring that you don't use if name == main, but just call a function on the baseline."
+                    )
+            self.fail("The assignment specified that the only code on the baseline should be a function call.")
 
 
     # run script and check triangles
