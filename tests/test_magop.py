@@ -10,7 +10,7 @@ import subprocess
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility, partial_credit
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
-from utils import PointCounter, FastaSeq, Seq
+from utils import PointCounter, FastaSeq, Seq, recursive_type_str
 
 SUBMISSION_PATH = "/autograder/submission/"
 SOLUTION_DIR = "magnumopus"
@@ -208,7 +208,12 @@ class TestFiles(unittest.TestCase):
         if isinstance(self.ispcr_result, str):
             print("ispcr return type matches expectation")
         else:
-            self.fail("ispcr return type is wrong")
+            actual = recursive_type_str(self.ispcr_result)
+            self.fail(
+                "ispcr return type is wrong.\n"
+                "Expected: str\n"
+                f"Found: {actual}"
+            )
         result = FastaSeq.from_fasta(self.ispcr_result)
         expected = FastaSeq.from_fasta(ISPCR_OUTPUT)
         if result != expected:
@@ -243,15 +248,118 @@ class TestFiles(unittest.TestCase):
             self.fail(f"magnumopus could not be imported due to an error:\n{self.error}")
         if not self.needleman_wunsch_ran:
             self.fail(f"needleman_wunsch failed with the error: {self.error}")
-        penalty = 0
+        score = 50
         # Check return type matches expected str
-        if isinstance(self.ispcr_result, str):
+        expected_return_type = "tuple[tuple[str,str],int]"
+        actual_return_type = recursive_type_str(self.needleman_wunsch_result)
+        if actual_return_type == expected_return_type:
             print("needleman_wunsch return type matches expectation")
         else:
-            print("needleman_wunsch return type is wrong")
+            self.fail(
+                "needleman_wunsch return type is wrong.\n"
+                f"Expected: {expected_return_type}\n"
+                f"Found: {actual_return_type}"
+            )
         if self.needleman_wunsch_result[0] not in POSSIBLE_ALNS and self.needleman_wunsch_result[0][::-1] not in POSSIBLE_ALNS:
             print(
                 "needleman_wunsch output does not match expected output.\n"
                 f"Your output was:\n{self.needleman_wunsch_result}"
             )
-        print("needleman_wunsch output matches expected output")
+            # Now diagnose why the output doesn't match
+            # First check if one or both sequences were not reversed
+            s1 = Seq("s1", self.needleman_wunsch_result[0][0])
+            s2 = Seq("s2", self.needleman_wunsch_result[0][0])
+            first = (s1.reverse(), s2)
+            second = (s1, s2.reverse())
+            both = (s1.reverse(), s2.reverse())
+            if first in POSSIBLE_ALNS or second in POSSIBLE_ALNS:
+                score -= 5
+            elif both in POSSIBLE_ALNS:
+                score -= 5
+
+            # Next check if they reverse complemented instead of reversing
+            first = (s1.complement(), s2)
+            second = (s1, s2.complement())
+            both = (s1.complement(), s2.complement())
+            if first in POSSIBLE_ALNS or second in POSSIBLE_ALNS:
+                score -= 5
+            elif both in POSSIBLE_ALNS:
+                score -= 5
+
+
+            # Otherwise we'll need to diagnose this issue manually
+            if score == 50:
+                print("The autograder cannot automatically determine the issue(s) with your script. Your score will be adjusted during grading once we diagnose the issue(s).")
+                score = 0
+            else:
+                # next check the alignment score
+                if self.needleman_wunsch_result[1] != 11:
+                    score -= 5
+            
+
+        else:
+            print("needleman_wunsch output matches expected output")
+        set_score(score)
+
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("hidden")
+    def test_nw_output_TAs(self):
+        """Describe issues the autograder could diagnose for TAs"""
+        if not self.submitted:
+            self.fail("magnumopus was not submitted.")
+        if not self.imported:
+            self.fail(f"magnumopus could not be imported due to an error:\n{self.error}")
+        if not self.needleman_wunsch_ran:
+            self.fail(f"needleman_wunsch failed with the error: {self.error}")
+        # Check return type matches expected str
+        expected_return_type = "tuple[tuple[str,str],int]"
+        actual_return_type = recursive_type_str(self.needleman_wunsch_result)
+        if actual_return_type == expected_return_type:
+            print("needleman_wunsch return type matches expectation")
+        else:
+            self.fail(
+                "needleman_wunsch return type is wrong.\n"
+                f"Expected: {expected_return_type}\n"
+                f"Found: {actual_return_type}"
+            )
+        if self.needleman_wunsch_result[0] not in POSSIBLE_ALNS and self.needleman_wunsch_result[0][::-1] not in POSSIBLE_ALNS:
+            print(
+                "needleman_wunsch output does not match expected output.\n"
+                f"Your output was:\n{self.needleman_wunsch_result}"
+            )
+            # Now diagnose why the output doesn't match
+            # First check if one or both sequences were not reversed
+            s1 = Seq("s1", self.needleman_wunsch_result[0][0])
+            s2 = Seq("s2", self.needleman_wunsch_result[0][0])
+            first = (s1.reverse(), s2)
+            second = (s1, s2.reverse())
+            both = (s1.reverse(), s2.reverse())
+            if first in POSSIBLE_ALNS or second in POSSIBLE_ALNS:
+                print("(-5) One of your sequences is backwards")
+            elif both in POSSIBLE_ALNS:
+                print("(-5) Both of your sequences are backwards")
+            
+            # Next check if they reverse complemented instead of reversing
+            first = (s1.complement(), s2)
+            second = (s1, s2.complement())
+            both = (s1.complement(), s2.complement())
+            if first in POSSIBLE_ALNS or second in POSSIBLE_ALNS:
+                print("(-5) One of your sequences is reverse complemented when it should have just been reversed")
+            elif both in POSSIBLE_ALNS:
+                print("(-5) Both of your sequences are reverse complemented when they should have just been reversed")
+            
+            # Next check if they complemented but didn't reverse
+            first = (s1.reverse_complement(), s2)
+            second = (s1, s2.reverse_complement())
+            both = (s1.reverse_complement(), s2.reverse_complement())
+            if first in POSSIBLE_ALNS or second in POSSIBLE_ALNS:
+                print("(-10) One of your sequences is complemented but should have been reversed")
+            elif both in POSSIBLE_ALNS:
+                print("(-10) Both of your sequences are complemented but should have been reversed")
+            
+            if self.needleman_wunsch_result[1] != 11:
+                print(f"(-5) Alignment score doesn't match expected. Expected 11, got {self.needleman_wunsch_result[1]}")
+
+
+        else:    
+            print("needleman_wunsch output matches expected output")
