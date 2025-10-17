@@ -242,20 +242,27 @@ class BlastResult(BaseModel):
             )
 
 class Seq():
-    _rc = {
+    _complement_lookup = {
         "A": "T",
         "T": "A",
         "C": "G",
         "G": "C",
-        "N": "N"
+        "N": "N",
+        "-": "-"
     }
     def __init__(self, header: str, seq: str):
         self.header = header
         self.seq = seq
     
     def reverse_complement(self) -> "Seq":
-        revseq = [self._rc[b] for b in self.seq[::-1]]
+        revseq = "".join([self._complement_lookup[b] for b in self.seq[::-1]])
         return Seq(self.header, revseq)
+    
+    def reverse(self) -> "Seq":
+        return Seq(self.header, self.seq[::-1])
+    
+    def complement(self) -> "Seq":
+        return Seq(self.header, "".join([self._complement_lookup[b] for b in self.seq]))
 
     def __eq__(self, other: "Seq") -> bool:
         if not isinstance(other, Seq):
