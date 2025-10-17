@@ -267,9 +267,13 @@ class Seq():
         return Seq(self.header, "".join([self._complement_lookup[b] for b in self.seq]))
 
     def __eq__(self, other: "Seq") -> bool:
-        if not isinstance(other, Seq):
+        if not isinstance(other, Seq) or isinstance(other, str):
             raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
-        return self.seq == other.seq
+        if isinstance(other, Seq):
+            seq = other.seq
+        else:
+            seq = other
+        return self.seq == other
     
     def __gt__(self, other: "Seq") -> bool:
         if not isinstance(other, Seq):
