@@ -251,6 +251,8 @@ class Seq():
         "-": "-"
     }
     def __init__(self, header: str, seq: str):
+        if header.startswith(">"):
+            header = header.lstrip(">")
         self.header = header
         self.seq = seq
     
@@ -290,7 +292,7 @@ class Seq():
         return self.header <= other.header
 
     def __str__(self) -> str:
-        return f"{self.header}\n{self.seq}"
+        return f">{self.header}\n{self.seq}"
 
 class FastaSeq():
     def __init__(self, seqs: list[Seq]=None):
