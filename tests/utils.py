@@ -333,4 +333,29 @@ class FastaSeq():
         return not self == other
 
 def recursive_type_str(obj: object) -> str:
-    #TODO
+    def _is_container(obj: object) -> bool:
+        """Check if it can contain elements but is not a string
+        
+        i.e., things like list, set, tuple, dict
+        """
+        return hasattr(obj, '__iter__') and hasattr(obj, '__contains__') and not isinstance(obj, str)
+
+    def _traverse_type(obj: object) -> str:
+        if _is_container(obj):
+            obj_name = obj.__class__.__name__
+            types = [_traverse_type(item) for item in obj]
+            match obj_name:
+                case "dict":
+                    value_types = [_traverse_type(item) for item in obj.values()]
+                    key_hint = "|".join(sorted(list(set(types))))
+                    value_hint = "|".join(sorted(list(set(value_types))))
+                    hint = f"{obj_name}[{key_hint},{value_hint}]"
+                case "tuple":
+                    hint = f"{obj_name}[{",".join(types)}]"
+                case _:
+                    hint = f"{obj_name}[{"|".join(sorted(list(set(types))))}]"
+            return hint
+        else:
+            return obj.__class__.__name__
+    
+    return _traverse_type(obj)
