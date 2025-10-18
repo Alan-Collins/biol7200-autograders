@@ -111,20 +111,38 @@ class TestFiles(unittest.TestCase):
             cls.needleman_wunsch_ran = False
             cls.needleman_wunsch_error = e
         
-        ### Modify to run amplicon_align.py
-        # try: # run step 3
-        #     if not hasattr(magnumopus, "step_three"):
-        #         raise("magnumopus has no function 'step_three'")
-        #     if not inspect.isfunction(magnumopus.step_three):
-        #         raise("magnumopus.step_three is not a function")
-        #     cls.step_three_result = magnumopus.step_three(
-        #         hit_pairs=Q3_INPUT,
-        #         assembly_file=f"{DATA_DIR}/Vibrio_cholerae_N16961.fna"
-        #     )
-        #     cls.step_three_ran = True
-        # except Exception as e:
-        #     cls.step_three_ran = False
-        #     cls.error = e
+        # Store help message of amplicon_align.py
+        if "amplicon_align.py" not in os.listdir(SUBMISSION_PATH):
+            cls.amplicon_align_ran = False
+            cls.amplicon_align_error = "File not found"
+            return cls
+        
+        command = [f"{SUBMISSION_PATH}amplicon_align.py", "-h"]
+                   
+        cls.aa_help_result = subprocess.run(
+            command,
+            text=True,
+            capture_output=True
+        )
+
+        # Run amplicon_align.py
+        command = [
+            f"{SUBMISSION_PATH}amplicon_align.py",
+            "-1", "Pseudomonas_aeruginosa_PAO1.fna",
+            "-2", "Pseudomonas_protegens_CHA0.fna",
+            "-p", "rpoD.fna",
+            "-m", "2000",
+            "--match", "1",
+            "--mismatch=-1",
+            "--gap=-1"
+        ]
+                   
+        cls.aa_result = subprocess.run(
+            command,
+            text=True,
+            capture_output=True,
+            cwd=cls.dir
+        )
 
     @classmethod
     def tearDownClass(cls):
