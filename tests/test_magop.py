@@ -116,6 +116,8 @@ class TestFiles(unittest.TestCase):
             cls.amplicon_align_ran = False
             cls.amplicon_align_error = "File not found"
             return cls
+
+        Path(f"{SUBMISSION_PATH}amplicon_align.py").chmod(0o777)
         
         command = [f"{SUBMISSION_PATH}amplicon_align.py", "-h"]
                    
