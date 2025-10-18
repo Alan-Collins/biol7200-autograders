@@ -4,6 +4,7 @@ import shutil
 import tempfile
 import subprocess
 from PIL import Image, ImageChops
+import re
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
@@ -41,6 +42,15 @@ class TestFiles(unittest.TestCase):
         # copy script to dir with data
         shutil.copy(SCRIPT_PATH, f"{cls.dir}/")
         Path(f"{cls.dir}/{SOLUTION_SCRIPT}").chmod(0o777)
+
+        pattern = re.compile(r"\#\![ ]?/usr/bin/env python3")
+        with open(SCRIPT_PATH) as f:
+            first_line = f.readline()
+        if re.match(pattern, first_line):
+            cls.shebang = True
+        else:
+            cls.shebang = False
+            return cls
 
         cls.result = subprocess.run(
             [f"./{SOLUTION_SCRIPT}"],
@@ -104,6 +114,8 @@ class TestFiles(unittest.TestCase):
         """Check plot generated"""
         if not self.submitted:
             self.fail("Missing required submission file(s), follow instructions carefully")
+        if not self.shebang:
+            self.fail("No shebang or incorrect shebang.")
         if self.error:
             self.fail(
                 f"your script produced an error:\nexitcode: {self.result.returncode}\n"
