@@ -167,9 +167,9 @@ class TestFiles(unittest.TestCase):
             print(f"score: {self.needleman_wunsch_result[1]}")
             print("\n".join(self.needleman_wunsch_result[0]))
             if self.needleman_wunsch_result[0] in POSSIBLE_ALNS or self.needleman_wunsch_result[0][::-1] in POSSIBLE_ALNS:
-                print("alignment matches expected.")
+                print("alignment matches expected.\n")
             else:
-                print("alignment was not in the expected set.")
+                print("alignment was not in the expected set.\n")
         else:
             print("needleman_wunsch error:")
             print(self.needleman_wunsch_error)
