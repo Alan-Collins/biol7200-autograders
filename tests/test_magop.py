@@ -6,9 +6,9 @@ import sys
 import inspect
 import os
 import subprocess
+import re
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility, partial_credit
-from gradescope_utils.autograder_utils.files import check_submitted_files
 
 from utils import PointCounter, FastaSeq, Seq, recursive_type_str
 
@@ -403,3 +403,130 @@ class TestFiles(unittest.TestCase):
 
         else:    
             print("needleman_wunsch output matches expected output")
+
+    @weight(0)
+    @number(f"{Q_NUM.next()}.{POINT_NUM.reset(1)}")
+    @visibility("visible")
+    def test_amplicon_align_runs(self):
+        """Check amplicon_align.py runs"""
+        if self.amplicon_align_ran:
+            if self.aa_help_result.stderr.strip() != "":
+                self.fail(
+                    "amplicon_align.py failed with the following error when run with -h:\n"
+                    f"{self.aa_help_result.stderr}"
+                    )
+            else:
+                print("amplicon_align.py ran without error when run with -h")
+
+            if self.aa_result.stderr.strip() != "":
+                self.fail(
+                    "amplicon_align.py failed with the following error when run with test inputs:\n"
+                    f"{self.aa_result.stderr}"
+                    )
+            else:
+                print("amplicon_align.py ran without error when run with test inputs")
+        
+        else:
+            self.fail(
+                "amplicon_align.py error:\n"
+                f"{self.amplicon_align_error}"
+                )
+
+    
+    @weight(5)
+    @number(f"{Q_NUM.next()}.{POINT_NUM.reset(1)}")
+    @visibility("visible")
+    def test_amplicon_align_help(self):
+        """Check amplicon_align.py help message matches expectation"""
+        if not self.amplicon_align_ran:
+            self.fail(
+                "amplicon_align.py error:\n"
+                f"{self.amplicon_align_error}"
+                )
+        if self.aa_help_result.stderr.strip() != "":
+            self.fail(
+                "amplicon_align.py failed with the following error when run with -h:\n"
+                f"{self.aa_help_result.stderr}"
+                )
+        opts = set(re.findall(r"\B-+\w+", self.aa_help_result.stdout))
+        print(
+            f"Found the following command line options:\n"
+            f"{", ".join(sorted(opts))}"
+            )
+        expected = {"-1", "-2", "-p", "-m", "--match", "--mismatch", "--gap"}
+        missing = expected.difference(opts)
+        if len(missing) != 0:
+            self.fail("your amplicon_align.py script is missing options which were specified as required parts of the CLI.")
+        print("All expected command line options were found.")
+
+    
+    @partial_credit(25)
+    @number(f"{Q_NUM.next()}.{POINT_NUM.reset(1)}")
+    @visibility("visible")
+    def test_amplicon_align_run(self, set_score=None):
+        """Check amplicon_align.py output matches expectation"""
+        score = 25
+        if not self.amplicon_align_ran:
+            self.fail(
+                "amplicon_align.py error:\n"
+                f"{self.amplicon_align_error}"
+                )
+        if self.aa_result.stderr.strip() != "":
+            self.fail(
+                "amplicon_align.py failed with the following error when run with test inputs:\n"
+                f"{self.aa_result.stderr}"
+                )
+        
+        outlines: list[str] = [l.strip() for l in self.aa_result.stdout.split("\n") if l.strip() != ""]
+        if len(outlines) != 3:
+            print(
+                f"amplicon_align.py output doesn't match expectation. Expected 3 lines. Found {len(outlines)}"
+            )
+        seqs = []
+        aln_score = None
+        for line in outlines:
+            if line.isnumeric():
+                aln_score = int(line)
+            else:
+                seqs.append(line)
+        if len(seqs) != 2:
+            if len(seqs) == 0:
+                score -= 10
+            else:
+                score -= 5
+            print(
+                f"Expected 2 sequence lines. Found {len(seqs)}"
+            )
+        if aln_score is None:
+            score -= 5
+            print(
+                f"Expected an alignment score, but didn't find one."
+            )
+        
+        if len(seqs) == 2:
+            actual_aln_score = 0
+            for a,b in zip(*seqs):
+                if a == b:
+                    actual_aln_score += 1
+                else:
+                    actual_aln_score -= 1
+            if actual_aln_score != 368:
+                if actual_aln_score == aln_score:
+                    score -= 5
+                    print("Returned alignment is not the best alignment")
+                else:
+                    if aln_score == 368:
+                        score -= 5
+                        print("Printed alignment does not match printed score")
+                    else:
+                        score -= 10
+                        print("Printed alignment score does not match the expected best score or the score of the printed alignment")
+        
+        if score == 25:
+            print("Output matches expectation.")
+        
+        set_score(max(score, 0))
+    
+
+        
+        
