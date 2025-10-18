@@ -119,6 +119,15 @@ class TestFiles(unittest.TestCase):
         cls.amplicon_align_ran = True
 
         Path(f"{SUBMISSION_PATH}amplicon_align.py").chmod(0o777)
+
+        pattern = re.compile(r"\#\![ ]?/usr/bin/env python3")
+        with open(f"{SUBMISSION_PATH}amplicon_align.py") as f:
+            first_line = f.readline()
+        if re.match(pattern, first_line):
+            cls.shebang = True
+        else:
+            cls.shebang = False
+            return cls
         
         command = [f"{SUBMISSION_PATH}amplicon_align.py", "-h"]
                    
@@ -174,7 +183,7 @@ class TestFiles(unittest.TestCase):
             print("needleman_wunsch error:")
             print(self.needleman_wunsch_error)
         
-        if self.amplicon_align_ran:
+        if self.shebang and self.amplicon_align_ran:
             if self.aa_help_result.stderr.strip() != "":
                 print("amplicon_align.py -h error:")
                 print(self.aa_help_result.stderr)
@@ -438,6 +447,8 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_amplicon_align_help(self):
         """Check amplicon_align.py help message matches expectation"""
+        if not self.shebang:
+            self.fail("No shebang or incorrect shebang")
         if not self.amplicon_align_ran:
             self.fail(
                 "amplicon_align.py error:\n"
@@ -466,6 +477,8 @@ class TestFiles(unittest.TestCase):
     def test_amplicon_align_run(self, set_score=None):
         """Check amplicon_align.py output matches expectation"""
         score = 25
+        if not self.shebang:
+            self.fail("No shebang or incorrect shebang")
         if not self.amplicon_align_ran:
             self.fail(
                 "amplicon_align.py error:\n"
