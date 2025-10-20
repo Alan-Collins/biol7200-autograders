@@ -341,7 +341,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Your Read class __init__ method does not create an instance of the class when given a SAM entry")
         print("yes")
     
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_just_M_read_at_pos(self):
         """Does the base_at_pos method return the right base when the read doesn't map to the first reference base"""
@@ -355,7 +355,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
     
-    @weight(1)
+    @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_del_read_at_pos(self):
         """Does the base_at_pos method return the right base when there is a deletion in the read at the requested location"""
@@ -369,7 +369,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
     
-    @weight(1)
+    @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_upstream_del_read_at_pos(self):
         """Does the base_at_pos method return the right base when there is a deletion in the read before the requested location"""
@@ -383,7 +383,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_ins_read_at_pos(self):
         """Does the base_at_pos method return the right base when there is an insertion in the read at the requested location"""
@@ -397,7 +397,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_upstream_ins_read_at_pos_internal_pos(self):
         """Does the base_at_pos method return the right base when there is an insertion in the read before the requested location"""
@@ -411,7 +411,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_upstream_ins_read_at_pos_beyond_read(self):
         """Does the base_at_pos method return the right base when there is an insertion in the read that reduces the mapped length to less than the read length"""
@@ -425,7 +425,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
     
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_downstream_del_read_at_pos(self):
         """Is the base_at_pos method impacted if there is a deletion in the read after the requested location"""
@@ -439,7 +439,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_mapped_right_of_requested_pos_read_at_pos(self):
         """Does base_at_pos return an empty string for reads that map to the right of requested location"""
@@ -453,10 +453,10 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_first_base_in_read_read_at_pos(self):
-        """Does base_at_pos return an empty string for reads that map to the right of requested location"""
+        """Does base_at_pos return an the right base for the first position in the read"""
         self.basic_fail()
         check_method_output(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
@@ -467,7 +467,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
     
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_mapped_left_of_requested_pos_read_at_pos(self):
         """Does base_at_pos return an empty string for reads that map to the left of requested location"""
@@ -481,7 +481,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_last_base_in_read_read_at_pos(self):
         """Does base_at_pos return the right read when the requested pos is the last base in the read"""
@@ -495,7 +495,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_unmapped_read_pos_read_at_pos(self):
         """Does the base_at_pos method return an empty string for unmapped reads"""
@@ -509,7 +509,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_soft_clipped_upstream_read_at_pos(self):
         """Does the base_at_pos method correctly handle soft clipping"""
@@ -523,7 +523,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
     
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_hard_clipped_upstream_read_at_pos(self):
         """Does the base_at_pos method correctly handle hard clipping"""
@@ -537,7 +537,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(3)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_internally_mapped_read_at_pos(self):
         """Does the base_at_pos method return the right base for a position in the middle of the reference"""
@@ -551,7 +551,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(4)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_internally_mapped_mapped_seq(self):
         """Does the mapped_seq method return the right sequence for a read mapped to the middle of the reference"""
@@ -564,7 +564,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(4)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_deletion_mapped_seq(self):
         """Does the mapped_seq method handle deletions correctly"""
@@ -577,7 +577,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
     
-    @weight(1)
+    @weight(4)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_insertion_mapped_seq(self):
         """Does the mapped_seq method handle insertions correctly"""
@@ -590,7 +590,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(4)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_soft_clipped_mapped_seq(self):
         """Does the mapped_seq method handle soft clipping correctly"""
@@ -603,7 +603,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(4)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_hard_clipped_mapped_seq(self):
         """Does the mapped_seq method handle hard clipping correctly"""
@@ -616,7 +616,7 @@ class TestFiles(unittest.TestCase):
         )
         print("yes")
 
-    @weight(1)
+    @weight(4)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_unmapped_mapped_seq(self):
         """Does the mapped_seq method handle unmapped reads correctly"""
