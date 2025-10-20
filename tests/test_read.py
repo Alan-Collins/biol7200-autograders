@@ -133,6 +133,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Unable to import magnumopus.sam.Read")
         if not inspect.isclass(self.read_class):
             self.fail(f"Read is not a class, but an instance of {self.read_class.__class__.__name__}")
+        print("yes")
 
     @weight(1)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -142,6 +143,7 @@ class TestFiles(unittest.TestCase):
             _ = self.read_class(test_data.TEST_READ_F_MAPPED)
         except Exception as e:
             self.fail(f"Your Read class __init__ method does not create an instance of the class when given a SAM entry:\n{e}")
+        print("yes")
     
     @weight(1)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -337,6 +339,7 @@ class TestFiles(unittest.TestCase):
         self.basic_fail()
         if not isinstance(self.read_class(test_data.TEST_READ_F_MAPPED), self.read_class):
             self.fail(f"Your Read class __init__ method does not create an instance of the class when given a SAM entry")
+        print("yes")
     
     @weight(1)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
