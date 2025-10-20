@@ -1,27 +1,21 @@
 import unittest
-from pathlib import Path
 import shutil
-import tempfile
 import os
+import sys
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
-from gradescope_utils.autograder_utils.files import check_submitted_files
 
 from utils import PointCounter
 
 SUBMISSION_PATH = "/autograder/submission/"
-SOLUTION_SCRIPT = "<script name>"
-SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
-DATA_DIR = "/autograder/biol7200-autograders/data/"
 
-Q_NUM = 4
+Q_NUM = 1
 
 POINT_NUM = PointCounter(0)
 
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.dir = Path(tempfile.mkdtemp())
         cls.submitted = False
         
         if "__init__.py" in os.listdir(SUBMISSION_PATH):
@@ -34,46 +28,76 @@ class TestFiles(unittest.TestCase):
             cls.format = "module"
         else:
             return cls
+        
+        cls.submitted = True
+        try: # import the package
+            sys.path.append(SUBMISSION_PATH)
+            import magnumopus
+            import magnumopus.sam
+            from magnumopus.sam import Read
+            cls.read_class = Read
+            cls.imported = True
+        
+        except Exception as e:
+            cls.imported = False
+            cls.error = e
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(cls.dir)
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    @visibility("on_fail")
+    @visibility("visible")
     def test_submitted_files(self):
         """Check submitted files"""
-        missing_files = check_submitted_files([f'{SOLUTION_SCRIPT}'])
-        for path in missing_files:
-            print(f'Missing {path}')
-        self.assertEqual(
-            len(missing_files),
-            0,
-            f'Missing script {SOLUTION_SCRIPT}, follow instructions carefully'
-        )
-        print(f'{SOLUTION_SCRIPT} script submitted successfully')
+        if not self.submitted:
+            self.fail("Your submission is lacking a magnumopus.py file or an __init__.py file and can't be processed.")
+        else:
+            print(f"magnumopus {self.format} submitted successfully")
+
     
     @weight(0)
-    @number(f"{Q_NUM}.{next(POINT_NUM)}")
-    def test_line_endings(self):
-        """Check unix line endings"""
-        if not self.submitted:
-            self.fail("No script was submitted")
-        with open(SCRIPT_PATH) as f:
-            f.readline()
-            newlines = f.newlines
-        if newlines != "\n":
-            self.fail(
-                "Your script does not use unix line endings. "
-                "That might interfere with the functionality of autograder tests. "
-                f"Please change your line endings to the unix \\n instead of your current {repr(newlines)}"
-            )
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_magop_import(self):
+        """Check magnumopus import"""
+        if not self.imported:
+            # Something about importing isn't working.
+            try:
+                sys.path.append(SUBMISSION_PATH)
+                import magnumopus
+            except Exception as e:
+                self.fail(
+                    f"Unable to import your magnumopus {self.format} due to error:\n{e}"
+                )
+        print(f"magnumopus {self.format} imported successfully")
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    @visibility("on_fail")
-    def test_x(self):
-        """Check xyz"""
-        if not self.submitted:
-            self.fail("No script was submitted")
+    @visibility("visible")
+    def test_sam_import(self):
+        """Check magnumopus.sam import"""
+        if not self.imported:
+            # Something about importing isn't working.
+            try:
+                sys.path.append(SUBMISSION_PATH)
+                import magnumopus.sam
+            except Exception as e:
+                self.fail(
+                    f"Unable to import your magnumopus.sam due to error:\n{e}"
+                )
+        print(f"magnumopus.sam imported successfully")
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("visible")
+    def test_read_import(self):
+        """Check magnumopus import"""
+        if not self.imported:
+            # Something about importing isn't working.
+            try:
+                sys.path.append(SUBMISSION_PATH)
+                import magnumopus.sam.Read
+            except Exception as e:
+                self.fail(
+                    f"Unable to import magnumopus.sam.Read due to error:\n{e}"
+                )
+        print(f"magnumopus.sam.Read imported successfully")
