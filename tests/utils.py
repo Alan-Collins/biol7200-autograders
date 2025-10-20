@@ -315,7 +315,6 @@ def check_class_method(cls, meth):
     Args:
         meth (str): The method of which to assess the existence callable-ity
     """
-    __tracebackhide__ = True # don't show this function in the traceback so just the informative test is shown
     # Figure out if message should say a or an for this method
     a_an = "an" if meth[0] in {"a", "e", "i", "o" "u"} else "a"
     if not hasattr(cls, meth):
@@ -331,7 +330,6 @@ def check_class_attribute(cls, attr):
     Args:
         attr (str): The attribute of which to assess the existence
     """
-    __tracebackhide__ = True
     a_an = "an" if attr[0] in {"a", "e", "i", "o" "u"} else "a"
     if not hasattr(cls, attr):
         raise(f"Your {cls.__name__} class does not have {a_an} {attr} attribute.")
@@ -346,7 +344,6 @@ def check_attribute_value(instance, attr, expected, tested_data):
         expected (any): The expected value
         tested_data (str): the nature of the tested data
     """
-    __tracebackhide__ = True
     a_an = "an" if tested_data[0] in {"a", "e", "i", "o", "u"} else "a"
     value = getattr(instance, attr)
     try:
@@ -366,7 +363,6 @@ def check_method_output(instance, method, expected, tested_data, args=(), kwargs
         expected (any): The expected value
         tested_data (str): the nature of the tested data
     """
-    __tracebackhide__ = True
     if kwargs == None:
         kwargs = {}
     a_an = "an" if tested_data[0] in {"a", "e", "i", "o", "u"} else "a"
