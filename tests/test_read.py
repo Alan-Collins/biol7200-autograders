@@ -195,7 +195,7 @@ class TestFiles(unittest.TestCase):
         check_class_method(self.read_class, "base_at_pos")
         print("yes")
     
-        @weight(1)
+    @weight(1)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_qual_at_pos_method_implemented(self):
         """Is there a callable qual_at_pos method defined"""
