@@ -313,7 +313,7 @@ class TestFiles(unittest.TestCase):
                 self.fail(
                     "Your BLAST hits are not sorted based on the location in the genome where they match."
                 )
-        print("format looks right")
+        print("format looks right. This was checking things like wrong number of annealing sites in returned tuples or wrong number of blast fields.")
     
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
