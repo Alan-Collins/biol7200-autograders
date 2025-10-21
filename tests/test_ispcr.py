@@ -216,7 +216,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Step one failed with the error: {self.error}")
         print("step_one ran")
     
-    @weight(15)
+    @weight(30)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_step_one_output(self):
@@ -259,7 +259,7 @@ class TestFiles(unittest.TestCase):
         print("step_two ran")
 
 
-    @weight(20)
+    @weight(40)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_step_two_output(self):
@@ -287,7 +287,8 @@ class TestFiles(unittest.TestCase):
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("on_fail")
-    def test_step_two_output_format(self, set_score=None):
+    def test_step_two_output_format(self):
+        """Check step_two output format is correct"""
         for annealing_sites in self.step_two_result:
             if len(annealing_sites) != 2:
                 self.fail(
@@ -367,7 +368,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Step three failed with the error: {self.error}")
         print("step_two ran")
 
-    @weight(15)
+    @weight(30)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_step_three_output(self):
