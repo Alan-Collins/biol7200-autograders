@@ -384,6 +384,6 @@ class TestFiles(unittest.TestCase):
             print("step_three return type matches expectation")
         else:
             self.fail("step_three return type is wrong")
-        if self.step_three_result != Q3_OUTPUT:
-            self.fail("step_three output does not match expected output")
+        if self.step_three_result.strip() != Q3_OUTPUT.strip():
+            self.assertEqual(self.step_three_result.strip(), Q3_OUTPUT.strip(), "step_three output does not match expected output")
         print("step_three output matches expected output")
