@@ -242,25 +242,38 @@ class BlastResult(BaseModel):
             )
 
 class Seq():
-    _rc = {
+    _complement_lookup = {
         "A": "T",
         "T": "A",
         "C": "G",
         "G": "C",
-        "N": "N"
+        "N": "N",
+        "-": "-"
     }
     def __init__(self, header: str, seq: str):
+        if header.startswith(">"):
+            header = header.lstrip(">")
         self.header = header
         self.seq = seq
     
     def reverse_complement(self) -> "Seq":
-        revseq = [self._rc[b] for b in self.seq[::-1]]
+        revseq = "".join([self._complement_lookup[b] for b in self.seq[::-1]])
         return Seq(self.header, revseq)
+    
+    def reverse(self) -> "Seq":
+        return Seq(self.header, self.seq[::-1])
+    
+    def complement(self) -> "Seq":
+        return Seq(self.header, "".join([self._complement_lookup[b] for b in self.seq]))
 
     def __eq__(self, other: "Seq") -> bool:
-        if not isinstance(other, Seq):
+        if not isinstance(other, Seq) or isinstance(other, str):
             raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
-        return self.seq == other.seq
+        if isinstance(other, Seq):
+            seq = other.seq
+        else:
+            seq = other
+        return self.seq == other
     
     def __gt__(self, other: "Seq") -> bool:
         if not isinstance(other, Seq):
@@ -283,7 +296,7 @@ class Seq():
         return self.header <= other.header
 
     def __str__(self) -> str:
-        return f"{self.header}\n{self.seq}"
+        return f">{self.header}\n{self.seq}"
 
 class FastaSeq():
     def __init__(self, seqs: list[Seq]=None):
@@ -300,10 +313,62 @@ class FastaSeq():
         
         for entry in fasta_str.split(">"):
             lines = [l for l in entry.split("\n") if l != ""]
+            if len(lines) < 2:
+                return cls()
             head = lines[0]
-            seq = "".join(lines[1])
+            seq = "".join(lines[1:])
             seqs.append(Seq(head, seq))
         return cls(seqs)
 
     def __str__(self) -> str:
         return "\n".join(self.seqs)
+    
+    def __len__(self) -> int:
+        return len(self.seqs)
+
+    def __iter__(self, ordered=False):
+        if ordered:
+            yield from sorted(self.seqs)
+        else:
+            yield from self.seqs
+
+    def __eq__(self, other: "FastaSeq") -> bool:
+        if not isinstance(other, FastaSeq):
+            raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        if len(self) != len(other):
+            return False
+        for a, b in zip(self, other):
+            if a != b:
+                return False
+        return True
+    
+    def __ne__(self, other: "FastaSeq"):
+        return not self == other
+
+def recursive_type_str(obj: object) -> str:
+    def _is_container(obj: object) -> bool:
+        """Check if it can contain elements but is not a string
+        
+        i.e., things like list, set, tuple, dict
+        """
+        return hasattr(obj, '__iter__') and hasattr(obj, '__contains__') and not isinstance(obj, str)
+
+    def _traverse_type(obj: object) -> str:
+        if _is_container(obj):
+            obj_name = obj.__class__.__name__
+            types = [_traverse_type(item) for item in obj]
+            match obj_name:
+                case "dict":
+                    value_types = [_traverse_type(item) for item in obj.values()]
+                    key_hint = "|".join(sorted(list(set(types))))
+                    value_hint = "|".join(sorted(list(set(value_types))))
+                    hint = f"{obj_name}[{key_hint},{value_hint}]"
+                case "tuple":
+                    hint = f"{obj_name}[{",".join(types)}]"
+                case _:
+                    hint = f"{obj_name}[{"|".join(sorted(list(set(types))))}]"
+            return hint
+        else:
+            return obj.__class__.__name__
+    
+    return _traverse_type(obj)
