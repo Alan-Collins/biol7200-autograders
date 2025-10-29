@@ -1,4 +1,5 @@
 from dataclasses import field
+import unittest
 
 from pydantic import BaseModel
 
@@ -318,10 +319,10 @@ def check_class_method(cls, meth):
     # Figure out if message should say a or an for this method
     a_an = "an" if meth[0] in {"a", "e", "i", "o" "u"} else "a"
     if not hasattr(cls, meth):
-        raise(f"Your {cls.__name__} class does not have {a_an} {meth} method.")
+        raise ValueError(f"Your {cls.__name__} class does not have {a_an} {meth} method.")
     else:
         if not callable(eval(f"cls.{meth}")):
-            raise(f"Your {cls.__name__} class does have {a_an} {meth} attribute, but it is not callable")
+            raise ValueError(f"Your {cls.__name__} class does have {a_an} {meth} attribute, but it is not callable")
 
 
 def check_class_attribute(cls, attr):
@@ -332,7 +333,7 @@ def check_class_attribute(cls, attr):
     """
     a_an = "an" if attr[0] in {"a", "e", "i", "o" "u"} else "a"
     if not hasattr(cls, attr):
-        raise(f"Your {cls.__name__} class does not have {a_an} {attr} attribute.")
+        raise ValueError(f"Your {cls.__name__} class does not have {a_an} {attr} attribute.")
 
 
 def check_attribute_value(instance, attr, expected, tested_data):
@@ -349,11 +350,11 @@ def check_attribute_value(instance, attr, expected, tested_data):
     try:
         assert value == expected
     except:
-        raise(f"Your {instance.__class__.__name__}.{attr} contains {value} for {a_an} {tested_data}, when it should have contained {expected}.")
+        raise ValueError(f"Your {instance.__class__.__name__}.{attr} contains {value} for {a_an} {tested_data}, when it should have contained {expected}.")
 
 
-def check_method_output(instance, method, expected, tested_data, args=(), kwargs=None):
-    """Compare an attribute of a class instance to an expected value
+def check_method_output(instance, method, expected, tested_data, args=(), kwargs=None, comparison=None):
+    """Compare an output of a class method to an expected value
 
     Args:
         instance (Object): The instance you want to assess
@@ -362,6 +363,7 @@ def check_method_output(instance, method, expected, tested_data, args=(), kwargs
         kwargs (dict[str, any]): The keyword arguments to provide to the method when called
         expected (any): The expected value
         tested_data (str): the nature of the tested data
+        comparison (callable): a function to compare the results. will be called with (result, expected) and should return bool
     """
     if kwargs == None:
         kwargs = {}
@@ -369,12 +371,39 @@ def check_method_output(instance, method, expected, tested_data, args=(), kwargs
     try:
         value = eval(f"instance.{method}(*args, **kwargs)")
     except Exception as e:
-        raise(f"Your {instance.__class__.__name__}.{method} for {a_an} {tested_data}, when it was run with input {args}. The error was {e}")
+        raise ValueError(f"Your {instance.__class__.__name__}.{method} for {a_an} {tested_data}, when it was run with input {args}. The error was {e}")
+    expected_ret_type = recursive_type_str(expected)
+    check_method_return_type(instance, method, tested_data, args, kwargs, expected_ret_type)
     try:
-        assert value == expected
+        if comparison is not None:
+            assert comparison(value, expected)
+        else:
+            assert value == expected
     except:
-        raise(f"Your {instance.__class__.__name__}.{method} returned {repr(value)} for {a_an} {tested_data}, when it should have returned {repr(expected)}.")
+        raise ValueError(f"Your {instance.__class__.__name__}.{method} returned {repr(value)} for {a_an} {tested_data}, when it should have returned {repr(expected)}.")
 
+
+def check_method_return_type(instance, method, tested_data, args=(), kwargs=None, expected_type=None):
+    """Compare an return type of a class method to an expected return type
+
+    Args:
+        instance (Object): The instance you want to assess
+        method (str): The method whose return value should be compared
+        args (tuple[any]): The arguments to provide to the method when called
+        kwargs (dict[str, any]): The keyword arguments to provide to the method when called
+        tested_data (str): the nature of the tested data
+        expected_type (str): The expected return type
+    """
+    if kwargs == None:
+        kwargs = {}
+    a_an = "an" if tested_data[0] in {"a", "e", "i", "o", "u"} else "a"
+    try:
+        value = eval(f"instance.{method}(*args, **kwargs)")
+    except Exception as e:
+        raise ValueError(f"Your {instance.__class__.__name__}.{method} for {a_an} {tested_data}, when it was run with input {args}. The error was {e}")
+    return_type = recursive_type_str(value) 
+    if return_type != expected_type:
+        raise TypeError(f"Your {instance.__class__.__name__}.{method} return type is {return_type}, when it should have been {expected_type}.")
 
 def recursive_type_str(obj: object) -> str:
     def _is_container(obj: object) -> bool:
