@@ -171,7 +171,7 @@ class TestFiles(unittest.TestCase):
         else:
             print("ispcr error:")
             print(self.ispcr_error)
-        if self.needleman_wunsch_ran:
+        if self.needleman_wunsch_ran and self.needleman_wunsch_result is not None:
             print("needleman_wunsch output:")
             print(f"score: {self.needleman_wunsch_result[1]}")
             print("\n".join(self.needleman_wunsch_result[0]))
