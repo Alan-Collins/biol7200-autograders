@@ -54,6 +54,9 @@ class TestFiles(unittest.TestCase):
         cls.dir = Path(tempfile.mkdtemp())
         cls.submitted = False
         cls.shebang = False
+        cls.error = "None"
+        cls.ispcr_error = "None"
+        cls.needleman_wunsch_error = "None"
         if "__init__.py" in os.listdir(SUBMISSION_PATH):
             cls.format = "package"
             os.mkdir(f"{SUBMISSION_PATH}magnumopus")
