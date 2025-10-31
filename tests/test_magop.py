@@ -418,6 +418,8 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_amplicon_align_runs(self):
         """Check amplicon_align.py runs"""
+        if "amplicon_align.py" not in os.listdir(SUBMISSION_PATH):
+            self.fail("No amplicon_align.py found in submission")
         if self.amplicon_align_ran:
             if self.aa_help_result.stderr.strip() != "":
                 self.fail(
