@@ -57,6 +57,7 @@ class TestFiles(unittest.TestCase):
         cls.error = "None"
         cls.ispcr_error = "None"
         cls.needleman_wunsch_error = "None"
+        cls.amplicon_align_error = "None"
         if "__init__.py" in os.listdir(SUBMISSION_PATH):
             cls.format = "package"
             os.mkdir(f"{SUBMISSION_PATH}magnumopus")
@@ -182,6 +183,9 @@ class TestFiles(unittest.TestCase):
                 print("alignment matches expected.\n")
             else:
                 print("alignment was not in the expected set.\n")
+            if self.needleman_wunsch_result[1] != 11:
+                print("alignment score is wrong.")
+            
         else:
             print("needleman_wunsch error:")
             print(self.needleman_wunsch_error)
@@ -347,7 +351,13 @@ class TestFiles(unittest.TestCase):
                 # next check the alignment score
                 if self.needleman_wunsch_result[1] != 11:
                     score -= 5
-            
+        
+        elif self.needleman_wunsch_result[1] != 11:
+            score -= 5
+            print(
+                "needleman_wunsch output does not match expected output.\n"
+                f"Your output was:\n{self.needleman_wunsch_result}"
+            )
 
         else:
             print("needleman_wunsch output matches expected output")
