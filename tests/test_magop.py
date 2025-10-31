@@ -53,6 +53,7 @@ class TestFiles(unittest.TestCase):
     def setUpClass(cls):
         cls.dir = Path(tempfile.mkdtemp())
         cls.submitted = False
+        cls.shebang = False
         if "__init__.py" in os.listdir(SUBMISSION_PATH):
             cls.format = "package"
             os.mkdir(f"{SUBMISSION_PATH}magnumopus")
@@ -126,7 +127,6 @@ class TestFiles(unittest.TestCase):
         if re.match(pattern, first_line):
             cls.shebang = True
         else:
-            cls.shebang = False
             return cls
         
         command = [f"{SUBMISSION_PATH}amplicon_align.py", "-h"]
@@ -447,6 +447,8 @@ class TestFiles(unittest.TestCase):
     @visibility("visible")
     def test_amplicon_align_help(self):
         """Check amplicon_align.py help message matches expectation"""
+        if "amplicon_align.py" not in os.listdir(SUBMISSION_PATH):
+            self.fail("No amplicon_align.py found in submission")
         if not self.shebang:
             self.fail("No shebang or incorrect shebang")
         if not self.amplicon_align_ran:
@@ -477,6 +479,8 @@ class TestFiles(unittest.TestCase):
     def test_amplicon_align_run(self, set_score=None):
         """Check amplicon_align.py output matches expectation"""
         score = 25
+        if "amplicon_align.py" not in os.listdir(SUBMISSION_PATH):
+            self.fail("No amplicon_align.py found in submission")
         if not self.shebang:
             self.fail("No shebang or incorrect shebang")
         if not self.amplicon_align_ran:
