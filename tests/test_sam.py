@@ -298,6 +298,40 @@ class TestFiles(unittest.TestCase):
 
     @weight(1)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.SECONDARY_CONSENSUS_SAM))
+    def test_pileup_at_pos_method_secondary(self):
+        """Does the 'pileup_at_pos' method handle secondary mappings as expected"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "pileup_at_pos")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="pileup_at_pos",
+            expected=(['C'], ['F']),
+            args=("Bacillus_subtilis", 5),
+            tested_data="a position with bases from secondary mapping reads"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.SUPPLEMENTAL_CONSENSUS_SAM))
+    def test_pileup_at_pos_method_supplemental(self):
+        """Does the 'pileup_at_pos' method handle supplemental mappings as expected"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "pileup_at_pos")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="pileup_at_pos",
+            expected=(['C'], ['F']),
+            args=("Bacillus_subtilis", 5),
+            tested_data="a position with bases from supplemental mapping reads"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @patch("builtins.open", mock_open(read_data=test_data.INDELS_SAM))
     def test_pileup_at_pos_method_handles_deletions(self):
         """Does the 'pileup_at_pos' method handle deletions as expected"""
@@ -384,6 +418,40 @@ class TestFiles(unittest.TestCase):
 
     @weight(1)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.SECONDARY_CONSENSUS_SAM))
+    def test_consensus_at_pos_method_secondary(self):
+        """Does the 'consensus_at_pos' method handle secondary mappings as expected"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus_at_pos")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus_at_pos",
+            expected="C",
+            args=("Bacillus_subtilis", 5),
+            tested_data="a position with bases from secondary mapping reads"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.SUPPLEMENTAL_CONSENSUS_SAM))
+    def test_consensus_at_pos_method_supplemental(self):
+        """Does the 'consensus_at_pos' method handle supplemental mappings as expected"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus_at_pos")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus_at_pos",
+            expected="C",
+            args=("Bacillus_subtilis", 5),
+            tested_data="a position with bases from supplemental mapping reads"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @patch("builtins.open", mock_open(read_data=test_data.INDELS_SAM))
     def test_consensus_at_pos_method_handles_deletions(self):
         """Does the 'consensus_at_pos' method handle deletions as expected"""
@@ -450,8 +518,207 @@ class TestFiles(unittest.TestCase):
 
     @weight(1)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.SIMPLE_CONSENSUS_SAM))
+    def test_consensus_method_basic(self):
+        """Does the 'consensus' method behave as expected for a simple input"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus",
+            expected="CAGCCGCGGTAATCCGGAGGTGGCAAGCGTTATCCGGAATTATTGGGCGTAAAGCGCGCGTAGGCGGTTTTTTAAGTCTGATGTGAAAGCCCACGGCTCAACCGTGGAGGGTCATTGGAAACTGGAAAACTTGAGTGCAGAAGAGGAAAG",
+            args=("Bacillus_subtilis",),
+            tested_data="a sequence to which reads mapped with no indels or clipping"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.SIMPLE_CONSENSUS_SAM))
+    def test_consensus_method_fake_seq(self):
+        """Does the 'consensus' method behave as expected for a sequence that doesn't exist"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus",
+            expected="",
+            args=("Not_a_real_seq",),
+            tested_data="a sequence to which no reads were mapped"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.SOFT_CLIP_CONSENSUS_SAM))
+    def test_consensus_method_soft_clip(self):
+        """Does the 'consensus' method behave as expected with soft clipping"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus",
+            expected="CAGCCGCGGTAATCCGGAGGTGGCAAGCGTTATCCGGAATTATTGGGCGTAAAGCGCGCGTAGGCGGTTTTTTAAGTCTGATGTGAAAGCCCACGGCTCAACCGTGGAGGGTCATTGGAAACTGGAAAACTTGAGTGCAGAAGAGGAAAG",
+            args=("Bacillus_subtilis",),
+            tested_data="a sequence to which reads mapped with soft clipping"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.DELETION_CONSENSUS_SAM))
+    def test_consensus_method_deletion(self):
+        """Does the 'consensus' method behave as expected with a deletion in the reads"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus",
+            expected="CAGCCGCGGTAATCCGGAGGTGGCAAGCGTTATCCTATTGGGCGTAAAGCGCGCGTAGGCGGTTTTTTAAGTCTGATGTGAAAGCCCACGGCTCAACCGTGGAGGGTCATTGGAAACTGGAAAACTTGAGTGCAGAAGAGGAAAG",
+            args=("Bacillus_subtilis",),
+            tested_data="a sequence to which reads mapped with a deletion"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.INSERTION_CONSENSUS_SAM))
+    def test_consensus_method_insertion(self):
+        """Does the 'consensus' method behave as expected with an insertion in the reads"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus",
+            expected="CAGCCGCGGTAATCCGGAGGTGGCAAGCGTTATCCGGAATAAAAATATTGGGCGTAAAGCGCGCGTAGGCGGTTTTTTAAGTCTGATGTGAAAGCCCACGGCTCAACCGTGGAGGGTCATTGGAAACTGGAAAACTTGAGTGCAGAAGAGGAAAG",
+            args=("Bacillus_subtilis",),
+            tested_data="a sequence to which reads mapped with an insertion"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.MINORITY_CONFLICTING_BASES_SAM))
+    def test_consensus_method_minor_disagree(self):
+        """Does the 'consensus' method behave as expected when a minority of reads disagree about base calls"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus",
+            expected="CAGCCGCGGTAATCCGGAGG",
+            args=("Bacillus_subtilis",),
+            tested_data="a sequence to which reads mapped with a minority of reads disagreeing about base calls"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.MAJORITY_CONFLICTING_BASES_SAM))
+    def test_consensus_method_major_disagree(self):
+        """Does the 'consensus' method behave as expected when a majority of reads disagree about base calls"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="consensus",
+            expected="CAGCCGCNNNNNTCCGGAGG",
+            args=("Bacillus_subtilis",),
+            tested_data="a sequence to which reads mapped with a majority of reads disagreeing about base calls"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
     def test_best_consensus_method_exists(self):
         """Does the SAM class have a 'best_consensus' method"""
         self.basic_fail()
         self.check_class_method(self.sam_class, "best_consensus")
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.SIMPLE_CONSENSUS_SAM))
+    def test_best_consensus_method_basic(self):
+        """Does the 'best_consensus' method behave as expected for a simple input"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "best_consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="best_consensus",
+            expected="CAGCCGCGGTAATCCGGAGGTGGCAAGCGTTATCCGGAATTATTGGGCGTAAAGCGCGCGTAGGCGGTTTTTTAAGTCTGATGTGAAAGCCCACGGCTCAACCGTGGAGGGTCATTGGAAACTGGAAAACTTGAGTGCAGAAGAGGAAAG",
+            tested_data="a SAM file with reads all mapped to a single reference"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.MAJORITY_READS_ONE_REF_SAM))
+    def test_best_consensus_method_two_ref(self):
+        """Does the 'best_consensus' method behave as expected for an input with reads mapped to two references"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "best_consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="best_consensus",
+            expected="CAGCCGCGGTAATCCGGAGGTGGCAAGCGTTATCCGGAATTATTGGGCGTAAAGCGCGCGTAGGCGGTTTTTTAAGTCTGATGTGAAAGCCCACGGCTCAACCGTGGAGGGTCATTGGAAACTGGAAAACTTGAGTGCAGAAGAGGAAAG",
+            tested_data="a SAM file with a minority of reads mapped to a second, longer reference"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.MIN_READS_BUT_MAJ_BASES_ONE_REF_SAM))
+    def test_best_consensus_method_minority_reads_majority_bases(self):
+        """Does the 'best_consensus' method behave as expected when the minority of reads, but majority of bases map to a reference"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "best_consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="best_consensus",
+            expected="ATCAAACATCATAATTTTTATGGAGAGTTTGATCCTGGCTCAGGATGAACGCTGGCGGCGTGCCTAATACATGCAAGTCGAGCGAACGGACGAGAAGCTT",
+            tested_data="a SAM file with a minority of reads mapped to a second, longer reference"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.MAJORITY_SECONDARY_SAM))
+    def test_best_consensus_method_majority_secondary(self):
+        """Does the 'best_consensus' method behave as expected when majority of reads and mapped bases are part of secondary mappings"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "best_consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="best_consensus",
+            expected="CAGCCGCGGTAATCCGGAGGTGGCAAGCGTTATCCGGAATTATTGGGCGTAAAGCGCGCGTAGGCGGTTTTTTAA",
+            tested_data="a SAM file where the majority of mapped reads and bases are part of secondary mappings"
+        )
+        print("yes")
+
+    @weight(1)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @patch("builtins.open", mock_open(read_data=test_data.MAJORITY_SUPPLEMENTAL_SAM))
+    def test_best_consensus_method_majority_supplemental(self):
+        """Does the 'best_consensus' method behave as expected when majority of reads and mapped bases are part of supplemental mappings"""
+        self.basic_fail()
+        self.check_class_method(self.sam_class, "best_consensus")
+        inst = self.sam_class.from_sam("fakepath")
+        self.check_method_output(
+            instance=inst,
+            method="best_consensus",
+            expected="CAGCCGCGGTAATCCGGAGGTGGCAAGCGTTATCCGGAATTATTGGGCGTAAAGCGCGCGTAGGCGGTTTTTTAA",
+            tested_data="a SAM file where the majority of mapped reads and bases are part of supplemental mappings"
+        )
         print("yes")
