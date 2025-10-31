@@ -6,13 +6,7 @@ import inspect
 
 from gradescope_utils.autograder_utils.decorators import weight, number, visibility
 
-from utils import (
-    PointCounter,
-    check_attribute_value,
-    check_class_attribute,
-    check_class_method,
-    check_method_output
-)
+from utils import PointCounter
 import data as test_data
 
 SUBMISSION_PATH = "/autograder/submission/"
@@ -63,6 +57,73 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Unable to import magnumopus.sam.Read")
         if not self.can_instance:
             self.fail("Unable to create an instance of your Read class")
+
+    def check_class_method(self, cls, meth):
+        """Check class for a method and print a clear message if absent
+
+        Args:
+            meth (str): The method of which to assess the existence callable-ity
+        """
+        # Figure out if message should say a or an for this method
+        a_an = "an" if meth[0] in {"a", "e", "i", "o" "u"} else "a"
+        if not hasattr(cls, meth):
+            self.fail(f"Your {cls.__name__} class does not have {a_an} {meth} method.")
+        else:
+            if not callable(eval(f"cls.{meth}")):
+                self.fail(f"Your {cls.__name__} class does have {a_an} {meth} attribute, but it is not callable")
+
+
+    def check_class_attribute(self, cls, attr):
+        """Check class for an attribute and print a clear message if absent
+
+        Args:
+            attr (str): The attribute of which to assess the existence
+        """
+        a_an = "an" if attr[0] in {"a", "e", "i", "o" "u"} else "a"
+        if not hasattr(cls, attr):
+            self.fail(f"Your {cls.__name__} class does not have {a_an} {attr} attribute.")
+
+
+    def check_attribute_value(self, instance, attr, expected, tested_data):
+        """Compare an attribute of a class instance to an expected value
+
+        Args:
+            instance (Object): The instance you want to assess
+            attr (str): The attribute whose value should be compared
+            expected (any): The expected value
+            tested_data (str): the nature of the tested data
+        """
+        a_an = "an" if tested_data[0] in {"a", "e", "i", "o", "u"} else "a"
+        value = getattr(instance, attr)
+        try:
+            assert value == expected
+        except:
+            self.fail(f"Your {instance.__class__.__name__}.{attr} contains {value} for {a_an} {tested_data}, when it should have contained {expected}.")
+
+
+    def check_method_output(self, instance, method, expected, tested_data, args=(), kwargs=None):
+        """Compare an attribute of a class instance to an expected value
+
+        Args:
+            instance (Object): The instance you want to assess
+            method (str): The method whose return value should be compared
+            args (tuple[any]): The arguments to provide to the method when called
+            kwargs (dict[str, any]): The keyword arguments to provide to the method when called
+            expected (any): The expected value
+            tested_data (str): the nature of the tested data
+        """
+        self.check_class_method(instance.__class__, method)
+        if kwargs == None:
+            kwargs = {}
+        a_an = "an" if tested_data[0] in {"a", "e", "i", "o", "u"} else "a"
+        try:
+            value = eval(f"instance.{method}(*args, **kwargs)")
+        except Exception as e:
+            self.fail(f"Your {instance.__class__.__name__}.{method} for {a_an} {tested_data}, when it was run with input {args}. The error was {e}")
+        try:
+            assert value == expected
+        except:
+            self.fail(f"Your {instance.__class__.__name__}.{method} returned {repr(value)} for {a_an} {tested_data}, when it should have returned {repr(expected)}.")
 
 
     @weight(0)
@@ -151,7 +212,7 @@ class TestFiles(unittest.TestCase):
         """Is the 'is_mapped' attribute defined"""
         self.basic_fail()
         read_instance = self.read_class(test_data.TEST_READ_F_MAPPED)
-        check_class_attribute(read_instance, "is_mapped")
+        self.check_class_attribute(read_instance, "is_mapped")
         print("yes")
 
     @weight(1)
@@ -160,7 +221,7 @@ class TestFiles(unittest.TestCase):
         """Is the 'is_forward' attribute defined"""
         self.basic_fail()
         read_instance = self.read_class(test_data.TEST_READ_F_MAPPED)
-        check_class_attribute(read_instance, "is_forward")
+        self.check_class_attribute(read_instance, "is_forward")
         print("yes")
 
     @weight(1)
@@ -169,7 +230,7 @@ class TestFiles(unittest.TestCase):
         """Is the 'is_reverse' attribute defined"""
         self.basic_fail()
         read_instance = self.read_class(test_data.TEST_READ_F_MAPPED)
-        check_class_attribute(read_instance, "is_reverse")
+        self.check_class_attribute(read_instance, "is_reverse")
         print("yes")
 
     @weight(1)
@@ -178,7 +239,7 @@ class TestFiles(unittest.TestCase):
         """Is the 'is_primary' attribute defined"""
         self.basic_fail()
         read_instance = self.read_class(test_data.TEST_READ_F_MAPPED)
-        check_class_attribute(read_instance, "is_primary")
+        self.check_class_attribute(read_instance, "is_primary")
         print("yes")
 
     @weight(1)
@@ -186,7 +247,7 @@ class TestFiles(unittest.TestCase):
     def test_init_method_implemented(self):
         """Is there a callable __init__ method defined"""
         self.basic_fail()
-        check_class_method(self.read_class, "__init__")
+        self.check_class_method(self.read_class, "__init__")
         print("yes")
 
     @weight(1)
@@ -194,7 +255,7 @@ class TestFiles(unittest.TestCase):
     def test_base_at_pos_method_implemented(self):
         """Is there a callable base_at_pos method defined"""
         self.basic_fail()
-        check_class_method(self.read_class, "base_at_pos")
+        self.check_class_method(self.read_class, "base_at_pos")
         print("yes")
     
     @weight(1)
@@ -202,7 +263,7 @@ class TestFiles(unittest.TestCase):
     def test_qual_at_pos_method_implemented(self):
         """Is there a callable qual_at_pos method defined"""
         self.basic_fail()
-        check_class_method(self.read_class, "qual_at_pos")
+        self.check_class_method(self.read_class, "qual_at_pos")
         print("yes")
 
     @weight(1)
@@ -210,7 +271,7 @@ class TestFiles(unittest.TestCase):
     def test_mapped_seq_method_implemented(self):
         """Is there a callable mapped_seq method defined"""
         self.basic_fail()
-        check_class_method(self.read_class, "mapped_seq")
+        self.check_class_method(self.read_class, "mapped_seq")
         print("yes")
 
 
@@ -219,7 +280,7 @@ class TestFiles(unittest.TestCase):
     def test_is_forward_with_forward(self):
         """Is the is_forward attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
             attr="is_forward",
             expected=True,
@@ -232,7 +293,7 @@ class TestFiles(unittest.TestCase):
     def test_is_reverse_with_forward(self):
         """Is the is_reverse attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
             attr="is_reverse",
             expected=False,
@@ -245,7 +306,7 @@ class TestFiles(unittest.TestCase):
     def test_is_forward_with_reverse(self):
         """Is the is_forward attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_R_MAPPED),
             attr="is_forward",
             expected=False,
@@ -258,7 +319,7 @@ class TestFiles(unittest.TestCase):
     def test_is_reverse_with_reverse(self):
         """Is the is_reverse attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_R_MAPPED),
             attr="is_reverse",
             expected=True,
@@ -271,7 +332,7 @@ class TestFiles(unittest.TestCase):
     def test_is_mapped_with_mapped(self):
         """Is the is_mapped attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
             attr="is_mapped",
             expected=True,
@@ -284,7 +345,7 @@ class TestFiles(unittest.TestCase):
     def test_is_mapped_with_unmapped(self):
         """Is the is_mapped attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_UNMAPPED),
             attr="is_mapped",
             expected=False,
@@ -297,7 +358,7 @@ class TestFiles(unittest.TestCase):
     def test_is_primary_with_primary(self):
         """Is the is_primary attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
             attr="is_primary",
             expected=True,
@@ -310,7 +371,7 @@ class TestFiles(unittest.TestCase):
     def test_is_primary_with_secondary(self):
         """Is the is_primary attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_F_SECONDARY),
             attr="is_primary",
             expected=False,
@@ -323,7 +384,7 @@ class TestFiles(unittest.TestCase):
     def test_is_primary_with_supplemental(self):
         """Is the is_primary attribute set properly"""
         self.basic_fail()
-        check_attribute_value(
+        self.check_attribute_value(
             instance=self.read_class(test_data.TEST_READ_F_SUPPLEMENTAL),
             attr="is_primary",
             expected=False,
@@ -346,7 +407,7 @@ class TestFiles(unittest.TestCase):
     def test_just_M_read_at_pos(self):
         """Does the base_at_pos method return the right base when the read doesn't map to the first reference base"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_M_ONLY_NON_1_POS),
             method="base_at_pos",
             args=(13,), # comma specifies this is a single element tuple. Just here to satisfy syntax rules
@@ -360,7 +421,7 @@ class TestFiles(unittest.TestCase):
     def test_del_read_at_pos(self):
         """Does the base_at_pos method return the right base when there is a deletion in the read at the requested location"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_D_12),
             method="base_at_pos",
             args=(13,),
@@ -374,7 +435,7 @@ class TestFiles(unittest.TestCase):
     def test_upstream_del_read_at_pos(self):
         """Does the base_at_pos method return the right base when there is a deletion in the read before the requested location"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_D_12),
             method="base_at_pos",
             args=(14,),
@@ -388,7 +449,7 @@ class TestFiles(unittest.TestCase):
     def test_ins_read_at_pos(self):
         """Does the base_at_pos method return the right base when there is an insertion in the read at the requested location"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_I_10),
             method="base_at_pos",
             args=(10,),
@@ -402,7 +463,7 @@ class TestFiles(unittest.TestCase):
     def test_upstream_ins_read_at_pos_internal_pos(self):
         """Does the base_at_pos method return the right base when there is an insertion in the read before the requested location"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_I_10),
             method="base_at_pos",
             args=(14,),
@@ -416,7 +477,7 @@ class TestFiles(unittest.TestCase):
     def test_upstream_ins_read_at_pos_beyond_read(self):
         """Does the base_at_pos method return the right base when there is an insertion in the read that reduces the mapped length to less than the read length"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_I_10),
             method="base_at_pos",
             args=(150,),
@@ -430,7 +491,7 @@ class TestFiles(unittest.TestCase):
     def test_downstream_del_read_at_pos(self):
         """Is the base_at_pos method impacted if there is a deletion in the read after the requested location"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_D_12),
             method="base_at_pos",
             args=(10,),
@@ -444,7 +505,7 @@ class TestFiles(unittest.TestCase):
     def test_mapped_right_of_requested_pos_read_at_pos(self):
         """Does base_at_pos return an empty string for reads that map to the right of requested location"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
             method="base_at_pos",
             args=(10,),
@@ -458,7 +519,7 @@ class TestFiles(unittest.TestCase):
     def test_first_base_in_read_read_at_pos(self):
         """Does base_at_pos return an the right base for the first position in the read"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
             method="base_at_pos",
             args=(16,),
@@ -472,7 +533,7 @@ class TestFiles(unittest.TestCase):
     def test_mapped_left_of_requested_pos_read_at_pos(self):
         """Does base_at_pos return an empty string for reads that map to the left of requested location"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
             method="base_at_pos",
             args=(167,),
@@ -486,7 +547,7 @@ class TestFiles(unittest.TestCase):
     def test_last_base_in_read_read_at_pos(self):
         """Does base_at_pos return the right read when the requested pos is the last base in the read"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_F_MAPPED),
             method="base_at_pos",
             args=(166,),
@@ -500,7 +561,7 @@ class TestFiles(unittest.TestCase):
     def test_unmapped_read_pos_read_at_pos(self):
         """Does the base_at_pos method return an empty string for unmapped reads"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_UNMAPPED),
             method="base_at_pos",
             args=(10,),
@@ -514,7 +575,7 @@ class TestFiles(unittest.TestCase):
     def test_soft_clipped_upstream_read_at_pos(self):
         """Does the base_at_pos method correctly handle soft clipping"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_SOFT_CLIP),
             method="base_at_pos",
             args=(13,),
@@ -528,7 +589,7 @@ class TestFiles(unittest.TestCase):
     def test_hard_clipped_upstream_read_at_pos(self):
         """Does the base_at_pos method correctly handle hard clipping"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_HARD_CLIP),
             method="base_at_pos",
             args=(13,),
@@ -542,7 +603,7 @@ class TestFiles(unittest.TestCase):
     def test_internally_mapped_read_at_pos(self):
         """Does the base_at_pos method return the right base for a position in the middle of the reference"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_M_ONLY_NON_1_POS),
             method="base_at_pos",
             args=(50,),
@@ -556,7 +617,7 @@ class TestFiles(unittest.TestCase):
     def test_internally_mapped_mapped_seq(self):
         """Does the mapped_seq method return the right sequence for a read mapped to the middle of the reference"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_M_ONLY_NON_1_POS),
             method="mapped_seq",
             expected="CAGCAGCCGCGGTAATACGAAGGGTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGCGCGTAGGTGGTTCAGCAAGTTGGATGTGAAATCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTACTGAGCTAGAGTACGGTAGAGGGT",
@@ -569,7 +630,7 @@ class TestFiles(unittest.TestCase):
     def test_deletion_mapped_seq(self):
         """Does the mapped_seq method handle deletions correctly"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_D_12),
             method="mapped_seq",
             expected="GTGCCAGCAGCC-GCGGTAATACGAAGGGTGCAAGCGTTAATCGGAATTACTNGGCGTAAAGCGCGCGTAGGTGGTTCAGCAAGTTGGATGTGAAATCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTACTGAGCTAGAGTACGGTAG",
@@ -582,7 +643,7 @@ class TestFiles(unittest.TestCase):
     def test_insertion_mapped_seq(self):
         """Does the mapped_seq method handle insertions correctly"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_CIGAR_I_10),
             method="mapped_seq",
             expected="GTGCCAGCAGCCGCGGTAATACGAAGGGTGCAAGCGTTAATCGGAATTACTNGGCGTAAAGCGCGCGTAGGTGGTTCAGCAAGTTGGATGTGAAATCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTACTGAGCTAGAGTACGGTAG",
@@ -595,7 +656,7 @@ class TestFiles(unittest.TestCase):
     def test_soft_clipped_mapped_seq(self):
         """Does the mapped_seq method handle soft clipping correctly"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_SOFT_CLIP),
             method="mapped_seq",
             expected="GTGCCAGCAGCCGCGGTAATACGAAGGGTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGCGCGTAGGTGGTTCAGCAAGTTGGATGTGAAATCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTACTG",
@@ -608,7 +669,7 @@ class TestFiles(unittest.TestCase):
     def test_hard_clipped_mapped_seq(self):
         """Does the mapped_seq method handle hard clipping correctly"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_HARD_CLIP),
             method="mapped_seq",
             expected="GTGCCAGCAGCCGCGGTAATACGAAGGGTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGCGCGTAGGTGGTTCAGCAAGTTGGATGTGAAATCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTACTG",
@@ -621,7 +682,7 @@ class TestFiles(unittest.TestCase):
     def test_unmapped_mapped_seq(self):
         """Does the mapped_seq method handle unmapped reads correctly"""
         self.basic_fail()
-        check_method_output(
+        self.check_method_output(
             instance=self.read_class(test_data.TEST_READ_UNMAPPED),
             method="mapped_seq",
             expected="",
