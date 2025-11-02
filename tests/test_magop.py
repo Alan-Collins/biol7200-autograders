@@ -553,6 +553,10 @@ class TestFiles(unittest.TestCase):
                     else:
                         score -= 10
                         print("Printed alignment score does not match the expected best score or the score of the printed alignment")
+            else:
+                if aln_score != 368:
+                    score -= 5
+                    print("Printed alignment does not match printed score")
         
         if score == 25:
             print("Output matches expectation.")
