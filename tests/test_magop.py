@@ -90,9 +90,9 @@ class TestFiles(unittest.TestCase):
         
         try: # run ispcr
             if not hasattr(magnumopus, "ispcr"):
-                raise("magnumopus has no function 'ispcr'")
+                raise AttributeError("magnumopus has no function 'ispcr'")
             if not inspect.isfunction(magnumopus.ispcr):
-                raise("magnumopus.ispcr is not a function")
+                raise AttributeError("magnumopus.ispcr is not a function")
             cls.ispcr_result = magnumopus.ispcr(
                 primer_file=f"{DATA_DIR}/rpoD.fna",
                 assembly_file=f"{DATA_DIR}/Pseudomonas_aeruginosa_PAO1.fna",
