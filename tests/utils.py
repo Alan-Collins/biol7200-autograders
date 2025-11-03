@@ -273,7 +273,7 @@ class Seq():
             seq = other.seq
         else:
             seq = other
-        return self.seq == other
+        return self.seq == seq
     
     def __gt__(self, other: "Seq") -> bool:
         if not isinstance(other, Seq):
@@ -297,6 +297,9 @@ class Seq():
 
     def __str__(self) -> str:
         return f">{self.header}\n{self.seq}"
+    
+    def __hash__(self) -> int:
+        return hash(self.seq)
 
 class FastaSeq():
     def __init__(self, seqs: list[Seq]=None):
