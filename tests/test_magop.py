@@ -430,6 +430,16 @@ class TestFiles(unittest.TestCase):
                 print("(-10) One of your sequences is complemented but should have been reversed")
             elif both in POSSIBLE_ALNS:
                 print("(-10) Both of your sequences are complemented but should have been reversed")
+
+            actual_score = 0
+            for a,b in zip(*self.needleman_wunsch_result[0]):
+                if a == b:
+                    actual_score += 1
+                else:
+                    actual_score -= 1
+
+            if actual_score != self.needleman_wunsch_result[1]:
+                print("(-5) returned score does not match alignment")
             
             if self.needleman_wunsch_result[1] != 11:
                 print(f"(-5) Alignment score doesn't match expected. Expected 11, got {self.needleman_wunsch_result[1]}")
