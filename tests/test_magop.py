@@ -342,6 +342,18 @@ class TestFiles(unittest.TestCase):
             elif both in POSSIBLE_ALNS:
                 score -= 5
 
+            # finally check if the score doesn't match the alignment goodness
+            actual_score = 0
+            for a,b in zip(*self.needleman_wunsch_result[0]):
+                if a == b:
+                    actual_score += 1
+                else:
+                    actual_score -= 1
+
+            if actual_score != self.needleman_wunsch_result[1]:
+                score -= 5
+                print("returned score does not match alignment")
+
 
             # Otherwise we'll need to diagnose this issue manually
             if score == 50:
