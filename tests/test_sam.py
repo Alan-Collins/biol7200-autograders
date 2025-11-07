@@ -22,7 +22,7 @@ SOLUTION_SCRIPT = "map_consensus.py"
 SCRIPT_PATH = f"{SUBMISSION_PATH}{SOLUTION_SCRIPT}"
 DATA_DIR = "/autograder/biol7200-autograders/data/"
 
-Q_NUM = 1
+Q_NUM = PointCounter(1)
 
 POINT_NUM = PointCounter(0)
 
