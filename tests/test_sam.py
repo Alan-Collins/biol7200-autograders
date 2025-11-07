@@ -247,7 +247,6 @@ class TestFiles(unittest.TestCase):
     
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    @visibility("on_fail")
     def test_magop_import(self):
         """Check magnumopus import"""
         if not self.imported:
@@ -859,7 +858,6 @@ class TestFiles(unittest.TestCase):
 
     @weight(0)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
-    @visibility("on_fail")
     def test_line_endings(self):
         """Check unix line endings"""
         if not Path(f"{SCRIPT_PATH}").exists():
