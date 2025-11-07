@@ -903,7 +903,7 @@ class TestFiles(unittest.TestCase):
         """Is map_consensus.py output correct"""
         if not self.map_consensus_ran:
             self.fail(f"map_consensus.py could not be run: {self.map_consensus_error}")
-        
+        print(f"Your script's output is:\n{self.mapcon_result.stdout}")
         score = 40
         try:
             result = FastaSeq.from_fasta(self.mapcon_result.stdout.strip())
