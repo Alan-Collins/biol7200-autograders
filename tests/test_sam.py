@@ -13,7 +13,8 @@ from gradescope_utils.autograder_utils.files import check_submitted_files
 
 from utils import (
     PointCounter,
-    FastaSeq
+    FastaSeq,
+    recursive_type_str
 )
 import data as test_data
 
