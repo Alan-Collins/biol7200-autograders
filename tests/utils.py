@@ -285,6 +285,12 @@ class Seq():
 
     def __str__(self) -> str:
         return f"{self.header}\n{self.seq}"
+    
+    def __hash__(self) -> int:
+        return hash(self.seq)
+    
+    def __len__(self) -> int:
+        return len(self.seq)
 
 class FastaSeq():
     def __init__(self, seqs: list[Seq]=None):
@@ -308,6 +314,25 @@ class FastaSeq():
 
     def __str__(self) -> str:
         return "\n".join(self.seqs)
+    
+    
+    def __eq__(self, other: "FastaSeq") -> bool:
+        if not isinstance(other, FastaSeq) or isinstance(other, Seq):
+            raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        if isinstance(other, FastaSeq):
+            return set(self.seqs) == set(other.seqs)
+        
+        # otherwise comparing against a single Seq instance
+        return len(self.seqs) == 1 and self.seqs[0] == other
+
+
+    def __len__(self) -> int:
+        return sum([len(s) for s in self.seqs])
+    
+    @property
+    def num_seqs(self):
+        return len(self.seqs)
+
 
 
 def check_class_method(cls, meth):
