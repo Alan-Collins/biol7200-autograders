@@ -284,7 +284,7 @@ class Seq():
         return self.header <= other.header
 
     def __str__(self) -> str:
-        return f"{self.header}\n{self.seq}"
+        return f">{self.header}\n{self.seq}"
     
     def __hash__(self) -> int:
         return hash(self.seq)
@@ -304,8 +304,10 @@ class FastaSeq():
         seqs = []
         if ">" not in fasta_str or "\n" not in fasta_str:
              return cls()
-        
+
         for entry in fasta_str.split(">"):
+            if entry.strip() == "":
+                continue
             lines = [l for l in entry.split("\n") if l != ""]
             head = lines[0]
             seq = "".join(lines[1])
@@ -313,7 +315,7 @@ class FastaSeq():
         return cls(seqs)
 
     def __str__(self) -> str:
-        return "\n".join(self.seqs)
+        return "\n".join([str(s) for s in self.seqs])
     
     
     def __eq__(self, other: "FastaSeq") -> bool:
