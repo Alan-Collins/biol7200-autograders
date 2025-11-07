@@ -106,7 +106,7 @@ class TestFiles(unittest.TestCase):
             "refs"
         ]
         for dir in cls.input_dirs:
-            shutil.copytree(f"{DATA_DIR}{dir}", f"{cls.dir}/")
+            shutil.copytree(f"{DATA_DIR}{dir}", f"{cls.dir}/{dir}")
         
         cls.submitted = True
         try: # import the package
