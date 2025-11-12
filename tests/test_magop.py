@@ -197,6 +197,13 @@ class TestFiles(unittest.TestCase):
             else:
                 print("amplicon_align.py -h output:")
                 print(self.aa_help_result.stdout)
+            if self.aa_result.stderr.strip() != "":
+                print("amplicon_align.py error:")
+                print(self.aa_result.stderr)
+            else:
+                print("amplicon_align.py output:")
+                print(self.aa_result.stdout)
+
         else:
             print("amplicon_align.py error:")
             print(self.amplicon_align_error)
