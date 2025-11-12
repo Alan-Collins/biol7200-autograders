@@ -313,8 +313,9 @@ class FastaSeq():
         seqs = []
         if ">" not in fasta_str or "\n" not in fasta_str:
              return cls()
-        
         for entry in fasta_str.split(">"):
+            if entry == "":
+                continue
             lines = [l for l in entry.split("\n") if l != ""]
             if len(lines) < 2:
                 return cls()
@@ -329,11 +330,8 @@ class FastaSeq():
     def __len__(self) -> int:
         return len(self.seqs)
 
-    def __iter__(self, ordered=False):
-        if ordered:
-            yield from sorted(self.seqs)
-        else:
-            yield from self.seqs
+    def __iter__(self):
+        yield from sorted(self.seqs)
 
     def __eq__(self, other: "FastaSeq") -> bool:
         if not isinstance(other, FastaSeq):
@@ -341,7 +339,7 @@ class FastaSeq():
         if len(self) != len(other):
             return False
         for a, b in zip(self, other):
-            if a != b:
+            if a != b and a.reverse_complement() != b:
                 return False
         return True
     
