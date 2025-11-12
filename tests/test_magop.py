@@ -560,6 +560,11 @@ class TestFiles(unittest.TestCase):
                 if actual_aln_score == aln_score:
                     score -= 5
                     print("Returned alignment is not the best alignment")
+                    a = Seq(header="a", seq=seqs[0].replace("-",""))
+                    b = Seq(header="b", seq=seqs[0].replace("-",""))
+                    pao1_expected = FastaSeq.from_fasta(ISPCR_OUTPUT).seqs[0]
+                    if pao1_expected != a and pao1_expected != b:
+                        print("Your alignment may be incorrect as your isPCR amplicons do not match the expectation.")
                 else:
                     if aln_score == 368:
                         score -= 5
