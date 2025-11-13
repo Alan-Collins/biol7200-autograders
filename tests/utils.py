@@ -310,7 +310,7 @@ class FastaSeq():
                 continue
             lines = [l for l in entry.split("\n") if l != ""]
             head = lines[0]
-            seq = "".join(lines[1])
+            seq = "".join(lines[1:])
             seqs.append(Seq(head, seq))
         return cls(seqs)
 
