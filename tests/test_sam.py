@@ -995,7 +995,7 @@ class TestFiles(unittest.TestCase):
         print()
         print("Comparing your output with specified -s inputs")
         try:
-            result = FastaSeq.from_fasta(self.mapcon_syn_result.stdout.strip())
+            result = FastaSeq.from_fasta(self.mapcon_syn_result.stdout)
             print(f"Your script's output is:\n{self.mapcon_syn_result.stdout}")
             if result == MAPCON_SYN_EXPECTED:
                 print("Your output matches the expectation for a sequence other than the best.")
@@ -1014,8 +1014,6 @@ class TestFiles(unittest.TestCase):
                 print("Your output matches the expectation for a sequence with no reads mapped to it.")
             else:
                 print(f"Your output does not match the expectation for a sequence with no reads mapped to it. Expected\n{MAPCON_METH_EXPECTED}")
-                print(repr(str(MAPCON_METH_EXPECTED)))
-                print(repr(str(result)))
                 score -= 5
         except Exception as e:
             print(f"Could not parse your script's stdout as FASTA sequence: {e}")
