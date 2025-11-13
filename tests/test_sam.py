@@ -79,6 +79,17 @@ SAM_CON_EXPECTED = FastaSeq.from_fasta((
     "GAAGGTGCGGCTGGATCACCTCCTT"
 ))
 
+MAPCON_SYN_EXPECTED = FastaSeq.from_fasta((
+    ">Synechococcus_elongatus_consensus\n"
+    "ATTTGAGAGTTTGATCCTGGCTCAGGATGAACGCTGCTTCGGGGACATTGGTGACAGGTGGTGCATGGTT"
+    "GTCGTCAGCTCGTGTCGTGAGATGTTGGGTTAAGTCCCGCAACGAGCGCAACCCTTGTCTTTAGTTGCCA"
+    "TCATTAAGTTGGGCACTCTAGAGAGACTGCCAGGGATAACCTGGAGG"
+))
+
+MAPCON_METH_EXPECTED = FastaSeq.from_fasta((
+    ">Methanococcus_aeolicus_consensus\n"
+))
+
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -163,6 +174,38 @@ class TestFiles(unittest.TestCase):
         ]
                    
         cls.mapcon_result = subprocess.run(
+            command,
+            text=True,
+            capture_output=True,
+            cwd=cls.dir
+        )
+
+        # specify off-target seq
+        command = [
+            f"{SCRIPT_PATH}",
+            "-1", "reads/ERR11767307_1.fastq",
+            "-2", "reads/ERR11767307_2.fastq",
+            "-r", "refs/16S.fna",
+            "-s", "Synechococcus_elongatus"
+        ]
+                   
+        cls.mapcon_syn_result = subprocess.run(
+            command,
+            text=True,
+            capture_output=True,
+            cwd=cls.dir
+        )
+
+        # specify blank seq
+        command = [
+            f"{SCRIPT_PATH}",
+            "-1", "reads/ERR11767307_1.fastq",
+            "-2", "reads/ERR11767307_2.fastq",
+            "-r", "refs/16S.fna",
+            "-s", "Methanococcus_aeolicus"
+        ]
+                   
+        cls.mapcon_meth_result = subprocess.run(
             command,
             text=True,
             capture_output=True,
@@ -899,6 +942,7 @@ class TestFiles(unittest.TestCase):
         if not self.map_consensus_ran:
             self.fail(f"map_consensus.py could not be run: {self.map_consensus_error}")
         print(f"Your script's output is:\n{self.mapcon_result.stdout}")
+        print("Comparing your output against the expectation with no -s specified")
         score = 40
         try:
             result = FastaSeq.from_fasta(self.mapcon_result.stdout.strip())
@@ -949,5 +993,31 @@ class TestFiles(unittest.TestCase):
                     "Your output is correct but is the reverse complement of the expected output. "
                     "Did you intend to reverse the sequence relative to the mapping reference?"
                 )
+
+        print("Comparing your output with specified -s inputs")
+        try:
+            result = FastaSeq.from_fasta(self.mapcon_syn_result.stdout.strip())
+            print(f"Your script's output is:\n{self.mapcon_syn_result.stdout}")
+            if result == MAPCON_SYN_EXPECTED:
+                print("Your output matches the expectation for a sequence other than the best.")
+            else:
+                print(f"Your output does not match the expectation for a sequence other than the best. Expected {MAPCON_SYN_EXPECTED}")
+                score -= 5
+        except Exception as e:
+            print(f"Could not parse your script's stdout as FASTA sequence: {e}")
+            score -= 5
+
+        try:
+            result = FastaSeq.from_fasta(self.mapcon_meth_result.stdout.strip())
+            print(f"Your script's output is:\n{self.mapcon_meth_result.stdout}")
+            if result == MAPCON_METH_EXPECTED:
+                print("Your output matches the expectation for a sequence other than the best.")
+            else:
+                print(f"Your output does not match the expectation for a sequence other than the best. Expected {MAPCON_METH_EXPECTED}")
+                score -= 5
+        except Exception as e:
+            print(f"Could not parse your script's stdout as FASTA sequence: {e}")
+            score -= 5
+
         
-        set_score(score)
+        set_score(max(score, 0))
