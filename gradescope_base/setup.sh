@@ -39,7 +39,7 @@ source "${HOME}/conda/etc/profile.d/conda.sh"
 source "${HOME}/conda/etc/profile.d/mamba.sh"
 mamba shell init
 source "${HOME}/.bashrc"
-mamba create -y -n biol7200 python pip r-essentials r-base
+mamba create -y -n biol7200 python pip r-essentials r-base numpy biotite
 mamba activate biol7200
 R --slave -e 'install.packages("ape", repos="http://cran.us.r-project.org");install.packages("Quartet", repos="http://cran.us.r-project.org")'
 
