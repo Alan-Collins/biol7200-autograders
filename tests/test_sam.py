@@ -992,7 +992,7 @@ class TestFiles(unittest.TestCase):
                         "Your output is correct but is the reverse complement of the expected output. "
                         "Did you intend to reverse the sequence relative to the mapping reference?"
                     )
-
+        print()
         print("Comparing your output with specified -s inputs")
         try:
             result = FastaSeq.from_fasta(self.mapcon_syn_result.stdout.strip())
@@ -1006,6 +1006,7 @@ class TestFiles(unittest.TestCase):
             print(f"Could not parse your script's stdout as FASTA sequence: {e}")
             score -= 5
 
+        print()
         try:
             result = FastaSeq.from_fasta(self.mapcon_meth_result.stdout.strip())
             print(f"Your script's output is:\n{self.mapcon_meth_result.stdout}")
