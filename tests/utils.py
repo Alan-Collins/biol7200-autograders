@@ -302,7 +302,7 @@ class FastaSeq():
     @classmethod
     def from_fasta(cls, fasta_str: str):
         seqs = []
-        if ">" not in fasta_str or "\n" not in fasta_str:
+        if ">" not in fasta_str:
              return cls()
 
         for entry in fasta_str.split(">"):
