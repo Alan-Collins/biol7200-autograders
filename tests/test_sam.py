@@ -951,48 +951,47 @@ class TestFiles(unittest.TestCase):
         
         if result == MAPCON_EXPECTED:
             print("output matches expected output")
-            set_score(score)
-            return
         
-        if result == SAM_CON_EXPECTED:
-            self.fail("Don't use `samtools consensus` to get the consensus")
-        
-        if result.num_seqs != 1:
-            self.fail("Your output includes multiple sequences")
-
-        if len(result) != 1493:
-            print("Your output is the wrong length")
+        else:        
+            if result == SAM_CON_EXPECTED:
+                self.fail("Don't use `samtools consensus` to get the consensus")
             
-            rlen = len(result)
+            if result.num_seqs != 1:
+                self.fail("Your output includes multiple sequences")
 
-            match rlen:
-                case 1528:
-                    print("You are not considering deletions correctly")
+            if len(result) != 1493:
+                print("Your output is the wrong length")
+                
+                rlen = len(result)
+
+                match rlen:
+                    case 1528:
+                        print("You are not considering deletions correctly")
+                        score -= 5
+                    case 1495:
+                        print("You are not determining the majority base call to decide the consensus")
+                        score -= 5
+                    case 1529:
+                        print("You are not considering deletions correctly or determining the majority base call to decide the consensus")
+                        score -= 10
+                    case _:
+                        self.fail(
+                            "Your output cannot be diagnosed automatically. "
+                            "Please report this issue so the autograder can be improved. "
+                            "Otherwise, your score will be manually adjusted during grading."
+                        )
+            else:
+                print("Your output is the correct length, but does not match the expected sequence")
+                if "N" not in result.seqs[0].seq:
                     score -= 5
-                case 1495:
-                    print("You are not determining the majority base call to decide the consensus")
-                    score -= 5
-                case 1529:
-                    print("You are not considering deletions correctly or determining the majority base call to decide the consensus")
-                    score -= 10
-                case _:
-                    self.fail(
-                        "Your output cannot be diagnosed automatically. "
-                        "Please report this issue so the autograder can be improved. "
-                        "Otherwise, your score will be manually adjusted during grading."
+                    print("You are not handling cases where there is no majority base call")
+                
+
+                if result.seqs[0].reverse_complement() == MAPCON_EXPECTED:
+                    print(
+                        "Your output is correct but is the reverse complement of the expected output. "
+                        "Did you intend to reverse the sequence relative to the mapping reference?"
                     )
-        else:
-            print("Your output is the correct length, but does not match the expected sequence")
-            if "N" not in result.seqs[0].seq:
-                score -= 5
-                print("You are not handling cases where there is no majority base call")
-            
-
-            if result.seqs[0].reverse_complement() == MAPCON_EXPECTED:
-                print(
-                    "Your output is correct but is the reverse complement of the expected output. "
-                    "Did you intend to reverse the sequence relative to the mapping reference?"
-                )
 
         print("Comparing your output with specified -s inputs")
         try:
