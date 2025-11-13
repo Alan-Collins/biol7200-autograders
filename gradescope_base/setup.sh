@@ -39,8 +39,9 @@ source "${HOME}/conda/etc/profile.d/conda.sh"
 source "${HOME}/conda/etc/profile.d/mamba.sh"
 mamba shell init
 source "${HOME}/.bashrc"
-mamba create -y -n biol7200 python pip
+mamba create -y -n biol7200 python pip r-essentials r-base
 mamba activate biol7200
+R --slave -e 'install.packages("ape", repos="http://cran.us.r-project.org");install.packages("Quartet", repos="http://cran.us.r-project.org")'
 
 # Clone autograder files
 git clone -b $GITHUB_BRANCH git@github.com:Alan-Collins/biol7200-autograders.git /autograder/biol7200-autograders
