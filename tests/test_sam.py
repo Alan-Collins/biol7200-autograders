@@ -1000,7 +1000,7 @@ class TestFiles(unittest.TestCase):
             if result == MAPCON_SYN_EXPECTED:
                 print("Your output matches the expectation for a sequence other than the best.")
             else:
-                print(f"Your output does not match the expectation for a sequence other than the best. Expected {MAPCON_SYN_EXPECTED}")
+                print(f"Your output does not match the expectation for a sequence other than the best. Expected\n{MAPCON_SYN_EXPECTED}")
                 score -= 5
         except Exception as e:
             print(f"Could not parse your script's stdout as FASTA sequence: {e}")
@@ -1013,7 +1013,7 @@ class TestFiles(unittest.TestCase):
             if result == MAPCON_METH_EXPECTED:
                 print("Your output matches the expectation for a sequence other than the best.")
             else:
-                print(f"Your output does not match the expectation for a sequence other than the best. Expected {MAPCON_METH_EXPECTED}")
+                print(f"Your output does not match the expectation for a sequence other than the best. Expected\n{MAPCON_METH_EXPECTED}")
                 score -= 5
         except Exception as e:
             print(f"Could not parse your script's stdout as FASTA sequence: {e}")
