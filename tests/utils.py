@@ -308,7 +308,7 @@ class FastaSeq():
         for entry in fasta_str.split(">"):
             if entry.strip() == "":
                 continue
-            lines = [l for l in entry.split("\n") if l != ""]
+            lines = [l.strip() for l in entry.split("\n") if l != ""]
             head = lines[0]
             seq = "".join(lines[1:])
             seqs.append(Seq(head, seq))
