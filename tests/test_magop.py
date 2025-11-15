@@ -78,6 +78,8 @@ class TestFiles(unittest.TestCase):
         
         if not Path(SCRIPT_PATH).exists():
             return cls
+
+        cls.submitted = True
         
         cls.magop_ran = False
         cls.magop_error = ""
