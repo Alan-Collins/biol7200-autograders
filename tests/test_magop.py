@@ -189,15 +189,15 @@ class TestFiles(unittest.TestCase):
 
     def compare_trees(self, ref_trees: str, query_tree: str) -> list[float]:
         with tempfile.NamedTemporaryFile() as ref_file, tempfile.NamedTemporaryFile() as query_file:
-            with open(ref_file, 'w') as f:
+            with open(ref_file.name, 'w') as f:
                 f.write(ref_trees)
-            with open(query_file, 'w') as f:
+            with open(query_file.name, 'w') as f:
                 f.write(query_tree)
             
             command = [
                 "./compare_trees.r",
-                f"{query_file}",
-                f"{ref_file}"
+                f"{query_file.name}",
+                f"{ref_file.name}"
             ]
 
             result = subprocess.run(
