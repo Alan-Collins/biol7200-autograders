@@ -208,13 +208,17 @@ class TestFiles(unittest.TestCase):
                 capture_output=True
             )
 
-            if result.stdout.strip() == "":
-                self.fail(
-                    f"Could not process your output tree. Your tree was\n{query_tree}\n"
-                    f"The error was {result.stderr}"
-                )
-            
-            scores = [float(i) for i in re.findall(r"\b(\d\.\d+)\b", result.stdout)]
+        if result.stdout.strip() == "":
+            self.fail(
+                f"Could not process your output tree. Your tree was\n{query_tree}\n"
+                f"The error was {result.stderr}"
+            )
+        
+        scores = [float(i) for i in re.findall(r"\b(\d\.\d+)\b", result.stdout)]
+
+        print(result.stdout)
+        print(result.stderr)
+        print(scores)
         
         return scores
 
