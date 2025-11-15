@@ -49,6 +49,8 @@ ASS_REFS_EXPECTED = "\n".join([
 READ_REFS_EXPECTED = "\n".join([
     # Expected
     "(((SRR27732368:24.29,Synechococcus_elongatus:20.71):9.14,((SRR24886915:10.12,Methanococcus_aeolicus:9.88):23.37,(ERR12954019:14.17,Sulfolobus_islandicus:13.83):24.13):24.11):2.45,((SRR25626983:22.35,Mycoplasma_pneumoniae:20.65):15.45,((SRR24105535:17.85,Wolbachia_pipientis:24.15):9.70,(SRR21376282:16.97,(ERR13716760:10.94,Escherichia_coli:9.06):10.53):6.30):2.42):1.70,((((SRR30750791:4.23,SRR28858832:5.77):3.22,Bacillus_subtilis:8.28):12.59,(ERR11767307:12.56,Fusibacter_paucivorans:15.44):6.91):2.42,(SRR13255634:-0.03,Leptospira_borgpetersenii:0.03):27.08):1.80):0.00;",
+    # same again to use the same R script
+    "(((SRR27732368:24.29,Synechococcus_elongatus:20.71):9.14,((SRR24886915:10.12,Methanococcus_aeolicus:9.88):23.37,(ERR12954019:14.17,Sulfolobus_islandicus:13.83):24.13):24.11):2.45,((SRR25626983:22.35,Mycoplasma_pneumoniae:20.65):15.45,((SRR24105535:17.85,Wolbachia_pipientis:24.15):9.70,(SRR21376282:16.97,(ERR13716760:10.94,Escherichia_coli:9.06):10.53):6.30):2.42):1.70,((((SRR30750791:4.23,SRR28858832:5.77):3.22,Bacillus_subtilis:8.28):12.59,(ERR11767307:12.56,Fusibacter_paucivorans:15.44):6.91):2.42,(SRR13255634:-0.03,Leptospira_borgpetersenii:0.03):27.08):1.80):0.00;",
     ""
 ])
 
