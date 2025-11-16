@@ -992,6 +992,9 @@ class TestFiles(unittest.TestCase):
                         "Your output is correct but is the reverse complement of the expected output. "
                         "Did you intend to reverse the sequence relative to the mapping reference?"
                     )
+                else:
+                    print("Unable to automatically diagnose the issue with your sequence")
+                    score -= 5
         print()
         print("Comparing your output with specified -s inputs")
         try:
