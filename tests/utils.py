@@ -319,12 +319,12 @@ class FastaSeq():
     
     
     def __eq__(self, other: "FastaSeq") -> bool:
-        if not isinstance(other, FastaSeq) or isinstance(other, Seq):
+        if not isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str):
             raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
         if isinstance(other, FastaSeq):
             return set(self.seqs) == set(other.seqs)
         
-        # otherwise comparing against a single Seq instance
+        # otherwise comparing against a single Seq or str instance
         return len(self.seqs) == 1 and self.seqs[0] == other
 
 
