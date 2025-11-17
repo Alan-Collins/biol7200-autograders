@@ -1004,11 +1004,12 @@ class TestFiles(unittest.TestCase):
                         print("You are not considering deletions correctly or determining the majority base call to decide the consensus")
                         score -= 10
                     case _:
-                        self.fail(
+                        print(
                             "Your output cannot be diagnosed automatically. "
                             "Please report this issue so the autograder can be improved. "
                             "Otherwise, your score will be manually adjusted during grading."
                         )
+                        score -= 10
             else:
                 print("Your output is the correct length, but does not match the expected sequence")
                 if "N" not in result.seqs[0].seq:
