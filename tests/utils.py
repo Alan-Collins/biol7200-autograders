@@ -307,7 +307,11 @@ class FastaSeq():
     def from_fasta(cls, fasta_str: str):
         seqs = []
         if ">" not in fasta_str:
-             return cls()
+             lines = [l for l in fasta_str.split("\n") if l != ""]
+             if len(lines) != 1:
+                return cls()
+             seq = Seq(header="", seq=lines[0])
+             return cls([seq])
 
         for entry in fasta_str.split(">"):
             if entry.strip() == "":
