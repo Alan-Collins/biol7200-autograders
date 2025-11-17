@@ -539,6 +539,13 @@ class TestFiles(unittest.TestCase):
             args=("Bacillus_subtilis", 477),
             tested_data="a position corresponding to a deleted base"
         )
+        self.check_method_output(
+            instance=inst,
+            method="pileup_at_pos",
+            expected=(['', '', '', 'A'], ['', '', '', 'F']),
+            args=("Bacillus_subtilis", 497),
+            tested_data="a position corresponding to a deleted base in a majority of the reads"
+        )
         print("yes")
 
     @weight(2)
@@ -658,6 +665,13 @@ class TestFiles(unittest.TestCase):
             expected="",
             args=("Bacillus_subtilis", 477),
             tested_data="a position corresponding to a deleted base"
+        )
+        self.check_method_output(
+            instance=inst,
+            method="consensus_at_pos",
+            expected="",
+            args=("Bacillus_subtilis", 497),
+            tested_data="a position corresponding to a deleted base in a majority of the reads"
         )
         print("yes")
 
