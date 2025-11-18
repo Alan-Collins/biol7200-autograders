@@ -309,7 +309,7 @@ class FastaSeq():
         if ">" not in fasta_str:
              lines = [l for l in fasta_str.split("\n") if l != ""]
              if len(lines) != 1:
-                return cls()
+                return cls([Seq("", "")])
              seq = Seq(header="", seq=lines[0])
              return cls([seq])
 
