@@ -241,6 +241,8 @@ class TestFiles(unittest.TestCase):
     def test_all_outputs(self):
         """Assess magop output when given all inputs"""
         self.basic_fail()
+        if self.magop_all_result.stderr.strip() != "":
+            self.fail(f"Your script produced an error:\n{self.magop_all_result.stderr}")
         print("Comparing your tree to the expected tree...")
         print(f"Your script output\n{self.magop_all_result.stdout}")
         scores = self.compare_trees(ALL_DATA_EXPECTED, self.magop_all_result.stdout)
@@ -259,6 +261,8 @@ class TestFiles(unittest.TestCase):
     def test_assembly_outputs(self):
         """Assess magop output when given assembly inputs only"""
         self.basic_fail()
+        if self.magop_ass_result.stderr.strip() != "":
+            self.fail(f"Your script produced an error:\n{self.magop_ass_result.stderr}")
         print("Comparing your tree to the expected tree...")
         print(f"Your script output\n{self.magop_ass_result.stdout}")
         scores = self.compare_trees(ASS_ONLY_EXPECTED, self.magop_ass_result.stdout)
@@ -277,6 +281,8 @@ class TestFiles(unittest.TestCase):
     def test_assembly_ref_outputs(self):
         """Assess magop output when given assembly and reference sequence inputs"""
         self.basic_fail()
+        if self.magop_ass_ref_result.stderr.strip() != "":
+            self.fail(f"Your script produced an error:\n{self.magop_ass_ref_result.stderr}")
         print("Comparing your tree to the expected tree...")
         print(f"Your script output\n{self.magop_ass_ref_result.stdout}")
         scores = self.compare_trees(ASS_REFS_EXPECTED, self.magop_ass_ref_result.stdout)
@@ -295,6 +301,8 @@ class TestFiles(unittest.TestCase):
     def test_read_ref_outputs(self):
         """Assess magop output when given only reads and reference sequence inputs"""
         self.basic_fail()
+        if self.magop_read_ref_result.stderr.strip() != "":
+            self.fail(f"Your script produced an error:\n{self.magop_read_ref_result.stderr}")
         print("Comparing your tree to the expected tree...")
         print(f"Your script output\n{self.magop_read_ref_result.stdout}")
         scores = self.compare_trees(READ_REFS_EXPECTED, self.magop_read_ref_result.stdout)
