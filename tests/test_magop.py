@@ -253,7 +253,7 @@ class TestFiles(unittest.TestCase):
         if scores[1] < 0.002:
             self.fail("Your tree indicates you forgot to make sure all your amplicons are aligned in the best orientation.")
 
-        self.fail("Your tree can't be automatically diagnosed. Please bring this to the attention of Professor Collins so he can improve the autograder.")
+        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
 
     @weight(25)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -273,7 +273,7 @@ class TestFiles(unittest.TestCase):
         if scores[1] == 0:
             self.fail("Your tree indicates you forgot to make sure all your amplicons are aligned in the best orientation.")
 
-        self.fail("Your tree can't be automatically diagnosed. Please bring this to the attention of Professor Collins so he can improve the autograder.")
+        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
 
     @weight(25)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -293,7 +293,7 @@ class TestFiles(unittest.TestCase):
         if scores[1] == 0:
             self.fail("Your tree indicates you forgot to make sure all your amplicons are aligned in the best orientation.")
 
-        self.fail("Your tree can't be automatically diagnosed. Please bring this to the attention of Professor Collins so he can improve the autograder.")
+        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
 
     @weight(25)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -311,4 +311,4 @@ class TestFiles(unittest.TestCase):
             print("Your tree closely matches the expected tree")
             return
 
-        self.fail("Your tree can't be automatically diagnosed. Please bring this to the attention of Professor Collins so he can improve the autograder.")
+        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
