@@ -235,7 +235,7 @@ class TestFiles(unittest.TestCase):
                 f"Please change your line endings to the unix \\n instead of your current {repr(newlines)}"
             )
 
-    @weight(25)
+    @weight(12.5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_all_outputs(self):
@@ -255,7 +255,7 @@ class TestFiles(unittest.TestCase):
 
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
 
-    @weight(25)
+    @weight(12.5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_assembly_outputs(self):
@@ -275,7 +275,7 @@ class TestFiles(unittest.TestCase):
 
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
 
-    @weight(25)
+    @weight(12.5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_assembly_ref_outputs(self):
@@ -295,7 +295,7 @@ class TestFiles(unittest.TestCase):
 
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
 
-    @weight(25)
+    @weight(12.5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("visible")
     def test_read_ref_outputs(self):
