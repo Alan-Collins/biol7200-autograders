@@ -245,6 +245,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Your script produced an error:\n{self.magop_all_result.stderr}")
         print("Comparing your tree to the expected tree...")
         print(f"Your script output\n{self.magop_all_result.stdout}")
+        print(f"\nExpected tree is:\n{ALL_DATA_EXPECTED[0]}")
         scores = self.compare_trees(ALL_DATA_EXPECTED, self.magop_all_result.stdout)
 
         if scores[0] < 0.002:
@@ -265,6 +266,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Your script produced an error:\n{self.magop_ass_result.stderr}")
         print("Comparing your tree to the expected tree...")
         print(f"Your script output\n{self.magop_ass_result.stdout}")
+        print(f"\nExpected tree is:\n{ASS_ONLY_EXPECTED[0]}")
         scores = self.compare_trees(ASS_ONLY_EXPECTED, self.magop_ass_result.stdout)
 
         if scores[0] == 0:
@@ -285,6 +287,7 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Your script produced an error:\n{self.magop_ass_ref_result.stderr}")
         print("Comparing your tree to the expected tree...")
         print(f"Your script output\n{self.magop_ass_ref_result.stdout}")
+        print(f"\nExpected tree is:\n{ASS_REFS_EXPECTED[0]}")
         scores = self.compare_trees(ASS_REFS_EXPECTED, self.magop_ass_ref_result.stdout)
 
         if scores[0] == 0:
@@ -305,7 +308,9 @@ class TestFiles(unittest.TestCase):
             self.fail(f"Your script produced an error:\n{self.magop_read_ref_result.stderr}")
         print("Comparing your tree to the expected tree...")
         print(f"Your script output\n{self.magop_read_ref_result.stdout}")
+        print(f"\nExpected tree is:\n{READ_REFS_EXPECTED[0]}")
         scores = self.compare_trees(READ_REFS_EXPECTED, self.magop_read_ref_result.stdout)
+        
 
         if scores[0] == 0:
             print("Your tree closely matches the expected tree")
