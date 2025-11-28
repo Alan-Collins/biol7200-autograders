@@ -48,6 +48,8 @@ ASS_REFS_EXPECTED = "\n".join([
     # distance = num_mismatches / len_alignment
     "((((Wolbachia_pipientis:0.03534124046564102,Wolbachia_NZ_CP046925.1:0.015639154240489006):0.0925878956913948,(((Escherichia_coli:0.0,Escherichia_coli_str._K-12_substr._MG1655_NC_000913.3:0.0):0.03738344833254814,Vibrio_cholerae_strain_N16961_NZ_CP028827.1:0.04074155166745186):0.03454092890024185,(((Pseudomonas_syringae_pv_tomato_str_DC3000_NC_004578.1:0.006461316719651222,(Pseudomonas_putida_NBRC_14164_NC_021505.1:0.0020134293008595705,Pseudomonas_protegens_CHA0_NZ_LS999205.1:0.0019391401438042521):0.0014438217040151358):0.007907647639513016,Pseudomonas_oleovorans_GD04132_NZ_CP104579.1:0.00978943333029747):0.006725793704390526,(Pseudomonas_aeruginosa_UCBPP-PA14_NC_008463.1:0.0,Pseudomonas_aeruginosa_PAO1_NC_002516.2:0.0):0.018630018457770348):0.042924150824546814):0.03495058789849281):0.010688744485378265,((Synechococcus_elongatus:0.11096963286399841,Mycoplasma_pneumoniae:0.13156768679618835):0.011511477641761303,(Sulfolobus_islandicus:0.1409788727760315,Methanococcus_aeolicus:0.12796053290367126):0.08921836316585541):0.0038778483867645264):0.0018465183675289154,Bacillus_subtilis:0.0867706835269928,(Fusibacter_paucivorans:0.08718350529670715,Leptospira_borgpetersenii:0.0953260064125061):0.010154064744710922):0.0;",
     "((((Wolbachia_pipientis:0.04,Wolbachia_NZ_CP046925.1:0.02):0.09,(((Escherichia_coli:0.00,Escherichia_coli_str._K-12_substr._MG1655_NC_000913.3:0.00):0.04,Vibrio_cholerae_strain_N16961_NZ_CP028827.1:0.04):0.03,(((Pseudomonas_syringae_pv_tomato_str_DC3000_NC_004578.1:0.01,(Pseudomonas_putida_NBRC_14164_NC_021505.1:0.00,Pseudomonas_protegens_CHA0_NZ_LS999205.1:0.00):0.00):0.01,Pseudomonas_oleovorans_GD04132_NZ_CP104579.1:0.01):0.01,(Pseudomonas_aeruginosa_UCBPP-PA14_NC_008463.1:0.00,Pseudomonas_aeruginosa_PAO1_NC_002516.2:0.00):0.02):0.04):0.03):0.01,((Synechococcus_elongatus:0.11,Mycoplasma_pneumoniae:0.13):0.01,(Sulfolobus_islandicus:0.14,Methanococcus_aeolicus:0.13):0.09):0.00):0.00,Bacillus_subtilis:0.09,(Fusibacter_paucivorans:0.09,Leptospira_borgpetersenii:0.10):0.01):0.00;",
+    # Including primers in amplicons
+    "((((Synechococcus_elongatus:30.80,(Sulfolobus_islandicus:40.44,Methanococcus_aeolicus:34.56):22.70):3.45,Mycoplasma_pneumoniae:38.80):1.25,(Leptospira_borgpetersenii:26.44,Fusibacter_paucivorans:22.56):3.06):0.48,Bacillus_subtilis:22.61,((Wolbachia_pipientis:9.07,Wolbachia_NZ_CP046925.1:3.93):24.43,((Vibrio_cholerae_strain_N16961_NZ_CP028827.1:10.50,(Escherichia_coli_str._K-12_substr._MG1655_NC_000913.3:0.00,Escherichia_coli:0.00):9.50):8.82,(((Pseudomonas_syringae_pv_tomato_str_DC3000_NC_004578.1:1.65,(Pseudomonas_putida_NBRC_14164_NC_021505.1:0.50,Pseudomonas_protegens_CHA0_NZ_LS999205.1:0.50):0.35):2.06,Pseudomonas_oleovorans_GD04132_NZ_CP104579.1:2.44):1.75,(Pseudomonas_aeruginosa_UCBPP-PA14_NC_008463.1:0.00,Pseudomonas_aeruginosa_PAO1_NC_002516.2:0.00):4.75):11.12):9.29):3.14);",
     ""
 ])
 
@@ -56,6 +58,8 @@ READ_REFS_EXPECTED = "\n".join([
     "(((SRR27732368:24.29,Synechococcus_elongatus:20.71):9.14,((SRR24886915:10.12,Methanococcus_aeolicus:9.88):23.37,(ERR12954019:14.17,Sulfolobus_islandicus:13.83):24.13):24.11):2.45,((SRR25626983:22.35,Mycoplasma_pneumoniae:20.65):15.45,((SRR24105535:17.85,Wolbachia_pipientis:24.15):9.70,(SRR21376282:16.97,(ERR13716760:10.94,Escherichia_coli:9.06):10.53):6.30):2.42):1.70,((((SRR30750791:4.23,SRR28858832:5.77):3.22,Bacillus_subtilis:8.28):12.59,(ERR11767307:12.56,Fusibacter_paucivorans:15.44):6.91):2.42,(SRR13255634:-0.03,Leptospira_borgpetersenii:0.03):27.08):1.80):0.00;",
     # sorted by sample name
     "((((((Synechococcus_elongatus:20.74,SRR27732368:24.26):8.34,((Sulfolobus_islandicus:13.79,ERR12954019:14.21):22.34,(SRR24886915:6.86,Methanococcus_aeolicus:13.14):25.16):24.66):3.05,(SRR13255634:0.01,Leptospira_borgpetersenii:-0.01):26.39):2.01,(((SRR30750791:4.23,SRR28858832:5.77):3.22,Bacillus_subtilis:8.28):12.64,(Fusibacter_paucivorans:15.41,ERR11767307:12.59):6.86):2.33):2.82,(SRR25626983:23.48,Mycoplasma_pneumoniae:19.52):16.77):1.10,(SRR21376282:16.97,(Escherichia_coli:9.06,ERR13716760:10.94):10.53):6.81,(Wolbachia_pipientis:24.17,SRR24105535:17.83):9.19):0.00;",
+    # Including primers in amplicons
+    "(((((Synechococcus_elongatus:21.33,SRR27732368:24.67):10.01,((Sulfolobus_islandicus:14.67,ERR12954019:14.33):26.34,(SRR24886915:10.15,Methanococcus_aeolicus:9.85):24.16):23.12):2.11,(SRR13255634:0.02,Leptospira_borgpetersenii:-0.02):28.52):2.06,(((SRR30750791:4.23,SRR28858832:5.77):3.17,Bacillus_subtilis:8.33):12.59,(Fusibacter_paucivorans:15.38,ERR11767307:12.62):6.91):3.15):1.92,(SRR25626983:22.35,Mycoplasma_pneumoniae:21.65):16.61,((Wolbachia_pipientis:22.19,SRR24105535:18.81):11.29,(SRR21376282:16.99,(Escherichia_coli:9.10,ERR13716760:10.90):10.51):6.59):2.08);",
     ""
 ])
 
@@ -307,6 +311,9 @@ class TestFiles(unittest.TestCase):
         if scores[2] == 0 or scores[3] == 0:
             self.fail("Your tree indicates you divide your distance by the alignment length. Just use the sum of mismatches and gaps as the distance.")
 
+        if scores[4] == 0:
+            self.fail("Your tree indicates you are including the primers in your isPCR amplicons.")
+
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made. Additionally, if your branch lengths in a tree that passes the autograder don't match those in the expected tree then that might be related to the same issue. Some issues only impact the topology with certain data, but still have small inputs elsewhere.")
 
     @weight(12.5)
@@ -329,5 +336,8 @@ class TestFiles(unittest.TestCase):
 
         if scores[1] == 0:
             self.fail("Your Needleman-Wunsch implementation uses a while loop with a condition like `while i>0 or j>0`. It should be `and` not `or`")
+
+        if scores[2] == 0:
+            self.fail("Your tree indicates you are including the primers in your isPCR amplicons.")
 
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made. Additionally, if your branch lengths in a tree that passes the autograder don't match those in the expected tree then that might be related to the same issue. Some issues only impact the topology with certain data, but still have small inputs elsewhere.")
