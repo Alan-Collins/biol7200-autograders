@@ -312,8 +312,11 @@ class TestFiles(unittest.TestCase):
         scores = self.compare_trees(READ_REFS_EXPECTED, self.magop_read_ref_result.stdout)
         
 
-        if scores[0] == 0 or scores[1] == 0:
+        if scores[0] == 0:
             print("Your tree closely matches the expected tree")
             return
+
+        if scores[1] == 0:
+            print("Your Needleman-Wunsch implementation uses a while loop with a condition like `while i>0 or j>0`. It should be `and` not `or`")
 
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
