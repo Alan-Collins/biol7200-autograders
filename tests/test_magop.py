@@ -257,7 +257,7 @@ class TestFiles(unittest.TestCase):
         if scores[1] < 0.002:
             self.fail("Your tree indicates you forgot to make sure all your amplicons are aligned in the best orientation.")
 
-        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
+        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made. Additionally, if your branch lengths in a tree that passes the autograder don't match those in the expected tree then that might be related to the same issue. Some issues only impact the topology with certain data, but still have small inputs elsewhere.")
 
     @weight(12.5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -278,7 +278,7 @@ class TestFiles(unittest.TestCase):
         if scores[1] == 0:
             self.fail("Your tree indicates you forgot to make sure all your amplicons are aligned in the best orientation.")
 
-        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
+        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made. Additionally, if your branch lengths in a tree that passes the autograder don't match those in the expected tree then that might be related to the same issue. Some issues only impact the topology with certain data, but still have small inputs elsewhere.")
 
     @weight(12.5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -302,7 +302,7 @@ class TestFiles(unittest.TestCase):
         if scores[2] == 0 or scores[3] == 0:
             self.fail("Your tree indicates you divide your distance by the alignment length. Just use the sum of mismatches and gaps as the distance.")
 
-        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
+        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made. Additionally, if your branch lengths in a tree that passes the autograder don't match those in the expected tree then that might be related to the same issue. Some issues only impact the topology with certain data, but still have small inputs elsewhere.")
 
     @weight(12.5)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
@@ -325,4 +325,4 @@ class TestFiles(unittest.TestCase):
         if scores[1] == 0:
             self.fail("Your Needleman-Wunsch implementation uses a while loop with a condition like `while i>0 or j>0`. It should be `and` not `or`")
 
-        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
+        self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made. Additionally, if your branch lengths in a tree that passes the autograder don't match those in the expected tree then that might be related to the same issue. Some issues only impact the topology with certain data, but still have small inputs elsewhere.")
