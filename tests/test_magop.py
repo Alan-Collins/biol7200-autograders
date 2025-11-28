@@ -56,10 +56,8 @@ ASS_REFS_EXPECTED = "\n".join([
 READ_REFS_EXPECTED = "\n".join([
     # Expected
     "(((SRR27732368:24.29,Synechococcus_elongatus:20.71):9.14,((SRR24886915:10.12,Methanococcus_aeolicus:9.88):23.37,(ERR12954019:14.17,Sulfolobus_islandicus:13.83):24.13):24.11):2.45,((SRR25626983:22.35,Mycoplasma_pneumoniae:20.65):15.45,((SRR24105535:17.85,Wolbachia_pipientis:24.15):9.70,(SRR21376282:16.97,(ERR13716760:10.94,Escherichia_coli:9.06):10.53):6.30):2.42):1.70,((((SRR30750791:4.23,SRR28858832:5.77):3.22,Bacillus_subtilis:8.28):12.59,(ERR11767307:12.56,Fusibacter_paucivorans:15.44):6.91):2.42,(SRR13255634:-0.03,Leptospira_borgpetersenii:0.03):27.08):1.80):0.00;",
-    # sorted by sample name
-    "((((((Synechococcus_elongatus:20.74,SRR27732368:24.26):8.34,((Sulfolobus_islandicus:13.79,ERR12954019:14.21):22.34,(SRR24886915:6.86,Methanococcus_aeolicus:13.14):25.16):24.66):3.05,(SRR13255634:0.01,Leptospira_borgpetersenii:-0.01):26.39):2.01,(((SRR30750791:4.23,SRR28858832:5.77):3.22,Bacillus_subtilis:8.28):12.64,(Fusibacter_paucivorans:15.41,ERR11767307:12.59):6.86):2.33):2.82,(SRR25626983:23.48,Mycoplasma_pneumoniae:19.52):16.77):1.10,(SRR21376282:16.97,(Escherichia_coli:9.06,ERR13716760:10.94):10.53):6.81,(Wolbachia_pipientis:24.17,SRR24105535:17.83):9.19):0.00;",
     # Including primers in amplicons
-    "(((((Synechococcus_elongatus:21.33,SRR27732368:24.67):10.01,((Sulfolobus_islandicus:14.67,ERR12954019:14.33):26.34,(SRR24886915:10.15,Methanococcus_aeolicus:9.85):24.16):23.12):2.11,(SRR13255634:0.02,Leptospira_borgpetersenii:-0.02):28.52):2.06,(((SRR30750791:4.23,SRR28858832:5.77):3.17,Bacillus_subtilis:8.33):12.59,(Fusibacter_paucivorans:15.38,ERR11767307:12.62):6.91):3.15):1.92,(SRR25626983:22.35,Mycoplasma_pneumoniae:21.65):16.61,((Wolbachia_pipientis:22.19,SRR24105535:18.81):11.29,(SRR21376282:16.99,(Escherichia_coli:9.10,ERR13716760:10.90):10.51):6.59):2.08);",
+    "((((Wolbachia_pipientis:24.17,SRR24105535:17.83):9.39,((Escherichia_coli:9.06,ERR13716760:10.94):10.53,SRR21376282:16.97):6.61):2.17,(Mycoplasma_pneumoniae:21.67,SRR25626983:22.33):16.71):1.70,(((Synechococcus_elongatus:21.27,SRR27732368:24.73):9.98,((Sulfolobus_islandicus:14.61,ERR12954019:14.39):26.41,(Methanococcus_aeolicus:9.85,SRR24886915:10.15):24.09):23.14):2.10,(Leptospira_borgpetersenii:-0.02,SRR13255634:0.02):28.53):2.09,((Fusibacter_paucivorans:15.47,ERR11767307:12.53):6.91,(Bacillus_subtilis:8.28,(SRR30750791:4.23,SRR28858832:5.77):3.22):12.59):3.26):0.00;",
     ""
 ])
 
@@ -335,9 +333,6 @@ class TestFiles(unittest.TestCase):
             return
 
         if scores[1] == 0:
-            self.fail("Your Needleman-Wunsch implementation uses a while loop with a condition like `while i>0 or j>0`. It should be `and` not `or`")
-
-        if scores[2] == 0:
             self.fail("Your tree indicates you are including the primers in your isPCR amplicons.")
 
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made. Additionally, if your branch lengths in a tree that passes the autograder don't match those in the expected tree then that might be related to the same issue. Some issues only impact the topology with certain data, but still have small inputs elsewhere.")
