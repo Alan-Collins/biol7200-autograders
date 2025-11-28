@@ -317,6 +317,6 @@ class TestFiles(unittest.TestCase):
             return
 
         if scores[1] == 0:
-            print("Your Needleman-Wunsch implementation uses a while loop with a condition like `while i>0 or j>0`. It should be `and` not `or`")
+            self.fail("Your Needleman-Wunsch implementation uses a while loop with a condition like `while i>0 or j>0`. It should be `and` not `or`")
 
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made.")
