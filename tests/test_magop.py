@@ -333,6 +333,10 @@ class TestFiles(unittest.TestCase):
             return
 
         if scores[1] == 0:
-            self.fail("Your tree indicates you are including the primers in your isPCR amplicons.")
+            self.fail(
+                "Your tree indicates you have one of two issues:\n"
+                "1. You are including the primers in your isPCR amplicons.\n"
+                "2. You are not handling gaps at the ends of alignments correctly. Look at your NW output for the amplicons from Methanococcus_aeolicus and SRR25626983"
+            )
 
         self.fail("Your tree can't be automatically diagnosed. That means you have made an uncommon error. Try viewing your amplicons, checking that your NW settings are 1, -1, -1, and eyeballing the tree. Those are common place where mistakes are made. Additionally, if your branch lengths in a tree that passes the autograder don't match those in the expected tree then that might be related to the same issue. Some issues only impact the topology with certain data, but still have small inputs elsewhere.")
