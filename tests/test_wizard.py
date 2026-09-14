@@ -91,7 +91,7 @@ class TestAliases(unittest.TestCase):
         if not self.submitted:
             self.fail("No script was submitted")
         command = f'source {SCRIPT_PATH}; if alias view_wizard >/dev/null 2>&1; then grep -Po "(?<=view_wizard=).+" {SCRIPT_PATH}; exit 0; else exit 1; fi'
-        alias = subprocess.run(command, capture_output=True, shell=True, executable="/bin/bash", text=True).stdout.strip('"\'\n ')
+        alias = subprocess.run(command, capture_output=True, shell=True, executable="/bin/bash", text=True).stdout.strip('"\n ').replace("'", "")
         if len(alias) == 0:
             self.fail("We were not able to process your alias. Please notify Professor Collins so he can diagnose the issue")
         # get wizard value
