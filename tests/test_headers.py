@@ -221,9 +221,9 @@ class TestFiles(unittest.TestCase):
                 "Your header does not appear to include the test file name in the header"
             )
         pattern = re.compile(r"^>sample_123$")
-        if not re.match(pattern, head):
+        if re.match(pattern, head):
             self.fail(
-                "Your headers is only the file name. How could multiple contigs be distinguished?"
+                "Your headers are only the file name. How could multiple contigs be distinguished?"
             )
         print("The headers in your output file look like they are correctly formatted")
 
@@ -247,9 +247,9 @@ class TestFiles(unittest.TestCase):
                 "Your header does not appear to include the test file name in the header"
             )
         pattern = re.compile(r"^>sample_123$")
-        if not re.match(pattern, head):
+        if re.match(pattern, head):
             self.fail(
-                "Your headers is only the file name. How could multiple contigs be distinguished?"
+                "Your headers are only the file name. How could multiple contigs be distinguished?"
             )
         pattern = re.compile(r"^.*\.fna.*$")
         if re.match(pattern, head):
