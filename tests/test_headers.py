@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 import shutil
 
-from gradescope_utils.autograder_utils.decorators import weight, number, partial_credit
+from gradescope_utils.autograder_utils.decorators import weight, number, partial_credit, visibility
 from gradescope_utils.autograder_utils.files import check_submitted_files
 
 from utils import PointCounter
@@ -279,3 +279,18 @@ class TestFiles(unittest.TestCase):
                 "Only header lines should be modified."
             )
         print("You did not change the sequence lines.")
+
+
+    @weight(0)
+    @number(f"{Q_NUM}.{POINT_NUM.next()}")
+    @visibility("hidden")
+    def test_check_headers_audit(self):
+        """Audit header changes"""
+        if not self.submitted:
+            self.fail("No script was submitted")
+        if not self._outfile.exists():
+            self.fail(
+                "Your script did not create the specified output file."
+            )
+        with open(self._outfile) as f:
+            print(f.read())
