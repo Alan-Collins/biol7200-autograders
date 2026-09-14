@@ -215,10 +215,15 @@ class TestFiles(unittest.TestCase):
             )
         if head.strip() == ">contig.1":
             self.fail("Your script did not change the headers of the test data")
-        pattern = re.compile(r"^>sample_123.*contig")
+        pattern = re.compile(r"^>sample_123.*")
         if not re.match(pattern, head):
             self.fail(
                 "Your header does not appear to include the test file name in the header"
+            )
+        pattern = re.compile(r"^>sample_123$")
+        if not re.match(pattern, head):
+            self.fail(
+                "Your headers is only the file name. How could multiple contigs be distinguished?"
             )
         print("The headers in your output file look like they are correctly formatted")
 
