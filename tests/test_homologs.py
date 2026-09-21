@@ -308,21 +308,46 @@ class TestFiles(unittest.TestCase):
             "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 196,
             "Wolbachia.fna": 4
         }
+        qcov_hsp_prcnt_expected = {
+            "Escherichia_coli_K12.fna": 110,
+            "Vibrio_cholerae_N16961.fna": 122,
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 245,
+            "Wolbachia.fna": 5
+        }
+        tblastn_fast_qcov_hsp_prcnt_expected = {
+            "Escherichia_coli_K12.fna": 98,
+            "Vibrio_cholerae_N16961.fna": 106,
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 195,
+            "Wolbachia.fna": 4
+        }
 
         task_regex = re.compile(r"^[^\#]*tblastn-fast")
-        task = "slow"
+        fast = False
         with open(self.homolog_file) as f:
             for line in f:
                 if re.match(task_regex, line):
-                    task = "fast"
+                    fast = True
+        
+        qcov_flag_regex = re.compile(r"^[^\#]*-qcov_hsp_perc")
+        qcov_flag = False
+        with open(self.homolog_file) as f:
+            for line in f:
+                if re.match(qcov_flag_regex, line):
+                    qcov_flag = True
         
         fail = False
-        print(f"Performance using -task {'tblastn' if task == 'slow' else 'tblastn-fast'}")
+        print(f"Performance using -task {'tblastn' if not fast else 'tblastn-fast'}")
+        print(f"filtering using {'-qcov_hsp_perc' if qcov_flag else 'awk only'}")
         for ass, result in all_results.items():
-            if task == "fast":
-                expected = tblastn_fast_expected[ass]
-            else:
-                expected = tblastn_expected[ass]
+            match (fast, qcov_flag):
+                case (True, True):
+                    expected = tblastn_fast_qcov_hsp_prcnt_expected[ass]
+                case (True, False):
+                    expected = tblastn_fast_expected[ass]
+                case (False, True):
+                    expected = qcov_hsp_prcnt_expected[ass]
+                case (False, False):
+                    expected = tblastn_expected[ass]
             count = int(re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)[0])
             if count != expected:
                 fail = True
