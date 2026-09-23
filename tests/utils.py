@@ -167,14 +167,14 @@ class BlastResult(BaseModel):
         return idx_flds
 
 
-    def can_verify_perfect_match(self, qcov_hsp_perc: bool=False):
+    def can_verify_perfect_match(self, qcov_hsp_perc: bool=False, perc_identity: bool=False):
         # qcov_hsp_perc option filters hits to only include those where the whole query matched within a single HSP
         # If the match is also 100% identical over its length then it is a perfect match.
         # can achieve the same effect by including qcovhsp in outfmt
-        if not qcov_hsp_perc and "qcovhsp" in self.fields_used:
-            if self.qcovhsp == 100:
-                qcov_hsp_perc = True
-        if qcov_hsp_perc:
+        fields_used = self.fields_used
+        if perc_identity:
+            fields_used.add("pident")
+        if qcov_hsp_perc or "qcovhsp" in self.fields_used:
             no_mm_or_gap = any([
                 "pident" in self.fields_used,
                 "mismatch" in self.fields_used and any(
