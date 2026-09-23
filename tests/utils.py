@@ -259,8 +259,12 @@ class Seq():
         return Seq(self.header, revseq)
 
     def __eq__(self, other: "Seq") -> bool:
-        if not isinstance(other, Seq):
+        if not (isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str)):
             raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        
+        if isinstance(other, FastaSeq):
+            return len(other.seqs) == 1 and other.seqs[0] == self
+        
         return self.seq == other.seq
     
     def __gt__(self, other: "Seq") -> bool:
@@ -303,7 +307,11 @@ class FastaSeq():
     def from_fasta(cls, fasta_str: str):
         seqs = []
         if ">" not in fasta_str:
-             return cls()
+             lines = [l for l in fasta_str.split("\n") if l != ""]
+             if len(lines) != 1:
+                return cls([Seq("", "")])
+             seq = Seq(header="", seq=lines[0])
+             return cls([seq])
 
         for entry in fasta_str.split(">"):
             if entry.strip() == "":
@@ -319,12 +327,12 @@ class FastaSeq():
     
     
     def __eq__(self, other: "FastaSeq") -> bool:
-        if not isinstance(other, FastaSeq) or isinstance(other, Seq):
+        if not (isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str)):
             raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
         if isinstance(other, FastaSeq):
             return set(self.seqs) == set(other.seqs)
         
-        # otherwise comparing against a single Seq instance
+        # otherwise comparing against a single Seq or str instance
         return len(self.seqs) == 1 and self.seqs[0] == other
 
 
