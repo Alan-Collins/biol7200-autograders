@@ -247,15 +247,24 @@ class Seq():
         "T": "A",
         "C": "G",
         "G": "C",
-        "N": "N"
+        "N": "N",
+        "-": "-"
     }
     def __init__(self, header: str, seq: str):
+        if header.startswith(">"):
+            header = header.lstrip(">")
         self.header = header
         self.seq = seq
     
     def reverse_complement(self) -> "Seq":
         revseq = [self._rc[b] for b in self.seq[::-1]]
         return Seq(self.header, revseq)
+    
+    def reverse(self) -> "Seq":
+        return Seq(self.header, self.seq[::-1])
+    
+    def complement(self) -> "Seq":
+        return Seq(self.header, "".join([self._rc[b] for b in self.seq]))
 
     def __eq__(self, other: "Seq") -> bool:
         if not (isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str)):
@@ -263,8 +272,12 @@ class Seq():
         
         if isinstance(other, FastaSeq):
             return len(other.seqs) == 1 and other.seqs[0] == self
+        if isinstance(other, Seq):
+            seq = other.seq
+        else:
+            seq = other
         
-        return self.seq == other.seq
+        return self.seq == seq
     
     def __gt__(self, other: "Seq") -> bool:
         if not isinstance(other, Seq):
@@ -324,7 +337,12 @@ class FastaSeq():
     def __str__(self) -> str:
         return "\n".join([str(s) for s in self.seqs])
     
-    
+    def __len__(self) -> int:
+        return len(self.seqs)
+
+    def __iter__(self):
+        yield from sorted(self.seqs)
+
     def __eq__(self, other: "FastaSeq") -> bool:
         if not (isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str)):
             raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
