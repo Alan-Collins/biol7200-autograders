@@ -1,5 +1,4 @@
 from dataclasses import field
-import unittest
 
 from pydantic import BaseModel
 
@@ -167,14 +166,14 @@ class BlastResult(BaseModel):
         return idx_flds
 
 
-    def can_verify_perfect_match(self, qcov_hsp_perc: bool=False):
+    def can_verify_perfect_match(self, qcov_hsp_perc: bool=False, perc_identity: bool=False):
         # qcov_hsp_perc option filters hits to only include those where the whole query matched within a single HSP
         # If the match is also 100% identical over its length then it is a perfect match.
         # can achieve the same effect by including qcovhsp in outfmt
-        if not qcov_hsp_perc and "qcovhsp" in self.fields_used:
-            if self.qcovhsp == 100:
-                qcov_hsp_perc = True
-        if qcov_hsp_perc:
+        fields_used = self.fields_used
+        if perc_identity:
+            fields_used.add("pident")
+        if qcov_hsp_perc or "qcovhsp" in self.fields_used:
             no_mm_or_gap = any([
                 "pident" in self.fields_used,
                 "mismatch" in self.fields_used and any(
@@ -248,20 +247,37 @@ class Seq():
         "T": "A",
         "C": "G",
         "G": "C",
-        "N": "N"
+        "N": "N",
+        "-": "-"
     }
     def __init__(self, header: str, seq: str):
+        if header.startswith(">"):
+            header = header.lstrip(">")
         self.header = header
         self.seq = seq
     
     def reverse_complement(self) -> "Seq":
         revseq = [self._rc[b] for b in self.seq[::-1]]
         return Seq(self.header, revseq)
+    
+    def reverse(self) -> "Seq":
+        return Seq(self.header, self.seq[::-1])
+    
+    def complement(self) -> "Seq":
+        return Seq(self.header, "".join([self._rc[b] for b in self.seq]))
 
     def __eq__(self, other: "Seq") -> bool:
-        if not isinstance(other, Seq):
+        if not (isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str)):
             raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
-        return self.seq == other.seq
+        
+        if isinstance(other, FastaSeq):
+            return len(other.seqs) == 1 and other.seqs[0] == self
+        if isinstance(other, Seq):
+            seq = other.seq
+        else:
+            seq = other
+        
+        return self.seq == seq
     
     def __gt__(self, other: "Seq") -> bool:
         if not isinstance(other, Seq):
@@ -303,7 +319,11 @@ class FastaSeq():
     def from_fasta(cls, fasta_str: str):
         seqs = []
         if ">" not in fasta_str:
-             return cls()
+             lines = [l for l in fasta_str.split("\n") if l != ""]
+             if len(lines) != 1:
+                return cls([Seq("", "")])
+             seq = Seq(header="", seq=lines[0])
+             return cls([seq])
 
         for entry in fasta_str.split(">"):
             if entry.strip() == "":
@@ -317,14 +337,19 @@ class FastaSeq():
     def __str__(self) -> str:
         return "\n".join([str(s) for s in self.seqs])
     
-    
+    def __len__(self) -> int:
+        return len(self.seqs)
+
+    def __iter__(self):
+        yield from sorted(self.seqs)
+
     def __eq__(self, other: "FastaSeq") -> bool:
-        if not isinstance(other, FastaSeq) or isinstance(other, Seq):
+        if not (isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str)):
             raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
         if isinstance(other, FastaSeq):
             return set(self.seqs) == set(other.seqs)
         
-        # otherwise comparing against a single Seq instance
+        # otherwise comparing against a single Seq or str instance
         return len(self.seqs) == 1 and self.seqs[0] == other
 
 
