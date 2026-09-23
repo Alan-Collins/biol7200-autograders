@@ -1,5 +1,4 @@
 from dataclasses import field
-import unittest
 
 from pydantic import BaseModel
 
