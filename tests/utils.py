@@ -1,4 +1,5 @@
 from dataclasses import field
+import unittest
 
 from pydantic import BaseModel
 
@@ -166,13 +167,10 @@ class BlastResult(BaseModel):
         return idx_flds
 
 
-    def can_verify_perfect_match(self, qcov_hsp_perc: bool=False, perc_identity: bool=True):
+    def can_verify_perfect_match(self, qcov_hsp_perc: bool=False):
         # qcov_hsp_perc option filters hits to only include those where the whole query matched within a single HSP
         # If the match is also 100% identical over its length then it is a perfect match.
         # can achieve the same effect by including qcovhsp in outfmt
-        fields_used = self.fields_used
-        if perc_identity:
-            fields_used.add("pident")
         if not qcov_hsp_perc and "qcovhsp" in self.fields_used:
             if self.qcovhsp == 100:
                 qcov_hsp_perc = True
@@ -201,7 +199,7 @@ class BlastResult(BaseModel):
         return no_mm_or_gap and full_length
     
 
-    def is_perfect_match(self, qcov_hsp_perc: bool=False, perc_identity: bool=False) -> bool|None:
+    def is_perfect_match(self, qcov_hsp_perc: bool=False) -> bool|None:
         """bool if knowable, None if unknowable"""
         if not self.can_verify_perfect_match(qcov_hsp_perc):
             return None
@@ -212,8 +210,6 @@ class BlastResult(BaseModel):
                 qcov_hsp_perc = True
 
         if qcov_hsp_perc:
-            if perc_identity:
-                return True
             # determine available fields
             if "pident" in self.fields_used:
                 return self.pident == 100
@@ -226,9 +222,7 @@ class BlastResult(BaseModel):
                 return self.mismatch == 0 and self.gaps == 0
 
         if "pident" in self.fields_used and "length" in self.fields_used:
-            return self.pident == 100 and self.length == self.qlen
-        elif perc_identity and "length" in self.fields_used:
-            return self.length == self.qlen
+                return self.pident == 100 and self.length == self.qlen
         
         if "nident" in self.fields_used:
             return self.nident == self.qlen
@@ -247,3 +241,229 @@ class BlastResult(BaseModel):
                 and self.gaps == 0
                 and self.length == self.qlen
             )
+
+class Seq():
+    _rc = {
+        "A": "T",
+        "T": "A",
+        "C": "G",
+        "G": "C",
+        "N": "N"
+    }
+    def __init__(self, header: str, seq: str):
+        self.header = header
+        self.seq = seq
+    
+    def reverse_complement(self) -> "Seq":
+        revseq = [self._rc[b] for b in self.seq[::-1]]
+        return Seq(self.header, revseq)
+
+    def __eq__(self, other: "Seq") -> bool:
+        if not (isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str)):
+            raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        
+        if isinstance(other, FastaSeq):
+            return len(other.seqs) == 1 and other.seqs[0] == self
+        
+        return self.seq == other.seq
+    
+    def __gt__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"ordering not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.header > other.header
+    
+    def __ge__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"ordering not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.header >= other.header
+    
+    def __lt__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"ordering not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.header < other.header
+    
+    def __le__(self, other: "Seq") -> bool:
+        if not isinstance(other, Seq):
+            raise TypeError(f"ordering not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        return self.header <= other.header
+
+    def __str__(self) -> str:
+        return f">{self.header}\n{self.seq}"
+    
+    def __hash__(self) -> int:
+        return hash(self.seq)
+    
+    def __len__(self) -> int:
+        return len(self.seq)
+
+class FastaSeq():
+    def __init__(self, seqs: list[Seq]=None):
+        if seqs is None:
+            self.seqs = []
+        else:
+            self.seqs = seqs
+        
+    @classmethod
+    def from_fasta(cls, fasta_str: str):
+        seqs = []
+        if ">" not in fasta_str:
+             lines = [l for l in fasta_str.split("\n") if l != ""]
+             if len(lines) != 1:
+                return cls([Seq("", "")])
+             seq = Seq(header="", seq=lines[0])
+             return cls([seq])
+
+        for entry in fasta_str.split(">"):
+            if entry.strip() == "":
+                continue
+            lines = [l.strip() for l in entry.split("\n") if l != ""]
+            head = lines[0]
+            seq = "".join(lines[1:])
+            seqs.append(Seq(head, seq))
+        return cls(seqs)
+
+    def __str__(self) -> str:
+        return "\n".join([str(s) for s in self.seqs])
+    
+    
+    def __eq__(self, other: "FastaSeq") -> bool:
+        if not (isinstance(other, FastaSeq) or isinstance(other, Seq) or isinstance(other, str)):
+            raise TypeError(f"== not supported between {self.__class__.__name__} and {other.__class__.__name__}")
+        if isinstance(other, FastaSeq):
+            return set(self.seqs) == set(other.seqs)
+        
+        # otherwise comparing against a single Seq or str instance
+        return len(self.seqs) == 1 and self.seqs[0] == other
+
+
+    def __len__(self) -> int:
+        return sum([len(s) for s in self.seqs])
+    
+    @property
+    def num_seqs(self):
+        return len(self.seqs)
+
+
+
+def check_class_method(cls, meth):
+    """Check class for a method and print a clear message if absent
+
+    Args:
+        meth (str): The method of which to assess the existence callable-ity
+    """
+    # Figure out if message should say a or an for this method
+    a_an = "an" if meth[0] in {"a", "e", "i", "o" "u"} else "a"
+    if not hasattr(cls, meth):
+        raise ValueError(f"Your {cls.__name__} class does not have {a_an} {meth} method.")
+    else:
+        if not callable(eval(f"cls.{meth}")):
+            raise ValueError(f"Your {cls.__name__} class does have {a_an} {meth} attribute, but it is not callable")
+
+
+def check_class_attribute(cls, attr):
+    """Check class for an attribute and print a clear message if absent
+
+    Args:
+        attr (str): The attribute of which to assess the existence
+    """
+    a_an = "an" if attr[0] in {"a", "e", "i", "o" "u"} else "a"
+    if not hasattr(cls, attr):
+        raise ValueError(f"Your {cls.__name__} class does not have {a_an} {attr} attribute.")
+
+
+def check_attribute_value(instance, attr, expected, tested_data):
+    """Compare an attribute of a class instance to an expected value
+
+    Args:
+        instance (Object): The instance you want to assess
+        attr (str): The attribute whose value should be compared
+        expected (any): The expected value
+        tested_data (str): the nature of the tested data
+    """
+    a_an = "an" if tested_data[0] in {"a", "e", "i", "o", "u"} else "a"
+    value = getattr(instance, attr)
+    try:
+        assert value == expected
+    except:
+        raise ValueError(f"Your {instance.__class__.__name__}.{attr} contains {value} for {a_an} {tested_data}, when it should have contained {expected}.")
+
+
+def check_method_output(instance, method, expected, tested_data, args=(), kwargs=None, comparison=None):
+    """Compare an output of a class method to an expected value
+
+    Args:
+        instance (Object): The instance you want to assess
+        method (str): The method whose return value should be compared
+        args (tuple[any]): The arguments to provide to the method when called
+        kwargs (dict[str, any]): The keyword arguments to provide to the method when called
+        expected (any): The expected value
+        tested_data (str): the nature of the tested data
+        comparison (callable): a function to compare the results. will be called with (result, expected) and should return bool
+    """
+    if kwargs == None:
+        kwargs = {}
+    a_an = "an" if tested_data[0] in {"a", "e", "i", "o", "u"} else "a"
+    try:
+        value = eval(f"instance.{method}(*args, **kwargs)")
+    except Exception as e:
+        raise ValueError(f"Your {instance.__class__.__name__}.{method} for {a_an} {tested_data}, when it was run with input {args}. The error was {e}")
+    expected_ret_type = recursive_type_str(expected)
+    check_method_return_type(instance, method, tested_data, args, kwargs, expected_ret_type)
+    try:
+        if comparison is not None:
+            assert comparison(value, expected)
+        else:
+            assert value == expected
+    except:
+        raise ValueError(f"Your {instance.__class__.__name__}.{method} returned {repr(value)} for {a_an} {tested_data}, when it should have returned {repr(expected)}.")
+
+
+def check_method_return_type(instance, method, tested_data, args=(), kwargs=None, expected_type=None):
+    """Compare an return type of a class method to an expected return type
+
+    Args:
+        instance (Object): The instance you want to assess
+        method (str): The method whose return value should be compared
+        args (tuple[any]): The arguments to provide to the method when called
+        kwargs (dict[str, any]): The keyword arguments to provide to the method when called
+        tested_data (str): the nature of the tested data
+        expected_type (str): The expected return type
+    """
+    if kwargs == None:
+        kwargs = {}
+    a_an = "an" if tested_data[0] in {"a", "e", "i", "o", "u"} else "a"
+    try:
+        value = eval(f"instance.{method}(*args, **kwargs)")
+    except Exception as e:
+        raise ValueError(f"Your {instance.__class__.__name__}.{method} for {a_an} {tested_data}, when it was run with input {args}. The error was {e}")
+    return_type = recursive_type_str(value) 
+    if return_type != expected_type:
+        raise TypeError(f"Your {instance.__class__.__name__}.{method} return type is {return_type}, when it should have been {expected_type}.")
+
+def recursive_type_str(obj: object) -> str:
+    def _is_container(obj: object) -> bool:
+        """Check if it can contain elements but is not a string
+        
+        i.e., things like list, set, tuple, dict
+        """
+        return hasattr(obj, '__iter__') and hasattr(obj, '__contains__') and not isinstance(obj, str)
+
+    def _traverse_type(obj: object) -> str:
+        if _is_container(obj):
+            obj_name = obj.__class__.__name__
+            types = [_traverse_type(item) for item in obj]
+            match obj_name:
+                case "dict":
+                    value_types = [_traverse_type(item) for item in obj.values()]
+                    key_hint = "|".join(sorted(list(set(types))))
+                    value_hint = "|".join(sorted(list(set(value_types))))
+                    hint = f"{obj_name}[{key_hint},{value_hint}]"
+                case "tuple":
+                    hint = f"{obj_name}[{",".join(types)}]"
+                case _:
+                    hint = f"{obj_name}[{"|".join(sorted(list(set(types))))}]"
+            return hint
+        else:
+            return obj.__class__.__name__
+    
+    return _traverse_type(obj)
