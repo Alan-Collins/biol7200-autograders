@@ -51,6 +51,13 @@ EXPECTED_OUTPUTS = {
     (0, 0, 0, 0): [7]
 }
 
+CORRECT_COUNTS = {
+    "Escherichia_coli_K12.fna": 27,
+    "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 38,
+    "Vibrio_cholerae_N16961.fna": 34,
+    "Wolbachia.fna": 2,
+}
+
 PENALTIES = {
     1: 5, # Don't check sequence ID matches
     2: 0, # Don't use `break` to stop checking hits
@@ -264,9 +271,16 @@ class TestFiles(unittest.TestCase):
                 "Wolbachia"
             ]
         )
+
         print("The number of identified homologs was:")
         for species, count in self.counts.items():
-            print(f"{species+':':<35} {count}")
+            correct_val = CORRECT_COUNTS[species]
+            verdict = "correct"
+            if count < correct_val:
+                verdict = "too low"
+            elif count > correct_val:
+                verdict = "too high"
+            print(f"{species+':':<35} {count} ({verdict})")
         if counts not in EXPECTED_OUTPUTS:
             print(
                 "Your script has issues that could not be diagnosed automatically by the autograder.\n\n"
