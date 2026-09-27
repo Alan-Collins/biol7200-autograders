@@ -52,10 +52,10 @@ EXPECTED_OUTPUTS = {
 }
 
 CORRECT_COUNTS = {
-    "Escherichia_coli_K12.fna": 27,
-    "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 38,
-    "Vibrio_cholerae_N16961.fna": 34,
-    "Wolbachia.fna": 2,
+    "Escherichia_coli_K12": 27,
+    "Pseudomonas_aeruginosa_UCBPP-PA14": 38,
+    "Vibrio_cholerae_N16961": 34,
+    "Wolbachia": 2,
 }
 
 PENALTIES = {
