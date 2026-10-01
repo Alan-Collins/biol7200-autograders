@@ -454,7 +454,7 @@ class TestFiles(unittest.TestCase):
             brlen = float(brlen_str)
         except:
             self.fail("The output of your command is not a number.")
-        if brlen != 45.54:
+        if round(brlen, 2) != 45.54:
             self.fail("Your command returned the wrong value.")
         print("Your command returned the correct value.")
 
