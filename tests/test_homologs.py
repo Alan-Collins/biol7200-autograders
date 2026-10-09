@@ -1,4 +1,3 @@
-from ty_extensions._internal import Unknown
 import unittest
 from pathlib import Path
 import re
