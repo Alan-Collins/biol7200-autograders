@@ -1,3 +1,4 @@
+from ty_extensions._internal import Unknown
 import unittest
 from pathlib import Path
 import re
@@ -6,7 +7,7 @@ import shutil
 import subprocess
 import os
 
-from gradescope_utils.autograder_utils.decorators import weight, number, visibility
+from gradescope_utils.autograder_utils.decorators import weight, number, visibility, partial_credit
 
 from utils import PointCounter
 
@@ -227,10 +228,10 @@ class TestFiles(unittest.TestCase):
             "The results of that test will be shown after the assignment due date."
             )
 
-    @weight(20)
+    @partial_credit(20)
     @number(f"{Q_NUM}.{POINT_NUM.next()}")
     @visibility("after_due_date")
-    def test_gets_right_number(self):
+    def test_gets_right_number(self, set_score=None):
         """Check script identifies correct number of matches"""
         if not self.homolog_file.exists():
             self.fail(
@@ -296,29 +297,30 @@ class TestFiles(unittest.TestCase):
                 )
         
         tblastn_expected = {
-            "Escherichia_coli_K12.fna": 116,
-            "Vibrio_cholerae_N16961.fna": 125,
-            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 250,
-            "Wolbachia.fna": 5
+            "Escherichia_coli_K12.fna": (116,),
+            "Vibrio_cholerae_N16961.fna": (125,),
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": (250,),
+            "Wolbachia.fna": (5,)
         }
 
         tblastn_fast_expected = {
-            "Escherichia_coli_K12.fna": 102,
-            "Vibrio_cholerae_N16961.fna": 107,
-            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 196,
-            "Wolbachia.fna": 4
+            "Escherichia_coli_K12.fna": (102,),
+            "Vibrio_cholerae_N16961.fna": (107,),
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": (196,),
+            "Wolbachia.fna": (4,)
         }
         qcov_hsp_prcnt_expected = {
-            "Escherichia_coli_K12.fna": 110,
-            "Vibrio_cholerae_N16961.fna": 122,
-            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 245,
-            "Wolbachia.fna": 5
+            # Either > or >= 30 pident
+            "Escherichia_coli_K12.fna": (110, 108),
+            "Vibrio_cholerae_N16961.fna": (122, 120),
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": (245, 241),
+            "Wolbachia.fna": (5,)
         }
         tblastn_fast_qcov_hsp_prcnt_expected = {
-            "Escherichia_coli_K12.fna": 98,
-            "Vibrio_cholerae_N16961.fna": 106,
-            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": 195,
-            "Wolbachia.fna": 4
+            "Escherichia_coli_K12.fna": (98, 96),
+            "Vibrio_cholerae_N16961.fna": (106, 105),
+            "Pseudomonas_aeruginosa_UCBPP-PA14.fna": (195, 192),
+            "Wolbachia.fna": (4,)
         }
 
         task_regex = re.compile(r"^[^\#]*tblastn-fast")
@@ -348,14 +350,22 @@ class TestFiles(unittest.TestCase):
                     expected = qcov_hsp_prcnt_expected[ass]
                 case (False, False):
                     expected = tblastn_expected[ass]
-            count = int(re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)[0])
-            if count != expected:
+            nums_found = re.findall(r"(?<!\S)\d+(?!\S)", result.stdout)
+            if len(nums_found) == 0:
+                set_score(0)
+                print("No numbers were found in your script's output.")
+                return
+            count = int(nums_found[0])
+            if count not in expected:
                 fail = True
-            print(f"Yours: {count} expected: {expected} for {ass}")
+            print(f"Yours: {count} expected: {' or '.join([str(i) for i in expected])} for {ass}")
 
         if fail:
-            self.fail("Your script identifies the wrong number of matches.")        
-
+            set_score(10) # partial credit if they return any number
+            print("Your script identifies the wrong number of matches.")
+            return
+        
+        set_score(20)
         print("Your script identifies the correct number of matches.")
 
 
