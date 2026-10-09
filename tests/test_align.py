@@ -228,14 +228,16 @@ class TestFiles(unittest.TestCase):
                     self.fail(
                         "Your script produced a non-zero exit code "
                         "when provided input sequences which are wrapped "
-                        "over multiple lines."
+                        "over multiple lines.\n\n"
+                        f"The stderr from your sript was:\n{result.stderr}"
                         )
                 else:
                     self.fail(
                         "Your script produced a non-zero exit code "
                         "when provided input sequences which are each "
                         "on a single line like the example provided in "
-                        "the assignment."
+                        "the assignment.\n\n"
+                        f"The stderr from your sript was:\n{result.stderr}"
                         )
         print("Your script produced an exit code of zero for all tests.")
 
