@@ -96,12 +96,16 @@ class TestFiles(unittest.TestCase):
                 bed,
                 outfile
             ]
-            result = subprocess.run(
-                command,
-                text=True,
-                capture_output=True,
-                cwd=cls.dir
-            )
+            try:
+                result = subprocess.run(
+                    command,
+                    text=True,
+                    capture_output=True,
+                    cwd=cls.dir
+                )
+            except OSError:
+                cls.zero_exit = False
+                return
             cls.results[basename] = result
             if result.returncode == 0:
                 cls.zero_exit = True
