@@ -175,7 +175,7 @@ class TestFiles(unittest.TestCase):
             if res is None:
                 self.fail("No output could be generated for your script. See other test failures for possible explanation.")
             if res.stderr.strip():
-                print("Your script produced the following error:\n{res.stderr}")
+                print(f"Your script produced the following error:\n{res.stderr}")
             self.fail("Your script exited with a non-zero exit code.")
         print("Your script ran successfully.")
 
